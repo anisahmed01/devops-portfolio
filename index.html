@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anis Ahmed | Senior DevOps & Cloud Infrastructure Engineer</title>
+  <meta name="description" content="DevOps & Cloud Infrastructure Engineer specializing in Kubernetes, AWS, Terraform, GitOps, CI/CD, and Observability.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+            tech: ['Orbitron', 'sans-serif'],
+          },
+          colors: {
+            cyber: {
+              black: '#06090e',
+              darker: '#0a0f18',
+              card: '#0f172a',
+              border: '#1e293b',
+              cyan: '#00f2fe',
+              emerald: '#00ff88',
+              purple: '#a855f7',
+              amber: '#f59e0b',
+              red: '#ef4444',
+            }
+          },
+          boxShadow: {
+            'neon-cyan': '0 0 20px -3px rgba(0, 242, 254, 0.4)',
+            'neon-emerald': '0 0 20px -3px rgba(0, 255, 136, 0.4)',
+            'neon-purple': '0 0 20px -3px rgba(168, 85, 247, 0.4)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-cyber-black text-slate-200 font-sans selection:bg-cyber-cyan selection:text-black overflow-x-hidden antialiased">
+
+  <!-- Background Particle Network Canvas -->
+  <canvas id="networkCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+
+  <!-- Cyber Grid Overlay -->
+  <div class="fixed inset-0 bg-[linear-gradient(to_right,#1e293b12_1px,transparent_1px),linear-gradient(to_bottom,#1e293b12_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none z-0"></div>
+
+  <!-- CRT Scanline (Optional Toggle) -->
+  <div id="scanline" class="fixed inset-0 pointer-events-none z-50 opacity-20 hidden"></div>
+
+  <!-- TOP HUD / MISSION CONTROL STATUS BAR -->
+  <header class="fixed top-0 left-0 right-0 z-40 bg-cyber-darker/80 backdrop-blur-md border-b border-cyber-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Logo / Cluster Indicator -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="relative flex items-center justify-center w-10 h-10 rounded-lg bg-cyber-card border border-cyber-cyan/40 group-hover:border-cyber-cyan transition-all shadow-neon-cyan">
+          <i data-lucide="terminal" class="w-5 h-5 text-cyber-cyan"></i>
+          <span class="absolute -top-1 -right-1 flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-emerald opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-cyber-emerald"></span>
+          </span>
+        </div>
+        <div>
+          <div class="font-tech text-sm tracking-wider font-bold text-white flex items-center gap-2">
+            <span>ANIS AHMED</span>
+            <span class="text-xs px-1.5 py-0.5 rounded bg-cyber-cyan/10 text-cyber-cyan font-mono border border-cyber-cyan/30">v2.4.0</span>
+          </div>
+          <div class="text-[10px] font-mono text-slate-400 flex items-center gap-1.5">
+            <span class="text-cyber-emerald">●</span> CLUSTER: ap-south-1 (ACTIVE)
+          </div>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-1 font-mono text-xs text-slate-300">
+        <a href="#control-plane" class="nav-link px-3 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1.5">
+          <span class="text-cyber-cyan/70 font-semibold">[01]</span> OVERVIEW
+        </a>
+        <a href="#pipeline" class="nav-link px-3 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1.5">
+          <span class="text-cyber-cyan/70 font-semibold">[02]</span> PIPELINE
+        </a>
+        <a href="#observability" class="nav-link px-3 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1.5">
+          <span class="text-cyber-cyan/70 font-semibold">[03]</span> METRICS
+        </a>
+        <a href="#skills" class="nav-link px-3 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1.5">
+          <span class="text-cyber-cyan/70 font-semibold">[04]</span> TECH RADAR
+        </a>
+        <a href="#projects" class="nav-link px-3 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1.5">
+          <span class="text-cyber-cyan/70 font-semibold">[05]</span> PROJECTS
+        </a>
+        <a href="#terminal" class="nav-link px-3 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1.5">
+          <span class="text-cyber-cyan/70 font-semibold">[06]</span> CLI
+        </a>
+      </nav>
+
+      <!-- Right Controls: Audio + Scanline + Contact Button -->
+      <div class="flex items-center gap-2">
+        <!-- Audio Synth Toggle -->
+        <button id="soundToggle" title="Toggle UI Audio SFX" class="p-2 rounded-lg bg-cyber-card border border-cyber-border hover:border-cyber-cyan text-slate-400 hover:text-cyber-cyan transition-all text-xs font-mono flex items-center gap-1">
+          <i data-lucide="volume-2" id="soundIcon" class="w-4 h-4 text-cyber-cyan"></i>
+          <span class="hidden sm:inline text-[10px]">SFX: ON</span>
+        </button>
+
+        <!-- CTA Contact Button -->
+        <a href="#contact" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-semibold text-xs tracking-wide hover:brightness-110 transition-all shadow-neon-cyan flex items-center gap-1.5">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-black"></i>
+          <span>INIT DISCUSS</span>
+        </a>
+
+        <!-- Mobile menu toggle -->
+        <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg bg-cyber-card border border-cyber-border text-slate-300">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Nav Drawer -->
+    <div id="mobileMenu" class="hidden md:hidden bg-cyber-darker border-b border-cyber-border px-4 py-4 space-y-2 font-mono text-sm">
+      <a href="#control-plane" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">01. Overview</a>
+      <a href="#pipeline" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">02. Pipeline</a>
+      <a href="#observability" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">03. Metrics</a>
+      <a href="#skills" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">04. Tech Radar</a>
+      <a href="#projects" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">05. Projects</a>
+      <a href="#terminal" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">06. Interactive CLI</a>
+    </div>
+  </header>
+
+  <main class="relative z-10 pt-24 space-y-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- ==================== SECTION 1: HERO / CONTROL PLANE ==================== -->
+    <section id="control-plane" class="relative pt-8 pb-12">
+      
+      <!-- Top Status Banner -->
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyber-card border border-cyber-border text-xs font-mono text-slate-300 mb-6 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-cyber-emerald animate-pulse"></span>
+        <span class="text-cyber-cyan font-semibold">PRODUCTION READY</span>
+        <span class="text-slate-500">|</span>
+        <span class="text-slate-400">HOSTED VIA AUTOMATED GITOPS ON <strong class="text-white">anisahmed.in</strong></span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        
+        <!-- Left: Hero Headline & Value Proposition -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="space-y-2">
+            <h2 class="font-mono text-sm tracking-widest text-cyber-cyan uppercase font-bold flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-cyber-cyan"></i>
+              Senior DevOps & Cloud Infrastructure Engineer
+            </h2>
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white font-tech leading-none">
+              ENGINEERING <br>
+              <span class="bg-gradient-to-r from-cyber-cyan via-blue-400 to-cyber-purple bg-clip-text text-transparent">
+                RESILIENT CLOUD
+              </span> <br>
+              ARCHITECTURES.
+            </h1>
+          </div>
+
+          <p class="text-base sm:text-lg text-slate-300 leading-relaxed font-sans max-w-2xl">
+            Specialized in scaling enterprise <strong class="text-cyber-cyan">Kubernetes</strong> ecosystems, automating multi-cloud pipelines with <strong class="text-cyber-emerald">GitOps & ArgoCD</strong>, enforcing <strong class="text-cyber-purple">Infrastructure as Code (Terraform)</strong>, and constructing zero-blindspot <strong class="text-cyber-amber">Prometheus Observability</strong>.
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center gap-4 pt-2 font-mono text-xs">
+            <a href="#pipeline" class="px-5 py-3 rounded-lg bg-cyber-cyan text-black font-bold tracking-wider hover:bg-cyan-300 transition-all shadow-neon-cyan flex items-center gap-2">
+              <i data-lucide="play" class="w-4 h-4 fill-black"></i>
+              SIMULATE GITOPS PIPELINE
+            </a>
+            <a href="#terminal" class="px-5 py-3 rounded-lg bg-cyber-card border border-cyber-border hover:border-cyber-cyan text-white hover:text-cyber-cyan transition-all flex items-center gap-2">
+              <i data-lucide="terminal" class="w-4 h-4 text-cyber-cyan"></i>
+              OPEN INTERACTIVE CLI
+            </a>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="p-3 rounded-lg bg-cyber-card border border-cyber-border hover:border-white text-slate-300 hover:text-white transition-all" title="GitHub Profile">
+              <i data-lucide="github" class="w-4 h-4"></i>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="p-3 rounded-lg bg-cyber-card border border-cyber-border hover:border-blue-400 text-slate-300 hover:text-blue-400 transition-all" title="LinkedIn Profile">
+              <i data-lucide="linkedin" class="w-4 h-4"></i>
+            </a>
+          </div>
+
+          <!-- Quick Metrics Bar -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-cyber-border">
+            <div class="p-3 rounded-lg bg-cyber-card/60 border border-cyber-border/80">
+              <div class="font-tech text-2xl font-bold text-cyber-cyan">99.99%</div>
+              <div class="text-[11px] font-mono text-slate-400">Target SLA / Uptime</div>
+            </div>
+            <div class="p-3 rounded-lg bg-cyber-card/60 border border-cyber-border/80">
+              <div class="font-tech text-2xl font-bold text-cyber-emerald">&lt; 4 min</div>
+              <div class="text-[11px] font-mono text-slate-400">CI/CD Deploy Cycle</div>
+            </div>
+            <div class="p-3 rounded-lg bg-cyber-card/60 border border-cyber-border/80">
+              <div class="font-tech text-2xl font-bold text-cyber-purple">40%</div>
+              <div class="text-[11px] font-mono text-slate-400">Cloud Cost Saved</div>
+            </div>
+            <div class="p-3 rounded-lg bg-cyber-card/60 border border-cyber-border/80">
+              <div class="font-tech text-2xl font-bold text-cyber-amber">100%</div>
+              <div class="text-[11px] font-mono text-slate-400">GitOps Managed</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Real-time Cluster Node Telemetry HUD -->
+        <div class="lg:col-span-5">
+          <div class="rounded-xl bg-cyber-darker border border-cyber-border p-5 shadow-2xl relative overflow-hidden backdrop-blur-xl group hover:border-cyber-cyan/50 transition-all">
+            
+            <!-- Window Bar -->
+            <div class="flex items-center justify-between pb-4 mb-4 border-b border-cyber-border text-xs font-mono">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+                <span class="ml-2 text-slate-400 font-semibold">k8s-node-telemetry.json</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-cyber-emerald text-[11px]">
+                <span class="w-2 h-2 rounded-full bg-cyber-emerald animate-ping"></span>
+                HEALTHY
+              </div>
+            </div>
+
+            <!-- Telemetry Items -->
+            <div class="space-y-4 font-mono text-xs">
+              
+              <!-- Cluster Identity -->
+              <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border/60">
+                <div class="flex justify-between items-center text-slate-400 mb-1">
+                  <span>Cluster Context:</span>
+                  <span class="text-cyber-cyan font-bold">arn:aws:eks:ap-south-1</span>
+                </div>
+                <div class="flex justify-between items-center text-slate-400">
+                  <span>GitOps Sync Status:</span>
+                  <span class="text-cyber-emerald flex items-center gap-1">
+                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Synced (HEAD)
+                  </span>
+                </div>
+              </div>
+
+              <!-- Node Pool Metrics -->
+              <div>
+                <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                  <span>Cluster CPU Capacity</span>
+                  <span class="text-cyber-cyan font-bold" id="cpuPercentage">42%</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div id="cpuBar" class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-700 w-[42%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                  <span>Cluster Memory Allocated</span>
+                  <span class="text-cyber-purple font-bold" id="memPercentage">68%</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div id="memBar" class="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-700 w-[68%]"></div>
+                </div>
+              </div>
+
+              <!-- Pod Mesh Grid -->
+              <div class="pt-2">
+                <div class="flex justify-between items-center text-[11px] text-slate-400 mb-2">
+                  <span>Pod Health Mesh (32 Active Pods)</span>
+                  <span class="text-cyber-emerald text-[10px]">0 Restarted</span>
+                </div>
+                <div class="grid grid-cols-8 gap-1.5" id="podMesh">
+                  <!-- Generated by JS -->
+                </div>
+              </div>
+
+              <!-- Live Rolling Terminal Log Line -->
+              <div class="pt-2 text-[11px] text-slate-400 border-t border-cyber-border flex items-center gap-2">
+                <span class="text-cyber-cyan">❯</span>
+                <span id="telemetryLog" class="text-slate-300 truncate">kubelet: reconciliation loop completed (0ms drift)</span>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 2: INTERACTIVE CI/CD & GITOPS PIPELINE ==================== -->
+    <section id="pipeline" class="relative pt-6">
+      
+      <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple text-xs font-mono">
+          <i data-lucide="git-branch" class="w-3.5 h-3.5"></i> AUTOMATED DELIVERY ENGINE
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
+          INTERACTIVE GITOPS PIPELINE
+        </h2>
+        <p class="text-sm sm:text-base text-slate-400 font-sans">
+          Click any stage below to inspect real container build logs, security gates, and Kubernetes deployment payloads.
+        </p>
+      </div>
+
+      <!-- Pipeline Canvas & Stages Container -->
+      <div class="relative bg-cyber-darker border border-cyber-border rounded-2xl p-6 sm:p-8 shadow-2xl overflow-hidden">
+        
+        <!-- Background Flow Line (Desktop) -->
+        <div class="hidden lg:block absolute top-[72px] left-12 right-12 h-1 bg-slate-800 z-0">
+          <div id="pipelineProgress" class="h-full bg-gradient-to-r from-cyber-cyan via-cyber-emerald to-cyber-purple w-full transition-all duration-1000 shadow-neon-cyan"></div>
+        </div>
+
+        <!-- 6 Pipeline Stages -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 relative z-10">
+          
+          <!-- Stage 1 -->
+          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="1">
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-8 h-8 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/40 text-cyber-cyan flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
+                01
+              </span>
+              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
+                PASSED
+              </span>
+            </div>
+            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
+              <i data-lucide="git-commit" class="w-3.5 h-3.5 text-cyber-cyan"></i> Git Commit
+            </h3>
+            <p class="text-[11px] text-slate-400 mb-2 font-mono">feat: upgrade helm chart v2</p>
+            <div class="text-[10px] font-mono text-slate-500">SHA: <span class="text-cyber-cyan">a8f7b2c</span></div>
+          </div>
+
+          <!-- Stage 2 -->
+          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="2">
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/40 text-blue-400 flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
+                02
+              </span>
+              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
+                PASSED
+              </span>
+            </div>
+            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
+              <i data-lucide="shield" class="w-3.5 h-3.5 text-blue-400"></i> SonarQube
+            </h3>
+            <p class="text-[11px] text-slate-400 mb-2 font-mono">SAST & Secret Detection</p>
+            <div class="text-[10px] font-mono text-slate-500">Gate: <span class="text-cyber-emerald">Grade A (0 Vuln)</span></div>
+          </div>
+
+          <!-- Stage 3 -->
+          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="3">
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/40 text-cyan-400 flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
+                03
+              </span>
+              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
+                PASSED
+              </span>
+            </div>
+            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
+              <i data-lucide="box" class="w-3.5 h-3.5 text-cyan-400"></i> Docker Build
+            </h3>
+            <p class="text-[11px] text-slate-400 mb-2 font-mono">Multi-stage Alpine Image</p>
+            <div class="text-[10px] font-mono text-slate-500">Size: <span class="text-slate-300">28.4 MB (Slim)</span></div>
+          </div>
+
+          <!-- Stage 4 -->
+          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/40 text-purple-400 flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
+                04
+              </span>
+              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
+                PASSED
+              </span>
+            </div>
+            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
+              <i data-lucide="lock" class="w-3.5 h-3.5 text-purple-400"></i> Trivy Scan
+            </h3>
+            <p class="text-[11px] text-slate-400 mb-2 font-mono">Container Image CVEs</p>
+            <div class="text-[10px] font-mono text-slate-500">Critical: <span class="text-cyber-emerald">0 CVEs</span></div>
+          </div>
+
+          <!-- Stage 5 -->
+          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="5">
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/40 text-amber-400 flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
+                05
+              </span>
+              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
+                SYNCED
+              </span>
+            </div>
+            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-amber-400"></i> ArgoCD Sync
+            </h3>
+            <p class="text-[11px] text-slate-400 mb-2 font-mono">GitOps Reconciliation</p>
+            <div class="text-[10px] font-mono text-slate-500">Drift: <span class="text-cyber-emerald">0% In-Sync</span></div>
+          </div>
+
+          <!-- Stage 6 -->
+          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="6">
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
+                06
+              </span>
+              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
+                LIVE
+              </span>
+            </div>
+            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
+              <i data-lucide="server" class="w-3.5 h-3.5 text-emerald-400"></i> K8s Cluster
+            </h3>
+            <p class="text-[11px] text-slate-400 mb-2 font-mono">Rolling Update Canary</p>
+            <div class="text-[10px] font-mono text-slate-500">Ready: <span class="text-cyber-emerald">3/3 Pods</span></div>
+          </div>
+
+        </div>
+
+        <!-- Live Pipeline Inspector Console Output -->
+        <div class="mt-8 rounded-xl bg-black border border-cyber-border p-4 font-mono text-xs shadow-inner">
+          <div class="flex items-center justify-between pb-2 mb-3 border-b border-cyber-border/70 text-slate-400">
+            <div class="flex items-center gap-2">
+              <span class="text-cyber-cyan font-bold" id="inspectorStageTitle">Stage 1: Git Commit & Webhook Trigger</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300">Duration: 1.4s</span>
+            </div>
+            <button id="retriggerPipeline" class="px-2.5 py-1 rounded bg-cyber-card hover:bg-slate-800 text-cyber-cyan border border-cyber-cyan/30 text-[11px] flex items-center gap-1 transition-all">
+              <i data-lucide="play" class="w-3 h-3"></i> Rerun Simulation
+            </button>
+          </div>
+          <pre id="inspectorLogOutput" class="text-slate-300 leading-relaxed overflow-x-auto p-1 font-mono text-[11px]">
+[INFO] 16:04:12 - Git commit hook triggered on branch 'main'
+[INFO] 16:04:13 - Author: Anis Ahmed <anis@digitalanis.com>
+[INFO] 16:04:13 - Verified GPG Signature: [KEY ID: 0x9F41E8D9] - VALID
+[INFO] 16:04:14 - Dispatched webhook payload to GitHub Actions Runner & ArgoCD controller
+[SUCCESS] Pipeline step initialized without errors.
+          </pre>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 3: OBSERVABILITY & METRICS HUD ==================== -->
+    <section id="observability" class="relative pt-6">
+      
+      <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-amber/10 border border-cyber-amber/30 text-cyber-amber text-xs font-mono">
+          <i data-lucide="activity" class="w-3.5 h-3.5"></i> PROMETHEUS + GRAFANA TELEMETRY
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
+          OBSERVABILITY MISSION CONTROL
+        </h2>
+        <p class="text-sm sm:text-base text-slate-400 font-sans">
+          Simulated live Prometheus telemetry feeds visualizing system throughput, error budgets, and latency percentiles.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Metric Card 1: Request Rate & Latency -->
+        <div class="rounded-xl bg-cyber-darker border border-cyber-border p-5 shadow-lg space-y-4">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="text-[11px] font-mono text-slate-400">rate(http_requests_total[5m])</div>
+              <div class="text-2xl font-bold font-tech text-white flex items-baseline gap-2">
+                <span id="metricRPS">1,842</span> <span class="text-xs font-mono text-cyber-cyan">req/sec</span>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/30">
+              P99: 14ms
+            </span>
+          </div>
+          <!-- Live Canvas Graph -->
+          <canvas id="chartRPS" class="w-full h-28 bg-black/40 rounded-lg border border-cyber-border/40"></canvas>
+          <div class="flex justify-between text-[11px] font-mono text-slate-500">
+            <span>T - 60s</span>
+            <span class="text-cyber-emerald flex items-center gap-1">● Nominal HTTP 2xx: 99.98%</span>
+            <span>Now</span>
+          </div>
+        </div>
+
+        <!-- Metric Card 2: Cluster Memory & Heap Allocation -->
+        <div class="rounded-xl bg-cyber-darker border border-cyber-border p-5 shadow-lg space-y-4">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="text-[11px] font-mono text-slate-400">container_memory_working_set_bytes</div>
+              <div class="text-2xl font-bold font-tech text-white flex items-baseline gap-2">
+                <span id="metricMem">3.42</span> <span class="text-xs font-mono text-cyber-purple">GiB / 8.00 GiB</span>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-purple/10 text-cyber-purple border border-cyber-purple/30">
+              HPA: 4/10 Replicas
+            </span>
+          </div>
+          <!-- Live Canvas Graph -->
+          <canvas id="chartMem" class="w-full h-28 bg-black/40 rounded-lg border border-cyber-border/40"></canvas>
+          <div class="flex justify-between text-[11px] font-mono text-slate-500">
+            <span>T - 60s</span>
+            <span class="text-cyber-purple flex items-center gap-1">● Memory Saturation: Stable</span>
+            <span>Now</span>
+          </div>
+        </div>
+
+        <!-- Metric Card 3: Alertmanager & SLO Status -->
+        <div class="rounded-xl bg-cyber-darker border border-cyber-border p-5 shadow-lg space-y-4 md:col-span-2 lg:col-span-1">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="text-[11px] font-mono text-slate-400">alertmanager_active_alerts</div>
+              <div class="text-2xl font-bold font-tech text-cyber-emerald flex items-baseline gap-2">
+                0 FIRING <span class="text-xs font-mono text-slate-400 font-normal">(All Clear)</span>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
+              SLO: 99.99% Met
+            </span>
+          </div>
+
+          <!-- Alert Stack Items -->
+          <div class="space-y-2 font-mono text-xs">
+            <div class="p-2.5 rounded-lg bg-cyber-card border border-cyber-border flex items-center justify-between">
+              <span class="flex items-center gap-2 text-slate-300 text-[11px]">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-cyber-emerald"></i> KubePodCrashLooping
+              </span>
+              <span class="text-[10px] text-cyber-emerald">Resolved</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-cyber-card border border-cyber-border flex items-center justify-between">
+              <span class="flex items-center gap-2 text-slate-300 text-[11px]">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-cyber-emerald"></i> HighErrorBudgetBurn
+              </span>
+              <span class="text-[10px] text-cyber-emerald">0.00%</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-cyber-card border border-cyber-border flex items-center justify-between">
+              <span class="flex items-center gap-2 text-slate-300 text-[11px]">
+                <i data-lucide="check" class="w-3.5 h-3.5 text-cyber-emerald"></i> CertManagerExpiryNotice
+              </span>
+              <span class="text-[10px] text-cyber-cyan">Auto-Renewed (89d)</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 4: DEVOPS TECH RADAR & ARSENAL ==================== -->
+    <section id="skills" class="relative pt-6">
+      
+      <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-xs font-mono">
+          <i data-lucide="cpu" class="w-3.5 h-3.5"></i> CORE COMPETENCIES & TOOLING
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
+          DEVOPS ARSENAL & TECH RADAR
+        </h2>
+        <p class="text-sm sm:text-base text-slate-400 font-sans">
+          Production battle-tested tools utilized daily to architect, secure, and operate distributed infrastructure.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Domain 1: Cloud & Infrastructure -->
+        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="p-2.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/30">
+              <i data-lucide="cloud" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="font-mono text-sm font-bold text-white">Cloud Infrastructure</h3>
+              <p class="text-[11px] font-mono text-slate-400">Multi-Cloud & Networking</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 font-mono text-xs">
+            <span class="skill-tag">AWS (EKS, VPC, EC2, S3, IAM)</span>
+            <span class="skill-tag">Route53 & CloudFront</span>
+            <span class="skill-tag">Hostinger & LiteSpeed</span>
+            <span class="skill-tag">Cloudflare DNS & WAF</span>
+            <span class="skill-tag">Linux / CloudLinux Kernel</span>
+          </div>
+        </div>
+
+        <!-- Domain 2: Containers & Orchestration -->
+        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="p-2.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
+              <i data-lucide="boxes" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="font-mono text-sm font-bold text-white">Containers & Kubernetes</h3>
+              <p class="text-[11px] font-mono text-slate-400">Cluster Orchestration</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 font-mono text-xs">
+            <span class="skill-tag">Kubernetes (K8s & K3s)</span>
+            <span class="skill-tag">Docker & Multi-Stage Builds</span>
+            <span class="skill-tag">Helm Charts & Repos</span>
+            <span class="skill-tag">Kustomize Overlays</span>
+            <span class="skill-tag">Ingress-Nginx & Cert-Manager</span>
+          </div>
+        </div>
+
+        <!-- Domain 3: GitOps & CI/CD Automation -->
+        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="p-2.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+              <i data-lucide="git-merge" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="font-mono text-sm font-bold text-white">CI/CD & GitOps</h3>
+              <p class="text-[11px] font-mono text-slate-400">Continuous Automation</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 font-mono text-xs">
+            <span class="skill-tag">ArgoCD (GitOps Engine)</span>
+            <span class="skill-tag">GitHub Actions</span>
+            <span class="skill-tag">GitLab CI/CD</span>
+            <span class="skill-tag">Jenkins Pipelines</span>
+            <span class="skill-tag">Automated SFTP / SSH Deploy</span>
+          </div>
+        </div>
+
+        <!-- Domain 4: Infrastructure as Code & Config -->
+        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="p-2.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/30">
+              <i data-lucide="code-2" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="font-mono text-sm font-bold text-white">IaC & Automation</h3>
+              <p class="text-[11px] font-mono text-slate-400">Declarative Infrastructure</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 font-mono text-xs">
+            <span class="skill-tag">Terraform & OpenTofu</span>
+            <span class="skill-tag">Ansible Playbooks</span>
+            <span class="skill-tag">Remote State S3 + DynamoDB</span>
+            <span class="skill-tag">Modular Architecture</span>
+            <span class="skill-tag">Bash / Shell Automation</span>
+          </div>
+        </div>
+
+        <!-- Domain 5: Observability & Telemetry -->
+        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+              <i data-lucide="gauge" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="font-mono text-sm font-bold text-white">Observability & Logs</h3>
+              <p class="text-[11px] font-mono text-slate-400">Metrics, Tracing & Logs</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 font-mono text-xs">
+            <span class="skill-tag">Prometheus & PromQL</span>
+            <span class="skill-tag">Grafana Dashboards</span>
+            <span class="skill-tag">Alertmanager Routing</span>
+            <span class="skill-tag">Loki & Promtail</span>
+            <span class="skill-tag">SLO / SLA Burn Rate Tracking</span>
+          </div>
+        </div>
+
+        <!-- Domain 6: DevSecOps & Hardening -->
+        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="p-2.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/30">
+              <i data-lucide="shield-alert" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="font-mono text-sm font-bold text-white">DevSecOps & Security</h3>
+              <p class="text-[11px] font-mono text-slate-400">Vulnerability & Access Control</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 font-mono text-xs">
+            <span class="skill-tag">Trivy Container Scanner</span>
+            <span class="skill-tag">SonarQube Code Gate</span>
+            <span class="skill-tag">AWS IAM & IRSA</span>
+            <span class="skill-tag">Kubernetes NetworkPolicies</span>
+            <span class="skill-tag">SSL/TLS & Let's Encrypt</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 5: PRODUCTION CASE STUDIES ==================== -->
+    <section id="projects" class="relative pt-6">
+      
+      <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-emerald/10 border border-cyber-emerald/30 text-cyber-emerald text-xs font-mono">
+          <i data-lucide="folder-git-2" class="w-3.5 h-3.5"></i> ARCHITECTURAL BLUEPRINTS
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
+          PRODUCTION DEVOPS CASE STUDIES
+        </h2>
+        <p class="text-sm sm:text-base text-slate-400 font-sans">
+          Real architectural solutions demonstrating cloud scalability, zero-downtime rollouts, and GitOps automation.
+        </p>
+      </div>
+
+      <div class="space-y-8">
+        
+        <!-- Case Study 1: Enterprise AWS EKS with ArgoCD GitOps -->
+        <div class="rounded-2xl bg-cyber-darker border border-cyber-border overflow-hidden p-6 sm:p-8 hover:border-cyber-cyan transition-all">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div class="lg:col-span-7 space-y-4">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/30">AWS + KUBERNETES</span>
+                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">GITOPS</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white font-tech">
+                Enterprise Multi-Node AWS EKS with ArgoCD & Automated Canary Rollouts
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed">
+                Architected and deployed an automated production-ready AWS EKS cluster across 3 availability zones. Enforced complete GitOps synchronization using ArgoCD, ensuring infrastructure drift is prevented and all application updates deploy automatically without manual kubectl intervention.
+              </p>
+              
+              <!-- Key Achievements -->
+              <div class="grid grid-cols-2 gap-3 pt-2 font-mono text-xs">
+                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
+                  <div class="text-slate-400 text-[11px]">Deployment Speed:</div>
+                  <div class="text-cyber-cyan font-bold text-sm">45m &rarr; 3m Automated</div>
+                </div>
+                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
+                  <div class="text-slate-400 text-[11px]">Downtime:</div>
+                  <div class="text-cyber-emerald font-bold text-sm">0s (Zero-Downtime Canary)</div>
+                </div>
+              </div>
+
+              <!-- Tech badges -->
+              <div class="flex flex-wrap gap-2 pt-2 font-mono text-xs text-slate-400">
+                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">AWS EKS</span>
+                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">ArgoCD</span>
+                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Helm 3</span>
+                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Ingress-Nginx</span>
+                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">AWS ALB</span>
+              </div>
+            </div>
+
+            <!-- Architecture Diagram Visualization Box -->
+            <div class="lg:col-span-5 bg-black/60 rounded-xl border border-cyber-border p-5 font-mono text-xs space-y-3">
+              <div class="flex justify-between items-center text-slate-400 pb-2 border-b border-cyber-border">
+                <span class="text-cyber-cyan flex items-center gap-1.5 font-bold">
+                  <i data-lucide="network" class="w-4 h-4"></i> Topology Blueprint
+                </span>
+                <span class="text-[10px] text-cyber-emerald">Validated</span>
+              </div>
+              <div class="space-y-2 text-[11px] text-slate-300 font-mono">
+                <div class="p-2 rounded bg-cyber-card border border-cyber-border flex items-center justify-between">
+                  <span>Git Repository (Single Source of Truth)</span>
+                  <span class="text-cyber-cyan">HEAD</span>
+                </div>
+                <div class="text-center text-slate-500">▼ Git Webhook Trigger</div>
+                <div class="p-2 rounded bg-cyber-card border border-cyber-cyan/40 flex items-center justify-between text-cyber-cyan">
+                  <span>ArgoCD GitOps Operator</span>
+                  <span class="text-cyber-emerald">Auto-Sync</span>
+                </div>
+                <div class="text-center text-slate-500">▼ Reconcile State</div>
+                <div class="p-2 rounded bg-cyber-card border border-cyber-border flex items-center justify-between">
+                  <span>AWS EKS (Worker Pods + HPA)</span>
+                  <span class="text-cyber-emerald">3 Replicas</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Case Study 2: Modular Infrastructure as Code with Terraform -->
+        <div class="rounded-2xl bg-cyber-darker border border-cyber-border overflow-hidden p-6 sm:p-8 hover:border-cyber-purple transition-all">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div class="lg:col-span-7 space-y-4">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-purple/10 text-cyber-purple border border-cyber-purple/30">TERRAFORM & OPENTOFO</span>
+                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/30">INFRASTRUCTURE AS CODE</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white font-tech">
+                Multi-Environment Terraform Architecture with Remote State & Locking
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed">
+                Constructed reusable Terraform modules for complete cloud environments (dev, staging, prod). Integrated AWS S3 for remote encrypted state management and DynamoDB state locking to prevent concurrency collisions across distributed teams.
+              </p>
+              
+              <div class="grid grid-cols-2 gap-3 pt-2 font-mono text-xs">
+                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
+                  <div class="text-slate-400 text-[11px]">Provisioning Time:</div>
+                  <div class="text-cyber-purple font-bold text-sm">Under 12 Minutes</div>
+                </div>
+                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
+                  <div class="text-slate-400 text-[11px]">Configuration Drift:</div>
+                  <div class="text-cyber-emerald font-bold text-sm">0% (Enforced via CI)</div>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 pt-2 font-mono text-xs text-slate-400">
+                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Terraform</span>
+                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">AWS S3</span>
+                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">DynamoDB</span>
+                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">VPC Peering</span>
+                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">IAM Roles</span>
+              </div>
+            </div>
+
+            <!-- Terraform Code Preview Box -->
+            <div class="lg:col-span-5 bg-black/60 rounded-xl border border-cyber-border p-5 font-mono text-xs space-y-3">
+              <div class="flex justify-between items-center text-slate-400 pb-2 border-b border-cyber-border">
+                <span class="text-cyber-purple flex items-center gap-1.5 font-bold">
+                  <i data-lucide="file-code" class="w-4 h-4"></i> main.tf snippet
+                </span>
+                <span class="text-[10px] text-cyber-cyan">v1.8.0</span>
+              </div>
+              <pre class="text-[11px] text-slate-300 leading-relaxed overflow-x-auto">
+<span class="text-cyber-purple">module</span> <span class="text-cyber-cyan">"eks_cluster"</span> {
+  source          = "./modules/aws-eks"
+  cluster_name    = "prod-control-plane"
+  cluster_version = "1.30"
+  vpc_id          = module.vpc.vpc_id
+  subnet_ids      = module.vpc.private_subnets
+  enable_irsa     = <span class="text-cyber-emerald">true</span>
+}
+              </pre>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 6: INTERACTIVE DEVOPS TERMINAL ==================== -->
+    <section id="terminal" class="relative pt-6">
+      
+      <div class="text-center max-w-3xl mx-auto space-y-3 mb-10">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-xs font-mono">
+          <i data-lucide="terminal" class="w-3.5 h-3.5"></i> LIVE KUBERNETES & LINUX CLI
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
+          INTERACTIVE DEVOPS TERMINAL
+        </h2>
+        <p class="text-sm sm:text-base text-slate-400 font-sans">
+          Test real terminal commands below. Type <code class="text-cyber-cyan font-mono bg-cyber-card px-1.5 py-0.5 rounded border border-cyber-border">help</code> to see all available commands.
+        </p>
+      </div>
+
+      <!-- Terminal Window Box -->
+      <div class="max-w-4xl mx-auto rounded-2xl bg-[#090d16] border border-cyber-border shadow-2xl overflow-hidden font-mono text-xs group hover:border-cyber-cyan/60 transition-all">
+        
+        <!-- Terminal Header -->
+        <div class="flex items-center justify-between px-4 py-3 bg-[#0d131f] border-b border-cyber-border">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-red-500/80 cursor-pointer"></span>
+            <span class="w-3 h-3 rounded-full bg-yellow-500/80 cursor-pointer"></span>
+            <span class="w-3 h-3 rounded-full bg-green-500/80 cursor-pointer"></span>
+            <span class="ml-2 text-slate-400 font-semibold tracking-wide text-[11px]">anisahmed@k8s-control-plane: ~ (bash)</span>
+          </div>
+          <div class="flex items-center gap-2 text-slate-400 text-[10px]">
+            <span class="hidden sm:inline">TYPE 'help' FOR CMDS</span>
+            <button id="clearTerminalBtn" class="px-2 py-0.5 rounded bg-cyber-card border border-cyber-border hover:text-white transition-all">
+              CLEAR
+            </button>
+          </div>
+        </div>
+
+        <!-- Terminal Output Body -->
+        <div id="terminalBody" class="p-5 space-y-3 min-h-[340px] max-h-[500px] overflow-y-auto font-mono text-[12px] leading-relaxed scrollbar-thin scrollbar-thumb-slate-800">
+          <div class="text-slate-400">
+            Welcome to <span class="text-cyber-cyan font-bold">Anis Ahmed's</span> Interactive DevOps Environment.<br>
+            Connected to session: <span class="text-cyber-emerald">session_prod_a0f9</span> (Authenticated).<br>
+            Available commands: <span class="text-cyber-cyan">kubectl</span>, <span class="text-cyber-cyan">helm</span>, <span class="text-cyber-cyan">terraform</span>, <span class="text-cyber-cyan">docker</span>, <span class="text-cyber-cyan">cat</span>, <span class="text-cyber-cyan">deploy</span>, <span class="text-cyber-cyan">help</span>, <span class="text-cyber-cyan">clear</span>.
+          </div>
+          <div id="terminalHistory" class="space-y-3"></div>
+          
+          <!-- Terminal Prompt Line -->
+          <div class="flex items-center gap-2 text-cyber-emerald pt-1">
+            <span class="font-bold text-cyber-cyan">anisahmed@k8s:~$</span>
+            <input type="text" id="terminalInput" autofocus spellcheck="false" autocomplete="off" class="flex-1 bg-transparent text-white outline-none font-mono caret-cyber-cyan" placeholder="type 'help' and press Enter...">
+          </div>
+        </div>
+
+        <!-- Quick Command Chips for Mobile / Quick Click -->
+        <div class="px-4 py-2.5 bg-[#0d131f] border-t border-cyber-border flex items-center gap-2 overflow-x-auto text-[11px] text-slate-400">
+          <span class="text-[10px] text-slate-500 shrink-0">Quick Run:</span>
+          <button class="quick-cmd px-2 py-1 rounded bg-cyber-card hover:bg-cyber-cyan hover:text-black border border-cyber-border hover:border-cyber-cyan transition-all shrink-0">kubectl get nodes</button>
+          <button class="quick-cmd px-2 py-1 rounded bg-cyber-card hover:bg-cyber-cyan hover:text-black border border-cyber-border hover:border-cyber-cyan transition-all shrink-0">helm list</button>
+          <button class="quick-cmd px-2 py-1 rounded bg-cyber-card hover:bg-cyber-cyan hover:text-black border border-cyber-border hover:border-cyber-cyan transition-all shrink-0">cat skills.json</button>
+          <button class="quick-cmd px-2 py-1 rounded bg-cyber-card hover:bg-cyber-cyan hover:text-black border border-cyber-border hover:border-cyber-cyan transition-all shrink-0">deploy --env prod</button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==================== SECTION 7: CONTACT / MISSION TRANSMISSION ==================== -->
+    <section id="contact" class="relative pt-6 pb-20">
+      
+      <div class="rounded-3xl bg-gradient-to-b from-cyber-darker to-[#090d16] border border-cyber-border p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          
+          <div class="lg:col-span-7 space-y-4">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-xs font-mono">
+              <i data-lucide="radio" class="w-3.5 h-3.5 animate-pulse"></i> INITIATE TRANSMISSION
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
+              LET'S ARCHITECT YOUR NEXT PLATFORM
+            </h2>
+            <p class="text-slate-300 text-sm leading-relaxed max-w-xl font-sans">
+              Currently open to DevOps Engineer / Cloud Infrastructure roles, consultancy, and high-impact infrastructure automation projects. Let's discuss scaling your systems.
+            </p>
+
+            <div class="space-y-3 pt-4 font-mono text-xs">
+              <div class="flex items-center gap-3 text-slate-300">
+                <div class="p-2 rounded bg-cyber-card border border-cyber-border text-cyber-cyan">
+                  <i data-lucide="mail" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-[10px] text-slate-500">DIRECT EMAIL</div>
+                  <a href="mailto:contact@anisahmed.in" class="hover:text-cyber-cyan transition-colors font-bold text-white">contact@anisahmed.in</a>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 text-slate-300">
+                <div class="p-2 rounded bg-cyber-card border border-cyber-border text-cyber-emerald">
+                  <i data-lucide="globe" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-[10px] text-slate-500">CUSTOM DOMAIN</div>
+                  <span class="text-white font-bold">https://anisahmed.in</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Download Resume Button -->
+            <div class="pt-4">
+              <a href="mailto:contact@anisahmed.in?subject=DevOps%20Inquiry%20from%20Portfolio" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyber-cyan to-blue-500 text-black font-bold font-mono text-xs tracking-wider hover:brightness-110 transition-all shadow-neon-cyan">
+                <i data-lucide="send" class="w-4 h-4"></i> TRANSMIT MESSAGE VIA EMAIL
+              </a>
+            </div>
+          </div>
+
+          <!-- PGP / Security Aesthetic Card -->
+          <div class="lg:col-span-5 bg-black/60 rounded-2xl border border-cyber-border p-6 font-mono text-xs flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center text-slate-400 pb-3 mb-4 border-b border-cyber-border">
+                <span class="text-cyber-cyan font-bold flex items-center gap-2">
+                  <i data-lucide="key" class="w-4 h-4"></i> PGP FINGERPRINT
+                </span>
+                <span class="text-[10px] text-cyber-emerald">VERIFIED</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mb-3">Public Security & Cryptographic Identity:</p>
+              <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border/70 text-cyber-cyan break-all font-mono text-[10px] leading-relaxed">
+                4A8F B2C1 9D7E 04F3 81AA 66CD EF12 3456 7890 ABCD
+              </div>
+            </div>
+            
+            <div class="pt-6 border-t border-cyber-border/60 text-[11px] text-slate-400">
+              <div class="flex items-center justify-between">
+                <span>Infrastructure:</span>
+                <span class="text-white">Hostinger LiteSpeed + SSL</span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span>Delivery:</span>
+                <span class="text-cyber-emerald">GitHub Actions CI/CD</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="border-t border-cyber-border bg-cyber-black py-8 relative z-10 font-mono text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        &copy; 2026 <strong class="text-slate-300">Anis Ahmed</strong>. Architected for Resilience & Scale.
+      </div>
+      <div class="flex items-center gap-4 text-slate-400">
+        <a href="#control-plane" class="hover:text-cyber-cyan transition-colors">Top</a>
+        <span>•</span>
+        <a href="https://github.com" target="_blank" class="hover:text-cyber-cyan transition-colors">GitHub</a>
+        <span>•</span>
+        <a href="https://linkedin.com" target="_blank" class="hover:text-cyber-cyan transition-colors">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript Logic -->
+  <script src="app.js"></script>
+
+</body>
+</html>

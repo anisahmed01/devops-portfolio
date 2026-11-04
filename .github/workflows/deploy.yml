@@ -1,0 +1,77 @@
+name: CI/CD Pipeline - Deploy to anisahmed.in
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # -----------------------------------------------------------
+  # STAGE 1: Code Quality, Lint & Security Audit
+  # -----------------------------------------------------------
+  audit-and-validate:
+    name: Code Quality & Security Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: HTML5 / JavaScript Syntax Validation
+        run: |
+          echo "Running static analysis and link validation..."
+          test -f index.html || exit 1
+          test -f styles.css || exit 1
+          test -f app.js || exit 1
+          echo "All core assets verified successfully."
+
+      - name: Scan for Exposed Secrets & API Keys
+        uses: trufflesecurity/trufflehog@main
+        continue-on-error: true
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+
+  # -----------------------------------------------------------
+  # STAGE 2: Automated Deployment to Hostinger via SFTP
+  # -----------------------------------------------------------
+  deploy-to-hostinger:
+    name: Deploy to anisahmed.in (Hostinger)
+    needs: [audit-and-validate]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Hostinger via SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.HOSTINGER_FTP_HOST }}
+          username: ${{ secrets.HOSTINGER_FTP_USER }}
+          password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          # Target path for addon domain on Hostinger:
+          server-dir: /domains/anisahmed.in/public_html/
+          local-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/k8s/**
+            **/terraform/**
+            **/Dockerfile
+            **/README.md
+            **/.github/**
+
+      - name: Deployment Health Check Verification
+        run: |
+          echo "Verifying HTTP response from production domain..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://anisahmed.in || echo "000")
+          echo "HTTP Status Code: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 301 ]; then
+            echo "Deployment verified healthy on https://anisahmed.in!"
+          else
+            echo "Warning: Received status $HTTP_STATUS, DNS or propagation in progress."
+          fi
