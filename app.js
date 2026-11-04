@@ -14,21 +14,148 @@ document.addEventListener('DOMContentLoaded', () => {
 // 0. CINEMATIC INTRO SPLASH DISSOLVE
 // ==========================================
 function initIntroSplash() {
-  const overlay = document.getElementById('introOverlay');
+  var overlay = document.getElementById('introOverlay');
   if (!overlay) return;
 
-  // Stays visible for 1.1s, then dissolves with blur-scale animation
-  setTimeout(() => {
-    overlay.classList.add('fade-out');
-    setTimeout(() => {
-      overlay.remove();
-    }, 700);
-  }, 1100);
+  /* ── grab the three text nodes ── */
+  var badge  = overlay.querySelector('.intro-badge');
+  var wrap   = document.getElementById('introQuoteWrap');
+  var author = overlay.querySelector('.intro-author');
+
+  /* guarantee hidden BEFORE first paint — inline style wins every time */
+  [badge, wrap, author].forEach(function(el) {
+    if (el) { el.style.opacity = '0'; el.style.transition = 'none'; }
+  });
+
+  /* ── full-screen canvas ── */
+  var cvs = document.createElement('canvas');
+  cvs.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:5;';
+  cvs.width  = window.innerWidth;
+  cvs.height = window.innerHeight;
+  overlay.appendChild(cvs);
+  var ctx = cvs.getContext('2d');
+  var W = cvs.width, H = cvs.height;
+  var CX = W * 0.5, CY = H * 0.5;
+
+  /* ── 180 glowing squares ── */
+  var COLS = ['#54c8ff','#57e6a5','#a78bfa','#ffd166','#c8e8ff'];
+  var sqs  = [];
+  for (var i = 0; i < 180; i++) {
+    var ang  = Math.random() * Math.PI * 2;
+    var dist = (0.65 + Math.random() * 0.55) * Math.max(W, H);
+    sqs.push({
+      /* start position: scattered around the full screen edges */
+      sx: CX + Math.cos(ang) * dist,
+      sy: CY + Math.sin(ang) * dist,
+      /* landing position: spread over the WHOLE screen */
+      lx: CX + (Math.random() - 0.5) * W * 0.9,
+      ly: CY + (Math.random() - 0.5) * H * 0.9,
+      /* exit position: blast back out even further */
+      ex: CX + Math.cos(ang) * dist * 1.6,
+      ey: CY + Math.sin(ang) * dist * 1.6,
+      sz:  7 + Math.random() * 13,
+      col: COLS[Math.floor(Math.random() * COLS.length)],
+      rot: Math.random() * 6.28,
+      rs:  (Math.random() - 0.5) * 0.14,
+      d:   Math.random() * 0.38
+    });
+  }
+
+  /* timing (ms) */
+  var T1 = 1500;   /* phase 1 — collect in */
+  var T2 = 1600;   /* phase 2 — hold */
+  var T3 = 850;    /* phase 3 — blast out */
+
+  var t0    = performance.now();
+  var shown = false;
+  var rafId;
+
+  function easeOut(t) { return 1 - Math.pow(1 - Math.min(1, t), 3); }
+  function easeIn(t)  { return Math.min(1, t) * Math.min(1, t) * Math.min(1, t); }
+
+  function drawSq(sq, x, y, a) {
+    if (a <= 0) return;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(sq.rot);
+    ctx.globalAlpha   = Math.min(1, a);
+    ctx.fillStyle     = sq.col;
+    ctx.shadowColor   = sq.col;
+    ctx.shadowBlur    = 18;
+    var s = sq.sz / 2;
+    ctx.fillRect(-s, -s, sq.sz, sq.sz);
+    ctx.restore();
+  }
+
+  function showText() {
+    if (shown) return;
+    shown = true;
+    [badge, wrap, author].forEach(function(el) {
+      if (!el) return;
+      el.style.transition = 'opacity 0.7s ease';
+      el.style.opacity    = '1';
+    });
+  }
+
+  function hideText() {
+    [badge, wrap, author].forEach(function(el) {
+      if (!el) return;
+      el.style.transition = 'opacity 0.4s ease';
+      el.style.opacity    = '0';
+    });
+  }
+
+  function frame(now) {
+    var el = now - t0;
+    ctx.clearRect(0, 0, W, H);
+
+    if (el < T1) {
+      /* ─── PHASE 1: squares fly IN from full-screen edges ─── */
+      var p = el / T1;
+      sqs.forEach(function(sq) {
+        sq.rot += sq.rs;
+        var sp = Math.max(0, (p - sq.d) / (1 - sq.d));
+        var e  = easeOut(sp);
+        drawSq(sq, sq.sx + (sq.lx - sq.sx) * e, sq.sy + (sq.ly - sq.sy) * e, e);
+      });
+      if (p > 0.65) showText();
+
+    } else if (el < T1 + T2) {
+      /* ─── PHASE 2: hold — squares gently pulse ─── */
+      showText();
+      sqs.forEach(function(sq) {
+        sq.rot += sq.rs * 0.25;
+        var pulse = 0.55 + 0.4 * Math.sin(now * 0.0022 + sq.sx * 0.008);
+        drawSq(sq, sq.lx, sq.ly, pulse);
+      });
+
+    } else if (el < T1 + T2 + T3) {
+      /* ─── PHASE 3: squares blast OUT across full screen ─── */
+      var p3 = (el - T1 - T2) / T3;
+      var e3 = easeIn(p3);
+      if (p3 > 0.12) hideText();
+      sqs.forEach(function(sq) {
+        sq.rot += sq.rs * 5;
+        drawSq(sq,
+          sq.lx + (sq.ex - sq.lx) * e3,
+          sq.ly + (sq.ey - sq.ly) * e3,
+          1 - e3);
+      });
+
+    } else {
+      /* ─── DONE ─── */
+      cancelAnimationFrame(rafId);
+      overlay.classList.add('fade-out');
+      setTimeout(function() { overlay.remove(); }, 700);
+      return;
+    }
+
+    rafId = requestAnimationFrame(frame);
+  }
+
+  rafId = requestAnimationFrame(frame);
 }
 
-// ==========================================
-// 1. ROCK-SOLID SCROLL REVEAL OBSERVER
-// ==========================================
 function initScrollObserver() {
   const elements = document.querySelectorAll('.scroll-reveal');
 

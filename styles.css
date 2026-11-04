@@ -773,19 +773,17 @@ h1 {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 75%);
+  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 85%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s ease;
-  will-change: opacity, transform, filter;
+  overflow: hidden;
+  transition: opacity 0.7s ease;
 }
 
 #introOverlay.fade-out {
   opacity: 0;
-  transform: scale(1.06);
-  filter: blur(10px);
   pointer-events: none;
 }
 
@@ -803,6 +801,15 @@ h1 {
   margin-bottom: 22px;
   background: rgba(16, 24, 42, 0.7);
   box-shadow: 0 0 20px rgba(84, 200, 255, 0.2);
+  position: relative;
+  z-index: 10;
+}
+
+#introQuoteWrap {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  width: min(860px, 88vw);
 }
 
 .intro-quote {
@@ -817,8 +824,7 @@ h1 {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  /* hidden from frame 0; JS reveals after pieces assemble */
-  opacity: 0;
+  filter: drop-shadow(0 0 22px rgba(84,200,255,0.4));
 }
 
 .intro-author {
@@ -828,20 +834,10 @@ h1 {
   letter-spacing: 2.5px;
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
   text-transform: uppercase;
+  position: relative;
+  z-index: 10;
 }
 
-@keyframes introTextReveal {
-  0% {
-    opacity: 0;
-    transform: translateY(24px) scale(0.95);
-    filter: blur(8px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0px);
-  }
-}
 
 .contact-meta {
   margin-top: 24px;
