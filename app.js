@@ -1,5 +1,6 @@
 // ==========================================
 // ANIS AHMED - DEVOPS MISSION CONTROL ENGINE
+// Multi-Cloud • DevSecOps • GitOps • AI Observability
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initAudioSynth();
   initNetworkCanvas();
+  initScrollReveal();
+  initActiveNavScroll();
   initPodMesh();
   initTelemetryLoop();
   initMetricsCharts();
@@ -19,7 +22,61 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// 1. WEB AUDIO API SYNTHESIZER (CYBER SFX)
+// 1. SCROLL REVEAL & NAVIGATION TRACKER
+// ==========================================
+function initScrollReveal() {
+  const revealElements = document.querySelectorAll('.reveal-on-scroll');
+  
+  if (!('IntersectionObserver' in window)) {
+    // Fallback if observer not supported
+    revealElements.forEach(el => el.classList.add('revealed'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        // Subtle cyber blip on section entering viewport
+        window.playCyberTone(650, 'sine', 0.02);
+      }
+    });
+  }, {
+    root: null,
+    threshold: 0.12,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  revealElements.forEach(el => observer.observe(el));
+}
+
+function initActiveNavScroll() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  window.addEventListener('scroll', () => {
+    let currentId = '';
+    const scrollPos = window.pageYOffset + 120;
+
+    sections.forEach(section => {
+      const top = section.offsetTop;
+      const height = section.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = section.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach(link => {
+      link.classList.remove('active-nav');
+      if (link.getAttribute('href') === `#${currentId}`) {
+        link.classList.add('active-nav');
+      }
+    });
+  }, { passive: true });
+}
+
+// ==========================================
+// 2. WEB AUDIO API SYNTHESIZER (CYBER SFX)
 // ==========================================
 let audioCtx = null;
 let sfxEnabled = true;
@@ -61,17 +118,19 @@ function initAudioSynth() {
     }
   };
 
-  soundToggle.addEventListener('click', () => {
-    sfxEnabled = !sfxEnabled;
-    soundToggle.querySelector('span').innerText = sfxEnabled ? 'SFX: ON' : 'SFX: OFF';
-    soundIcon.setAttribute('data-lucide', sfxEnabled ? 'volume-2' : 'volume-x');
-    if (window.lucide) window.lucide.createIcons();
-    if (sfxEnabled) window.playCyberTone(1200, 'sine', 0.1);
-  });
+  if (soundToggle) {
+    soundToggle.addEventListener('click', () => {
+      sfxEnabled = !sfxEnabled;
+      soundToggle.querySelector('span').innerText = sfxEnabled ? 'SFX: ON' : 'SFX: OFF';
+      soundIcon.setAttribute('data-lucide', sfxEnabled ? 'volume-2' : 'volume-x');
+      if (window.lucide) window.lucide.createIcons();
+      if (sfxEnabled) window.playCyberTone(1200, 'sine', 0.1);
+    });
+  }
 }
 
 // ==========================================
-// 2. NETWORK TOPOLOGY PARTICLE CANVAS
+// 3. NETWORK TOPOLOGY PARTICLE CANVAS
 // ==========================================
 function initNetworkCanvas() {
   const canvas = document.getElementById('networkCanvas');
@@ -143,7 +202,7 @@ function initNetworkCanvas() {
 }
 
 // ==========================================
-// 3. POD MESH & TELEMETRY JITTER
+// 4. POD MESH & TELEMETRY JITTER
 // ==========================================
 function initPodMesh() {
   const meshContainer = document.getElementById('podMesh');
@@ -170,18 +229,17 @@ function initTelemetryLoop() {
   const telemetryLog = document.getElementById('telemetryLog');
 
   const logs = [
-    'kubelet: reconciliation loop completed (0ms drift)',
-    'calico-node: BGP peer established with spine-sw-01',
-    'argocd-repo-server: git fetch origin main [COMPLETED]',
-    'cert-manager: certificate /etc/ssl/anisahmed valid for 89d',
-    'prometheus: scrape target worker-node-02 responded 200 OK',
-    'aws-alb-controller: target group health check passed (12/12)',
-    'hpa-autoscaler: evaluated desired replicas: 3 [STABLE]',
+    'opa-gatekeeper: all resource constraints validated (0 violations)',
+    'falco: runtime kernel eBPF stream clear across namespaces',
+    'gitleaks-scan: pre-commit entropy check returned zero secrets',
+    'argocd-controller: multi-cluster reconcile [EKS + AKS Synced]',
+    'trivy-scanner: container image vulnerability baseline: 0 Critical',
+    'bedrock-telemetry: AI anomaly detection evaluating request latencies',
+    'cert-manager: SSL certificate /etc/ssl/anisahmed valid for 89d',
   ];
 
   let logIdx = 0;
   setInterval(() => {
-    // Random subtle CPU fluctuations
     const cpu = Math.floor(38 + Math.random() * 8);
     const mem = Math.floor(65 + Math.random() * 5);
 
@@ -202,7 +260,7 @@ function initTelemetryLoop() {
 }
 
 // ==========================================
-// 4. OBSERVABILITY LIVE CANVASES
+// 5. OBSERVABILITY LIVE CANVASES
 // ==========================================
 function initMetricsCharts() {
   function setupLiveChart(canvasId, color, baseVal, jitter) {
@@ -221,7 +279,6 @@ function initMetricsCharts() {
     function render() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Add new point and shift
       points.shift();
       points.push(baseVal + (Math.sin(Date.now() / 800) * jitter * 0.7) + (Math.random() - 0.5) * (jitter * 0.5));
 
@@ -230,7 +287,6 @@ function initMetricsCharts() {
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
 
-      // Create gradient fill
       const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
       grad.addColorStop(0, color.replace(')', ', 0.35)').replace('rgb', 'rgba'));
       grad.addColorStop(1, 'transparent');
@@ -247,7 +303,6 @@ function initMetricsCharts() {
 
       ctx.stroke();
 
-      // Close path for fill
       ctx.lineTo(canvas.width, canvas.height);
       ctx.lineTo(0, canvas.height);
       ctx.fillStyle = grad;
@@ -262,7 +317,7 @@ function initMetricsCharts() {
 }
 
 // ==========================================
-// 5. INTERACTIVE CI/CD PIPELINE SIMULATOR
+// 6. INTERACTIVE CI/CD & DEVSECOPS SIMULATOR
 // ==========================================
 function initPipelineSimulator() {
   const cards = document.querySelectorAll('.pipeline-card');
@@ -273,54 +328,53 @@ function initPipelineSimulator() {
 
   const stageData = {
     1: {
-      title: 'Stage 1: Git Commit & Webhook Trigger',
-      log: `[INFO] 16:04:12 - Git commit hook triggered on branch 'main'
-[INFO] 16:04:13 - Author: Anis Ahmed <contact@anisahmed.in>
-[INFO] 16:04:13 - Verified GPG Signature: [KEY ID: 0x4A8FB2C1] - VALID
-[INFO] 16:04:14 - Dispatched webhook payload to GitHub Actions Runner
-[SUCCESS] Pipeline step initialized without errors.`,
+      title: 'Stage 1: Gitleaks Pre-Commit Secret Scanner',
+      log: `[INFO] 17:10:02 - gitleaks protect --verbose --redact --staged
+[INFO] 17:10:03 - Scanning git diff against 140+ entropy and credential regex rules...
+[INFO] 17:10:04 - Checked 18 files, 2,186 lines of code
+[INFO] 17:10:04 - AWS Access Keys: NONE DETECTED
+[INFO] 17:10:04 - Private RSA / SSH Keys: NONE DETECTED
+[SUCCESS] Gitleaks secret verification passed. Clean commit approved.`,
     },
     2: {
-      title: 'Stage 2: SonarQube SAST & Secret Gate',
-      log: `[INFO] 16:04:15 - Initiating SonarQube Scanner v5.0.1
-[INFO] 16:04:16 - Scanning 42 codebase source files for secrets / keys
-[INFO] 16:04:18 - Security Hotspots: 0 | Bugs: 0 | Vulnerabilities: 0
-[INFO] 16:04:19 - Code Coverage: 88.4%
-[SUCCESS] Quality Gate: PASSED (Grade A achieved).`,
+      title: 'Stage 2: SonarQube SAST & Snyk Dependency Scan',
+      log: `[INFO] 17:10:05 - Initiating SonarQube Scanner & Snyk CLI test
+[INFO] 17:10:06 - SonarQube SAST: 0 Security Hotspots, 0 Bugs, Grade A Quality Gate
+[INFO] 17:10:08 - Snyk SCA: Tested 342 dependencies for known vulnerabilities
+[INFO] 17:10:09 - 0 high or critical severity vulnerabilities found
+[SUCCESS] SonarQube & Snyk Quality Gate: PASSED.`,
     },
     3: {
-      title: 'Stage 3: Docker Multi-Stage Build & Push',
-      log: `[INFO] 16:04:20 - docker build -t ghcr.io/anisahmed/portfolio:v2.4.0 .
-[INFO] 16:04:21 - Step 1/8 : FROM node:20-alpine AS builder
-[INFO] 16:04:23 - Step 2/8 : RUN npm ci && npm run build
-[INFO] 16:04:25 - Step 3/8 : FROM nginx:alpine
-[INFO] 16:04:26 - Step 4/8 : COPY --from=builder /app/dist /usr/share/nginx/html
-[INFO] 16:04:27 - Docker image compressed: 28.4 MB
-[SUCCESS] Pushed image digest sha256:7f9a8b2c to container registry.`,
+      title: 'Stage 3: Docker Multi-Stage Build & Trivy Image Audit',
+      log: `[INFO] 17:10:10 - docker build -t ghcr.io/anisahmed/portfolio:v2.5.0 .
+[INFO] 17:10:12 - Hardened Alpine Nginx base image: non-root user (UID 101)
+[INFO] 17:10:13 - trivy image --severity HIGH,CRITICAL ghcr.io/anisahmed/portfolio:v2.5.0
+[INFO] 17:10:14 - Image OS: Alpine Linux 3.20 (0 Vulnerabilities Detected)
+[SUCCESS] Docker container image signed & pushed with clean Trivy SBOM audit.`,
     },
     4: {
-      title: 'Stage 4: Trivy Container Vulnerability Scan',
-      log: `[INFO] 16:04:28 - trivy image --severity HIGH,CRITICAL ghcr.io/anisahmed/portfolio:v2.4.0
-[INFO] 16:04:29 - Updating vulnerability database...
-[INFO] 16:04:30 - Total Vulnerabilities Found: 0
-[INFO] 16:04:30 - CRITICAL: 0 | HIGH: 0 | MEDIUM: 0 | LOW: 0
-[SUCCESS] Image passed compliance security audit.`,
+      title: 'Stage 4: Checkov & Open Policy Agent (OPA) IaC Validation',
+      log: `[INFO] 17:10:15 - checkov -d ./terraform --framework terraform
+[INFO] 17:10:16 - Passed checks: 42, Failed: 0, Skipped: 0
+[INFO] 17:10:17 - conftest test --policy ./policy/ terraform.tfplan.json
+[INFO] 17:10:18 - OPA Rego Evaluation: rule 'restrict_public_ssh' - ALLOWED
+[SUCCESS] Infrastructure as Code meets CIS benchmark compliance standards.`,
     },
     5: {
-      title: 'Stage 5: ArgoCD GitOps Reconciliation',
-      log: `[INFO] 16:04:31 - ArgoCD Application controller detected new image digest
-[INFO] 16:04:32 - Repository: https://github.com/anisahmed/devops-portfolio
-[INFO] 16:04:33 - Comparing Target State with Live Cluster State...
-[INFO] 16:04:34 - Auto-Sync policy triggered (Prune: true, SelfHeal: true)
-[SUCCESS] ArgoCD sync status: Synced (Revision: HEAD).`,
+      title: 'Stage 5: Production Manual Sign-off Approval Gate',
+      log: `[INFO] 17:10:19 - Dispatching change advisory webhook to Slack #devops-deployments
+[INFO] 17:10:20 - Change Request #CR-9481 generated with plan diff summary
+[INFO] 17:10:22 - Digital Signature received from Lead Platform Engineer (Anis Ahmed)
+[INFO] 17:10:23 - Target Environment: Multi-Cloud Production (AWS ap-south-1 & Azure AKS)
+[SUCCESS] Production Deployment Authorization Granted.`,
     },
     6: {
-      title: 'Stage 6: Kubernetes Canary Release & Verification',
-      log: `[INFO] 16:04:35 - kubectl rollout status deployment/portfolio-web -n production
-[INFO] 16:04:36 - Waiting for pod portfolio-web-7f89c to reach 'Running'...
-[INFO] 16:04:37 - Liveness & Readiness Probes HTTP 200 OK
-[INFO] 16:04:38 - Traffic shifted: 10% -> 50% -> 100% Canary Complete
-[SUCCESS] Deployment successfully deployed with 0 downtime on https://anisahmed.in`,
+      title: 'Stage 6: ArgoCD GitOps Reconciliation & Canary Rollout',
+      log: `[INFO] 17:10:24 - ArgoCD ApplicationSet syncing target revision: HEAD
+[INFO] 17:10:25 - Canary deployment initiated: 10% traffic shifted to v2.5.0
+[INFO] 17:10:27 - Prometheus metrics evaluation: HTTP 5xx rate: 0.00%, P99: 14ms
+[INFO] 17:10:28 - Traffic promoted to 100% across all availability zones
+[SUCCESS] Zero-downtime release active on https://anisahmed.in`,
     },
   };
 
@@ -362,12 +416,11 @@ function initPipelineSimulator() {
     });
   }
 
-  // Select first stage by default
   selectStage(1);
 }
 
 // ==========================================
-// 6. INTERACTIVE DEVOPS TERMINAL
+// 7. INTERACTIVE DEVOPS TERMINAL
 // ==========================================
 function initTerminal() {
   const terminalInput = document.getElementById('terminalInput');
@@ -384,36 +437,58 @@ function initTerminal() {
   const commands = {
     help: () => `
 <span class="text-cyber-cyan font-bold">AVAILABLE COMMANDS:</span>
-  <span class="text-cyber-emerald">kubectl get nodes</span>      List active cluster compute nodes
-  <span class="text-cyber-emerald">kubectl get pods</span>       List running microservice pods
-  <span class="text-cyber-emerald">helm list</span>               Display deployed Helm charts
-  <span class="text-cyber-emerald">terraform state list</span>   Show provisioned AWS IaC state
-  <span class="text-cyber-emerald">docker ps</span>              List running Docker containers
-  <span class="text-cyber-emerald">cat about.txt</span>          Read Anis Ahmed's engineering bio
-  <span class="text-cyber-emerald">cat skills.json</span>        Output full technical skill inventory
-  <span class="text-cyber-emerald">cat contact.txt</span>        Display contact & social coordinates
-  <span class="text-cyber-emerald">deploy --env prod</span>      Simulate live production rollout
-  <span class="text-cyber-emerald">clear</span>                  Clear the terminal screen
+  <span class="text-cyber-emerald">cat experience.txt</span>       View Anis Ahmed's 5+ year track record
+  <span class="text-cyber-emerald">cat devsecops.json</span>       View complete 7-pillar security tooling
+  <span class="text-cyber-emerald">cat ai-tools.json</span>        Inspect Bedrock & Harness AI telemetry
+  <span class="text-cyber-emerald">kubectl get nodes</span>        List AWS EKS & Azure AKS nodes
+  <span class="text-cyber-emerald">helm list</span>                Display deployed Helm releases
+  <span class="text-cyber-emerald">terraform state list</span>     Show provisioned multi-cloud IaC
+  <span class="text-cyber-emerald">docker ps</span>                List running Docker containers
+  <span class="text-cyber-emerald">cat contact.txt</span>          Display contact, email & LinkedIn
+  <span class="text-cyber-emerald">deploy --env prod</span>        Simulate live production rollout
+  <span class="text-cyber-emerald">clear</span>                    Clear terminal screen
+`,
+    'cat experience.txt': () => `
+<span class="text-cyber-cyan font-bold">EXPERIENCE OVERVIEW:</span>
+<span class="text-white font-bold">Role:</span>       DevOps Engineer (July 2021 &mdash; Present | 5 Years 5 Months)
+<span class="text-white font-bold">Location:</span>   Delhi, India (Open to Remote Global)
+<span class="text-white font-bold">Platforms:</span>  AWS, GCP, Azure, Kubernetes, Linux
+
+<span class="text-cyber-emerald font-bold">CORE HIGHLIGHTS:</span>
+• Multi-Cloud CI/CD across Jenkins, GitHub Actions, GCP, and Azure DevOps.
+• Declarative Infrastructure as Code using Terraform and Ansible.
+• Containerized microservices on Docker and Kubernetes (EKS, AKS).
+• DevSecOps shift-left gates: Gitleaks, SonarQube, Snyk, Checkov, Trivy, OPA.
+• 24/7 Observability: Prometheus, Grafana, ELK Stack, and CloudWatch.
+• Python and Shell automation for server management and maintenance.
+`,
+    'cat devsecops.json': () => `
+{
+  <span class="text-cyber-red">"secrets"</span>: "Gitleaks (Pre-commit entropy & key detection)",
+  <span class="text-cyber-blue">"sast"</span>: "SonarQube (Code quality & security gates)",
+  <span class="text-cyber-purple">"sca"</span>: "Snyk (Vulnerable third-party dependency scanner)",
+  <span class="text-cyan-400">"container_security"</span>: "Trivy (Image CVE & SBOM auditor)",
+  <span class="text-cyber-emerald">"iac_policy"</span>: ["Checkov (CIS benchmarks)", "Open Policy Agent (Rego rules)"],
+  <span class="text-amber-400">"runtime_detection"</span>: "Falco (Kernel eBPF anomaly detection)",
+  <span class="text-slate-300">"approval_gates"</span>: "Slack / Teams interactive production sign-off"
+}
+`,
+    'cat ai-tools.json': () => `
+{
+  <span class="text-cyber-amber">"ai_observability"</span>: "Amazon Bedrock LLM",
+  <span class="text-cyber-purple">"deployment_verification"</span>: "Harness AI",
+  <span class="text-cyber-cyan">"capabilities"</span>: [
+    "Automated incident root-cause analysis",
+    "Log anomaly clustering across Prometheus & CloudWatch",
+    "Automated canary rollback verification"
+  ]
+}
 `,
     'kubectl get nodes': () => `
-NAME                        STATUS   ROLES           AGE   VERSION   INTERNAL-IP
-ip-10-0-1-12.ec2.internal   Ready    control-plane   42d   v1.30.2   10.0.1.12
-ip-10-0-2-45.ec2.internal   Ready    node,worker     42d   v1.30.2   10.0.2.45
-ip-10-0-2-89.ec2.internal   Ready    node,worker     42d   v1.30.2   10.0.2.89
-`,
-    'kubectl get nodes -o wide': () => `
-NAME                        STATUS   ROLES           AGE   VERSION   OS-IMAGE                      KERNEL-VERSION
-ip-10-0-1-12.ec2.internal   Ready    control-plane   42d   v1.30.2   Amazon Linux 2023.4.202405    6.1.84-99.169.amzn2023.x86_64
-ip-10-0-2-45.ec2.internal   Ready    node,worker     42d   v1.30.2   Amazon Linux 2023.4.202405    6.1.84-99.169.amzn2023.x86_64
-ip-10-0-2-89.ec2.internal   Ready    node,worker     42d   v1.30.2   Amazon Linux 2023.4.202405    6.1.84-99.169.amzn2023.x86_64
-`,
-    'kubectl get pods': () => `
-NAMESPACE     NAME                                   READY   STATUS    RESTARTS   AGE
-production    portfolio-frontend-6b87d89bf5-2zpq7   1/1     Running   0          4d12h
-production    portfolio-frontend-6b87d89bf5-8nm4k   1/1     Running   0          4d12h
-production    argocd-server-7965448f7f-k9p6q         1/1     Running   0          42d
-ingress-nginx ingress-nginx-controller-6d7c6-m5w4q   1/1     Running   0          42d
-monitoring    prometheus-k8s-0                       2/2     Running   0          42d
+NAME                             STATUS   ROLES           CLUSTER      VERSION
+eks-ap-south-1a-worker-01        Ready    node,worker     AWS-EKS      v1.30.2
+eks-ap-south-1b-worker-02        Ready    node,worker     AWS-EKS      v1.30.2
+aks-centralindia-nodepool-01     Ready    node,worker     Azure-AKS    v1.30.2
 `,
     'helm list': () => `
 NAME                 NAMESPACE     REVISION  STATUS    CHART                    APP VERSION
@@ -421,62 +496,39 @@ argo-cd              argocd        3         deployed  argo-cd-6.7.18           
 cert-manager         cert-manager  1         deployed  cert-manager-v1.14.4     v1.14.4
 ingress-nginx        ingress-nginx 4         deployed  ingress-nginx-4.10.0     1.10.0
 kube-prometheus      monitoring    2         deployed  kube-prometheus-58.2.2   v0.73.2
-portfolio-app        production    14        deployed  portfolio-chart-1.2.0    v2.4.0
+falco-runtime        security      1         deployed  falco-3.8.4              0.37.1
 `,
     'terraform state list': () => `
-module.vpc.aws_vpc.this[0]
-module.vpc.aws_subnet.public[0]
-module.vpc.aws_subnet.public[1]
-module.vpc.aws_subnet.private[0]
-module.vpc.aws_subnet.private[1]
-module.vpc.aws_nat_gateway.this[0]
+module.multi_cloud_vpc.aws_vpc.this[0]
+module.multi_cloud_vpc.aws_subnet.private[0]
 module.eks.aws_eks_cluster.this[0]
-module.eks.aws_eks_node_group.workers["general"]
-aws_iam_role.eks_cluster_role
+module.azure_aks.azurerm_kubernetes_cluster.k8s
 aws_s3_bucket.terraform_remote_state
 aws_dynamodb_table.terraform_state_locks
 `,
     'docker ps': () => `
 CONTAINER ID   IMAGE                                COMMAND                  STATUS         PORTS
-7c4e1f8a9b2c   ghcr.io/anisahmed/portfolio:v2.4.0   "/docker-entrypoint.…"   Up 4 days      0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp
+7c4e1f8a9b2c   ghcr.io/anisahmed/portfolio:v2.5.0   "/docker-entrypoint.…"   Up 5 days      0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp
 8b2d4e6f1a0c   prom/prometheus:v2.51.0              "/bin/prometheus --c…"   Up 42 days     0.0.0.0:9090->9090/tcp
 4a5b6c7d8e9f   grafana/grafana:10.4.1               "/run.sh"                Up 42 days     0.0.0.0:3000->3000/tcp
 `,
-    'cat about.txt': () => `
-<span class="text-cyber-cyan font-bold">NAME:</span> Anis Ahmed
-<span class="text-cyber-cyan font-bold">ROLE:</span> Senior DevOps & Cloud Infrastructure Engineer
-<span class="text-cyber-cyan font-bold">LOCATION:</span> India (Open to Remote Global)
-<span class="text-cyber-cyan font-bold">MISSION:</span> 
-Eliminating manual operations through high-resilience GitOps, containerization, 
-and proactive observability. I build cloud platforms that withstand failure, 
-scale seamlessly, and enable developers to deploy code with total confidence.
-`,
-    'cat skills.json': () => `
-{
-  <span class="text-cyber-cyan">"cloud"</span>: ["AWS (EKS, VPC, IAM, S3, Route53)", "Hostinger LiteSpeed"],
-  <span class="text-cyber-cyan">"orchestration"</span>: ["Kubernetes", "K3s", "Docker", "Helm", "Kustomize"],
-  <span class="text-cyber-cyan">"iac"</span>: ["Terraform", "OpenTofu", "Ansible", "CloudFormation"],
-  <span class="text-cyber-cyan">"cicd"</span>: ["ArgoCD (GitOps)", "GitHub Actions", "GitLab CI", "Jenkins"],
-  <span class="text-cyber-cyan">"observability"</span>: ["Prometheus", "Grafana", "Alertmanager", "Loki"],
-  <span class="text-cyber-cyan">"security"</span>: ["Trivy", "SonarQube", "IRSA", "NetworkPolicies", "Let's Encrypt"]
-}
-`,
     'cat contact.txt': () => `
-<span class="text-cyber-cyan">Email:</span>     <a href="mailto:contact@anisahmed.in" class="underline text-white">contact@anisahmed.in</a>
-<span class="text-cyber-cyan">Website:</span>   <a href="https://anisahmed.in" target="_blank" class="underline text-white">https://anisahmed.in</a>
-<span class="text-cyber-cyan">GitHub:</span>    <a href="https://github.com" target="_blank" class="underline text-white">https://github.com/anisahmed</a>
-<span class="text-cyber-cyan">LinkedIn:</span>  <a href="https://linkedin.com" target="_blank" class="underline text-white">https://linkedin.com/in/anisahmed</a>
-<span class="text-cyber-cyan">PGP Key:</span>   4A8F B2C1 9D7E 04F3 81AA 66CD EF12 3456 7890 ABCD
+<span class="text-cyber-cyan">Name:</span>       Anis Ahmed (DevOps Engineer)
+<span class="text-cyber-cyan">LinkedIn:</span>   <a href="https://www.linkedin.com/in/webanis" target="_blank" class="underline text-white">https://www.linkedin.com/in/webanis</a>
+<span class="text-cyber-cyan">Email:</span>      <a href="mailto:contact@anisahmed.in" class="underline text-white">contact@anisahmed.in</a>
+<span class="text-cyber-cyan">Website:</span>    <a href="https://anisahmed.in" target="_blank" class="underline text-white">https://anisahmed.in</a>
+<span class="text-cyber-cyan">Location:</span>   Delhi, India
+<span class="text-cyber-cyan">PGP Key:</span>    4A8F B2C1 9D7E 04F3 81AA 66CD EF12 3456 7890 ABCD
 `,
     'deploy --env prod': () => {
       setTimeout(() => {
         const lines = [
-          '⚡ [INIT] Connecting to AWS EKS production cluster...',
-          '📦 [PULL] Verifying image ghcr.io/anisahmed/portfolio:v2.4.0 checksum',
-          '🔒 [IAM] Authenticated via AWS IRSA assume role: arn:aws:iam::prod-deployer',
-          '🔄 [ROLLOUT] Initiating zero-downtime rolling update (maxSurge: 25%)',
-          '✅ [READY] Health check passed (12/12 targets healthy)',
-          '🚀 [SUCCESS] Deployment complete: anisahmed.in is live with 100% traffic!',
+          '⚡ [INIT] Connecting to multi-cloud EKS & AKS production clusters...',
+          '🔍 [DEVSECOPS] Gitleaks, SonarQube & Trivy verification: PASSED (0 CVEs)',
+          '📜 [OPA] Evaluated Terraform & K8s plan against Rego compliance: APPROVED',
+          '👤 [SIGN-OFF] Production Approval Gate authorized by Anis Ahmed',
+          '🔄 [GITOPS] ArgoCD syncing canary release across availability zones...',
+          '✅ [READY] Health probes 200 OK. 0 Downtime Canary Rollout Completed!',
         ];
 
         let i = 0;
@@ -488,9 +540,9 @@ scale seamlessly, and enable developers to deploy code with total confidence.
           } else {
             clearInterval(interval);
           }
-        }, 400);
+        }, 380);
       }, 100);
-      return `<span class="text-cyber-amber">🚀 Triggering production canary deployment pipeline...</span>`;
+      return `<span class="text-cyber-amber">🚀 Initiating multi-cloud DevSecOps production rollout...</span>`;
     },
     clear: () => {
       terminalHistory.innerHTML = '';
@@ -513,10 +565,9 @@ scale seamlessly, and enable developers to deploy code with total confidence.
     commandHistory.push(cmdRaw);
     historyIndex = commandHistory.length;
 
-    // Display user input line
     appendTerminalOutput(`
       <div class="flex items-center gap-2 text-slate-400">
-        <span class="text-cyber-cyan font-bold">anisahmed@k8s:~$</span>
+        <span class="text-cyber-cyan font-bold">anisahmed@devops:~$</span>
         <span class="text-white font-mono">${cmdRaw}</span>
       </div>
     `);
@@ -571,7 +622,7 @@ scale seamlessly, and enable developers to deploy code with total confidence.
 }
 
 // ==========================================
-// 7. MOBILE MENU TOGGLE
+// 8. MOBILE MENU TOGGLE
 // ==========================================
 function initMobileMenu() {
   const btn = document.getElementById('mobileMenuBtn');

@@ -9,17 +9,61 @@
   }
 }
 
-@keyframes laserScan {
+@keyframes laserSweep {
   0% {
-    top: -100%;
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
   }
   100% {
-    top: 200%;
+    transform: translateY(300%);
+    opacity: 0;
   }
 }
 
 .animate-neon-pulse {
   animation: pulseNeonCyan 2s infinite ease-in-out;
+}
+
+/* ==========================================
+   SCROLL REVEAL & TRANSITION EFFECTS
+   ========================================== */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delay classes */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+
+/* Section laser scanline highlight */
+.hud-scanline-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.hud-scanline-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00f2fe, #00ff88, transparent);
+  animation: laserSweep 4s infinite linear;
+  pointer-events: none;
 }
 
 /* CRT Scanline Effect */
@@ -31,7 +75,7 @@
     90deg,
     rgba(255, 0, 0, 0.03),
     rgba(0, 255, 0, 0.01),
-    rgba(0, 0, 255, 0.03)
+    rgba(0, 255, 0, 0.03)
   );
   background-size: 100% 3px, 6px 100%;
 }
@@ -58,11 +102,29 @@
   transform: translateY(-1px);
 }
 
+/* Active Nav Links */
+.nav-link.active-nav {
+  color: #00f2fe !important;
+  background-color: rgba(0, 242, 254, 0.1) !important;
+  border-color: rgba(0, 242, 254, 0.3) !important;
+}
+
 /* Pipeline Cards Active State */
 .pipeline-card.active-stage {
   border-color: #00f2fe !important;
   box-shadow: 0 0 20px rgba(0, 242, 254, 0.3) !important;
   background-color: rgba(15, 23, 42, 0.9) !important;
+}
+
+/* Security Tool Cards */
+.security-tool-card {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.security-tool-card:hover {
+  transform: translateY(-4px);
+  border-color: #00f2fe;
+  box-shadow: 0 10px 25px -5px rgba(0, 242, 254, 0.2);
 }
 
 /* Custom Scrollbars */
