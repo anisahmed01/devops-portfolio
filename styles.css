@@ -766,27 +766,61 @@ h1 {
   flex-wrap: wrap;
 }
 
+
 /* ==========================================
-   CINEMATIC INTRO SPLASH OVERLAY
+   CINEMATIC INTRO SPLASH — 3D VOXEL SQUARES (OPTION 1)
    ========================================== */
 #introOverlay {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 75%);
+  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 85%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s ease;
-  will-change: opacity, transform, filter;
+  overflow: hidden;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
 #introOverlay.fade-out {
   opacity: 0;
-  transform: scale(1.06);
-  filter: blur(10px);
+  transform: scale(1.08);
   pointer-events: none;
+}
+
+/* Initially hidden: no overlapping text from the start! */
+.intro-badge,
+#introQuoteWrap,
+.intro-author {
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  transform: scale(0.85) translateY(15px);
+  filter: blur(6px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Coming close & assembled state */
+#introOverlay.intro-revealed .intro-badge,
+#introOverlay.intro-revealed #introQuoteWrap,
+#introOverlay.intro-revealed .intro-author {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0px);
+}
+
+/* Going away & disappearing state */
+#introOverlay.intro-disperse .intro-badge,
+#introOverlay.intro-disperse #introQuoteWrap,
+#introOverlay.intro-disperse .intro-author {
+  opacity: 0;
+  transform: scale(1.15) translateY(-20px);
+  filter: blur(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
 }
 
 .intro-badge {
@@ -805,6 +839,14 @@ h1 {
   box-shadow: 0 0 20px rgba(84, 200, 255, 0.2);
 }
 
+#introQuoteWrap {
+  position: relative;
+  display: block;
+  text-align: center;
+  width: min(860px, 88vw);
+  margin: 0 auto;
+}
+
 .intro-quote {
   font-size: clamp(2rem, 5vw, 3.6rem);
   font-weight: 850;
@@ -817,7 +859,7 @@ h1 {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: introTextReveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  filter: drop-shadow(0 0 25px rgba(84, 200, 255, 0.35));
 }
 
 .intro-author {
@@ -829,18 +871,6 @@ h1 {
   text-transform: uppercase;
 }
 
-@keyframes introTextReveal {
-  0% {
-    opacity: 0;
-    transform: translateY(24px) scale(0.95);
-    filter: blur(8px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0px);
-  }
-}
 
 .contact-meta {
   margin-top: 24px;

@@ -15,172 +15,165 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 function initIntroSplash() {
   const overlay = document.getElementById('introOverlay');
-  const wrap = document.getElementById('introQuoteWrap');
-  const quote = wrap ? wrap.querySelector('.intro-quote') : null;
-  if (!overlay || !wrap || !quote) return;
+  if (!overlay) return;
 
-  function build() {
-    const qRect = quote.getBoundingClientRect();
-    let W = qRect.width;
-    let H = qRect.height;
-    if (W < 20 || H < 10) { setTimeout(build, 80); return; }
+  const quoteWrap = document.getElementById('introQuoteWrap');
+  const badge = overlay.querySelector('.intro-badge');
+  const author = overlay.querySelector('.intro-author');
 
-    // Grid of square/rectangular pieces
-    const ROWS = 6;
-    const COLS = 12;
-    const pw = W / COLS;
-    const ph = H / ROWS;
+  // Create full-screen high-DPI canvas for the squares
+  const canvas = document.createElement('canvas');
+  canvas.id = 'introSquareCanvas';
+  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;';
+  overlay.insertBefore(canvas, overlay.firstChild);
 
-    wrap.style.width = W + 'px';
-    wrap.style.height = H + 'px';
-    wrap.style.position = 'relative';
+  const ctx = canvas.getContext('2d');
+  let width = (canvas.width = window.innerWidth);
+  let height = (canvas.height = window.innerHeight);
 
-    const pieces = [];
+  window.addEventListener('resize', () => {
+    if (!overlay.parentNode) return;
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
 
-    for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) {
-        const piece = document.createElement('div');
-        piece.className = 'intro-piece';
-        piece.style.width = W + 'px';
-        piece.style.height = H + 'px';
+  // Small squares particle system
+  const NUM_SQUARES = 160;
+  const colors = ['#54c8ff', '#57e6a5', '#a78bfa', '#ffd166', '#ffffff'];
+  const squares = [];
 
-        const cT = r * ph;
-        const cR = W - (c + 1) * pw;
-        const cB = H - (r + 1) * ph;
-        const cL = c * pw;
-        piece.style.clipPath = `inset(${cT}px ${cR}px ${cB}px ${cL}px round 3px)`;
+  const centerX = width / 2;
+  const centerY = height / 2;
 
-        const inner = quote.cloneNode(true);
-        inner.style.cssText = `position:absolute;top:0;left:0;width:${W}px;opacity:1;animation:none;margin:0;padding:0;pointer-events:none;`;
-        piece.appendChild(inner);
+  // Initialize squares scattered across full screen in 3D
+  for (let i = 0; i < NUM_SQUARES; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.random() * Math.max(width, height) * 0.85 + 120;
+    const startX = centerX + Math.cos(angle) * dist;
+    const startY = centerY + Math.sin(angle) * dist;
 
-        // Scattered starting positions: flying in like fragmented pieces from outer space
-        const startX = (Math.random() - 0.5) * window.innerWidth * 1.5;
-        const startY = (Math.random() - 0.5) * window.innerHeight * 1.5;
-        const startRot = (Math.random() - 0.5) * 180;
-        const startScale = 0.2 + Math.random() * 0.3;
+    // Target region around center
+    const targetX = centerX + (Math.random() - 0.5) * Math.min(width * 0.75, 820);
+    const targetY = centerY + (Math.random() - 0.5) * 240;
 
-        piece.style.transform = `translate(${startX}px, ${startY}px) rotate(${startRot}deg) scale(${startScale})`;
-        piece.style.opacity = '0';
-        piece.style.transition = 'none';
+    // Exit vector when dispersing away
+    const exitAngle = angle + (Math.random() - 0.5) * 0.6;
+    const exitDist = Math.max(width, height) * 1.5;
+    const exitX = centerX + Math.cos(exitAngle) * exitDist;
+    const exitY = centerY + Math.sin(exitAngle) * exitDist;
 
-        wrap.appendChild(piece);
-        pieces.push(piece);
-      }
-    }
-
-    // PHASE 1: Collect pieces smoothly into the quote
-    pieces.forEach((el, i) => {
-      const delay = 100 + (i % COLS) * 25 + Math.floor(i / COLS) * 35;
-      setTimeout(() => {
-        el.style.transition = 'transform 1000ms cubic-bezier(0.16, 1, 0.3, 1), opacity 600ms ease';
-        el.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
-        el.style.opacity = '1';
-      }, delay);
+    squares.push({
+      startX,
+      startY,
+      targetX,
+      targetY,
+      exitX,
+      exitY,
+      currX: startX,
+      currY: startY,
+      baseSize: Math.floor(Math.random() * 11) + 6, // 6px to 16px small squares
+      currSize: 0,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.08,
+      delay: Math.random() * 0.35, // staggered arrival
+      alpha: 0
     });
+  }
 
-    // PHASE 2: Hold & Seamless swap to glowing quote
-    const assembleTime = 100 + (COLS - 1) * 25 + (ROWS - 1) * 35 + 1000;
+  const startTime = performance.now();
+  const PHASE1_DUR = 1200; // ms: collecting pieces & coming close
+  const PHASE2_DUR = 1100; // ms: hold & glow
+  const PHASE3_DUR = 850;  // ms: disappearing / going away into distance
 
-    setTimeout(() => {
-      quote.style.transition = 'opacity 0.3s ease, filter 0.3s ease';
-      quote.style.opacity = '1';
-      quote.style.filter = 'drop-shadow(0 0 16px rgba(84, 200, 255, 0.6))';
-      pieces.forEach(el => {
-        el.style.transition = 'opacity 0.3s ease';
-        el.style.opacity = '0';
+  let animFrameId;
+
+  function render(now) {
+    const elapsed = now - startTime;
+    ctx.clearRect(0, 0, width, height);
+
+    if (elapsed < PHASE1_DUR) {
+      // --- PHASE 1: COLLECTING & COMING CLOSE ---
+      const p = Math.min(1, elapsed / PHASE1_DUR);
+
+      squares.forEach(sq => {
+        const sqP = Math.max(0, Math.min(1, (p - sq.delay) / (1 - sq.delay)));
+        const ease = 1 - Math.pow(1 - sqP, 3);
+
+        sq.currX = sq.startX + (sq.targetX - sq.startX) * ease;
+        sq.currY = sq.startY + (sq.targetY - sq.startY) * ease;
+        // Coming close: zoom size up as they fly toward the viewer
+        sq.currSize = sq.baseSize * ease;
+        sq.alpha = ease * 0.95;
+        sq.rot += sq.rotSpeed;
+
+        drawSquare(ctx, sq);
       });
-    }, assembleTime);
 
-    // PHASE 3: Disappear into flying squared pieces & cyber particles
-    const shatterStart = assembleTime + 1100;
+      // Reveal text cleanly from scratch as pieces arrive
+      if (p > 0.55) {
+        overlay.classList.add('intro-revealed');
+      }
 
-    setTimeout(() => {
-      quote.style.transition = 'opacity 0.2s ease';
-      quote.style.opacity = '0';
+    } else if (elapsed < PHASE1_DUR + PHASE2_DUR) {
+      // --- PHASE 2: HOLD & VIBRANT GLOW ---
+      overlay.classList.add('intro-revealed');
 
-      // Snap pieces back for the explosion
-      pieces.forEach(el => {
-        el.style.transition = 'none';
-        el.style.transform = 'translate(0,0) rotate(0deg) scale(1)';
-        el.style.opacity = '1';
+      squares.forEach(sq => {
+        sq.currX = sq.targetX;
+        sq.currY = sq.targetY;
+        sq.currSize = sq.baseSize;
+        sq.alpha = 0.75 + Math.sin(now * 0.005 + sq.startX) * 0.2;
+        sq.rot += sq.rotSpeed * 0.4;
+
+        drawSquare(ctx, sq);
       });
 
-      void wrap.getBoundingClientRect(); // flush layout
+    } else if (elapsed < PHASE1_DUR + PHASE2_DUR + PHASE3_DUR) {
+      // --- PHASE 3: GOING AWAY & DISAPPEARING ---
+      const p3 = Math.min(1, (elapsed - (PHASE1_DUR + PHASE2_DUR)) / PHASE3_DUR);
+      const easeOut = Math.pow(p3, 2.5);
 
-      // Spawn extra floating glowing square voxels
-      spawnIntroVoxelGrid(overlay);
+      overlay.classList.add('intro-disperse');
 
-      // Explode pieces outward as squared tumbling fragments
-      pieces.forEach((el, i) => {
-        const outX = (Math.random() - 0.5) * window.innerWidth * 2.2;
-        const outY = (Math.random() - 0.5) * window.innerHeight * 2.2;
-        const outRot = (Math.random() - 0.5) * 540;
-        const delay = Math.random() * 220;
+      squares.forEach(sq => {
+        sq.currX = sq.targetX + (sq.exitX - sq.targetX) * easeOut;
+        sq.currY = sq.targetY + (sq.exitY - sq.targetY) * easeOut;
+        // Going away: shrink and dissolve into deep space
+        sq.currSize = Math.max(0, sq.baseSize * (1 - easeOut));
+        sq.alpha = Math.max(0, (1 - easeOut) * 0.9);
+        sq.rot += sq.rotSpeed * 3;
 
-        setTimeout(() => {
-          el.style.transition = 'transform 850ms cubic-bezier(0.4, 0, 1, 0.5), opacity 650ms ease';
-          el.style.transform = `translate(${outX}px, ${outY}px) rotate(${outRot}deg) scale(0.02)`;
-          el.style.opacity = '0';
-        }, delay);
+        drawSquare(ctx, sq);
       });
-    }, shatterStart);
 
-    // PHASE 4: Dismiss overlay and reveal website
-    const finishTime = shatterStart + 900;
-    setTimeout(() => {
+    } else {
+      // Completed - dismiss overlay cleanly
+      cancelAnimationFrame(animFrameId);
       overlay.classList.add('fade-out');
       setTimeout(() => {
         overlay.remove();
-      }, 700);
-    }, finishTime);
+      }, 550);
+      return;
+    }
+
+    animFrameId = requestAnimationFrame(render);
   }
 
-  function spawnIntroVoxelGrid(parent) {
-    const count = 36;
-    const colors = ['#54c8ff', '#57e6a5', '#a78bfa', '#ffd166', '#ffffff'];
-    for (let i = 0; i < count; i++) {
-      const sq = document.createElement('div');
-      sq.className = 'intro-voxel-square';
-      const size = Math.floor(Math.random() * 14) + 8;
-      const left = Math.random() * 90 + 5;
-      const top = Math.random() * 90 + 5;
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      const tx = (Math.random() * 600 - 300).toFixed(0);
-      const ty = (Math.random() * 600 - 300).toFixed(0);
-      const r = (Math.random() * 720 - 360).toFixed(0);
-
-      sq.style.cssText = `
-        position: absolute;
-        width: ${size}px;
-        height: ${size}px;
-        left: ${left}%;
-        top: ${top}%;
-        background: ${color};
-        box-shadow: 0 0 12px ${color};
-        border-radius: 2px;
-        pointer-events: none;
-        z-index: 100000;
-        transform: translate(0, 0) rotate(0deg) scale(1);
-        transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.8s ease;
-      `;
-      parent.appendChild(sq);
-
-      requestAnimationFrame(() => {
-        sq.style.transform = `translate(${tx}px, ${ty}px) rotate(${r}deg) scale(0)`;
-        sq.style.opacity = '0';
-      });
-    }
+  function drawSquare(c, sq) {
+    if (sq.currSize <= 0 || sq.alpha <= 0) return;
+    c.save();
+    c.translate(sq.currX, sq.currY);
+    c.rotate(sq.rot);
+    c.globalAlpha = sq.alpha;
+    c.fillStyle = sq.color;
+    c.shadowColor = sq.color;
+    c.shadowBlur = 10;
+    c.fillRect(-sq.currSize / 2, -sq.currSize / 2, sq.currSize, sq.currSize);
+    c.restore();
   }
 
-  requestAnimationFrame(() => {
-    const start = () => setTimeout(build, 60);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(start);
-    } else {
-      setTimeout(start, 200);
-    }
-  });
+  animFrameId = requestAnimationFrame(render);
 }
 
 function initScrollObserver() {
