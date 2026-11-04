@@ -152,6 +152,7 @@ function initIntroSplash() {
     }, ASSEMBLE_END);
 
     setTimeout(function() {
+      try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch(e) { window.scrollTo(0, 0); }
       overlay.classList.add('fade-out');
       setTimeout(function() { overlay.remove(); }, 650);
     }, DISMISS);
