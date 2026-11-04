@@ -204,6 +204,10 @@ aws_dynamodb_table.terraform_state_locks
   "runtime": "Falco (Kernel eBPF anomaly detection)"
 }
 `,
+    quote: () => `
+<span style="color:var(--emerald); font-weight:700;">“Automate everything. Break nothing.”</span> &mdash; Anis Ahmed
+<span style="color:var(--blue);">Thanks for stopping by!</span> 👋
+`,
     'cat experience.txt': () => `
 <span style="color:var(--blue); font-weight:700;">ANIS AHMED — DEVOPS ENGINEER</span>
 • Experience: 5+ years (July 2021 — Present)

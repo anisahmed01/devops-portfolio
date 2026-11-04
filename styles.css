@@ -773,6 +773,30 @@ h1 {
   font-family: ui-monospace, monospace;
 }
 
+.quote-banner {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px dashed rgba(155, 177, 221, 0.2);
+  text-align: center;
+}
+
+.quote-text {
+  font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(100deg, var(--blue), var(--emerald));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.quote-sub {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
 /* ==========================================
    FOOTER
    ========================================== */

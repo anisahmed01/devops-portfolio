@@ -814,6 +814,30 @@ h1 {
   font-family: ui-monospace, monospace;
 }
 
+.quote-banner {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px dashed rgba(155, 177, 221, 0.2);
+  text-align: center;
+}
+
+.quote-text {
+  font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(100deg, var(--blue), var(--emerald));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.quote-sub {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
 /* ==========================================
    FOOTER
    ========================================== */
@@ -887,7 +911,7 @@ h1 {
 }
 
   </style>
-  <link rel="stylesheet" href="styles.css?v=2.6.0">
+  <link rel="stylesheet" href="styles.css?v=2.6.1">
 </head>
 
 <body>
@@ -959,7 +983,8 @@ h1 {
 
           <p><span class="prompt">$</span> cat mission.txt</p>
           <p class="terminal-output">
-            Automate infrastructure · Enforce DevSecOps · Scale with resilience.
+            Automate everything. Break nothing.<br>
+            Enforce DevSecOps · Scale with resilience.
           </p>
           
           <div id="terminalHistory"></div>
@@ -977,6 +1002,7 @@ h1 {
             <button class="terminal-chip" data-cmd="kubectl get nodes">kubectl get nodes</button>
             <button class="terminal-chip" data-cmd="helm list">helm list</button>
             <button class="terminal-chip" data-cmd="cat devsecops.json">cat devsecops.json</button>
+            <button class="terminal-chip" data-cmd="quote">quote</button>
             <button class="terminal-chip" data-cmd="deploy --env prod">deploy --env prod</button>
             <button class="terminal-chip" data-cmd="clear">clear</button>
           </div>
@@ -1375,6 +1401,12 @@ h1 {
         &bull;
         <span>Domain: <strong style="color:var(--text);">https://anisahmed.in</strong></span>
       </div>
+
+      <!-- Signature Quote Banner -->
+      <div class="quote-banner">
+        <div class="quote-text">“Automate everything. Break nothing.”</div>
+        <div class="quote-sub">Thanks for stopping by! 👋</div>
+      </div>
     </section>
 
   </main>
@@ -1384,8 +1416,8 @@ h1 {
     <a class="brand" href="#home" aria-label="Anis Ahmed Home">
       <span class="brand-box">AA</span><span class="brand-dot">.</span>
     </a>
-    <p>Designed with intent. Deployed with automation.</p>
-    <span>v2.6.0 &bull; <a href="https://www.linkedin.com/in/webanis" target="_blank">LinkedIn</a> &bull; <a href="https://github.com/anisahmed01" target="_blank">GitHub</a></span>
+    <p>“Automate everything. Break nothing.” &bull; Thanks for stopping by!</p>
+    <span>v2.6.1 &bull; <a href="https://www.linkedin.com/in/webanis" target="_blank">LinkedIn</a> &bull; <a href="https://github.com/anisahmed01" target="_blank">GitHub</a></span>
   </footer>
 
   <!-- Interactive JavaScript Engine -->
@@ -1596,6 +1628,10 @@ aws_dynamodb_table.terraform_state_locks
   "runtime": "Falco (Kernel eBPF anomaly detection)"
 }
 `,
+    quote: () => `
+<span style="color:var(--emerald); font-weight:700;">“Automate everything. Break nothing.”</span> &mdash; Anis Ahmed
+<span style="color:var(--blue);">Thanks for stopping by!</span> 👋
+`,
     'cat experience.txt': () => `
 <span style="color:var(--blue); font-weight:700;">ANIS AHMED — DEVOPS ENGINEER</span>
 • Experience: 5+ years (July 2021 — Present)
@@ -1709,7 +1745,7 @@ Type <span style="color:var(--blue);">help</span> to view all supported DevOps c
 }
 
   </script>
-  <script src="app.js?v=2.6.0"></script>
+  <script src="app.js?v=2.6.1"></script>
 
 </body>
 </html>
