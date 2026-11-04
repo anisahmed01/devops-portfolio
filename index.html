@@ -1507,6 +1507,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // 0. CINEMATIC INTRO SPLASH — PIECE ASSEMBLY
 // ==========================================
 function initIntroSplash() {
+  /* Prevent running multiple times across script tags or re-entry */
+  if (window.__introSplashRan) return;
+  window.__introSplashRan = true;
+
   var overlay = document.getElementById('introOverlay');
   if (!overlay) return;
 
@@ -1514,19 +1518,23 @@ function initIntroSplash() {
   var wrap   = document.getElementById('introQuoteWrap');
   var author = overlay.querySelector('.intro-author');
 
-  /* hide everything instantly — inline style beats all CSS */
+  /* hide everything initially */
   [badge, wrap, author].forEach(function(el) {
     if (el) { el.style.opacity = '0'; el.style.transition = 'none'; }
   });
 
-  /* ── Build the quote from scratch — nothing pre-existing ── */
-  if (wrap) wrap.innerHTML = '';  /* wipe any HTML text that was there */
+  if (wrap) wrap.innerHTML = '';
 
-  var QUOTE = '\u201cAutomate everything. Break nothing.\u201d';
+  /* 2 Distinct Lines: Eliminates any chance of word-splitting like "brea" / "k" */
+  var lines = [
+    '\u201cAutomate everything.',
+    'Break nothing.\u201d'
+  ];
 
-  /* gradient colours interpolated per character */
-  function charColor(i, total) {
-    var t = i / Math.max(1, total - 1);
+  /* smooth gradient across both lines */
+  var totalChars = lines[0].length + lines[1].length;
+  function charColor(idx) {
+    var t = idx / Math.max(1, totalChars - 1);
     var r, g, b;
     if (t < 0.5) {
       var s = t / 0.5;
@@ -1542,124 +1550,104 @@ function initIntroSplash() {
     return 'rgb(' + r + ',' + g + ',' + b + ')';
   }
 
-  /* flex container for letters */
   var box = document.createElement('div');
   box.style.cssText = [
     'display:flex',
-    'flex-wrap:wrap',
+    'flex-direction:column',
+    'align-items:center',
     'justify-content:center',
-    'align-items:baseline',
-    'padding:0 24px',
-    'font-size:clamp(2rem,5vw,3.6rem)',
+    'padding:0 14px',
+    'font-size:clamp(1.4rem, 4.2vw, 3.2rem)',
     'font-weight:850',
     'letter-spacing:-1px',
-    'line-height:1.2',
+    'line-height:1.25',
     'text-align:center'
   ].join(';');
 
   var letters = [];
-  var words = QUOTE.split(' ');
-  var letterIdx = 0; /* global index for colour gradient */
-  var totalChars = QUOTE.replace(/ /g, '').length;
+  var globalIdx = 0;
 
-  words.forEach(function(word, wi) {
-    /* each word lives in its own inline-flex span — prevents mid-word wrapping */
-    var wordWrap = document.createElement('span');
-    wordWrap.style.cssText = 'display:inline-flex;white-space:nowrap;';
+  lines.forEach(function(lineText) {
+    var row = document.createElement('div');
+    row.style.cssText = 'display:block;white-space:nowrap;margin:2px 0;';
 
-    for (var ci = 0; ci < word.length; ci++) {
-      var ch  = word[ci];
-      var col = charColor(letterIdx, totalChars);
-      letterIdx++;
-
+    for (var ci = 0; ci < lineText.length; ci++) {
+      var ch = lineText[ci];
+      var col = charColor(globalIdx++);
       var span = document.createElement('span');
-      span.textContent = ch;
+      span.textContent = ch === ' ' ? '\u00a0' : ch;
 
+      /* Scatter distance scaled safely for mobile & desktop */
       var angle = Math.random() * Math.PI * 2;
-      var dist  = 350 + Math.random() * 450;
+      var dist  = Math.min(window.innerWidth || 400, 500) * (0.6 + Math.random() * 0.6);
       var dx    = (Math.cos(angle) * dist).toFixed(0);
       var dy    = (Math.sin(angle) * dist).toFixed(0);
 
       span.style.cssText = [
         'display:inline-block',
         'color:' + col,
-        'text-shadow:0 0 18px ' + col,
+        'text-shadow:0 0 16px ' + col,
         'opacity:0',
-        'transform:translate(' + dx + 'px,' + dy + 'px) scale(0.15)',
+        'transform:translate(' + dx + 'px,' + dy + 'px) scale(0.2)',
         'transition:none',
         'will-change:transform,opacity'
       ].join(';');
 
-      wordWrap.appendChild(span);
+      row.appendChild(span);
       letters.push(span);
     }
 
-    box.appendChild(wordWrap);
-
-    /* space between words (but not after the last word) */
-    if (wi < words.length - 1) {
-      var sp = document.createElement('span');
-      sp.textContent = '\u00a0';
-      sp.style.cssText = 'display:inline-block;width:0.28em;';
-      box.appendChild(sp);
-    }
+    box.appendChild(row);
   });
 
   if (wrap) {
-    wrap.style.opacity = '1';   /* wrap itself visible — letters handle their own opacity */
+    wrap.style.opacity = '1';
     wrap.appendChild(box);
   }
 
-  /* ── Timing ── */
-  var BADGE_DELAY  = 0;      /* ms — badge appears instantly */
-  var FLY_START    = 150;    /* ms — letters start flying in */
-  var STAGGER      = 22;     /* ms — gap between each letter */
-  var FLY_DUR      = 650;    /* ms — each letter fly duration */
+  /* Timing */
+  var BADGE_DELAY  = 50;
+  var FLY_START    = 150;
+  var STAGGER      = 22;
+  var FLY_DUR      = 600;
   var ASSEMBLE_END = FLY_START + (letters.length - 1) * STAGGER + FLY_DUR;
-  var HOLD         = 1300;   /* ms — hold after all assembled */
+  var HOLD         = 1400;
   var DISMISS      = ASSEMBLE_END + HOLD;
 
   requestAnimationFrame(function() {
-
-    /* badge fades in first */
     if (badge) {
       setTimeout(function() {
-        badge.style.transition = 'opacity 0.55s ease';
+        badge.style.transition = 'opacity 0.5s ease';
         badge.style.opacity    = '1';
       }, BADGE_DELAY);
     }
 
-    /* letters fly in with stagger */
     letters.forEach(function(span, i) {
       setTimeout(function() {
         span.style.transition =
           'transform ' + FLY_DUR + 'ms cubic-bezier(0.16,1,0.3,1),' +
-          'opacity 420ms ease';
+          'opacity 380ms ease';
         span.style.transform = 'translate(0,0) scale(1)';
         span.style.opacity   = '1';
       }, FLY_START + i * STAGGER);
     });
 
-    /* author appears after letters land */
     if (author) {
       setTimeout(function() {
-        author.style.transition = 'opacity 0.55s ease';
+        author.style.transition = 'opacity 0.5s ease';
         author.style.opacity    = '1';
       }, ASSEMBLE_END - 200);
     }
 
-    /* add a soft glow to the assembled quote */
     setTimeout(function() {
       box.style.transition = 'filter 0.5s ease';
-      box.style.filter     = 'drop-shadow(0 0 28px rgba(84,200,255,0.55))';
+      box.style.filter     = 'drop-shadow(0 0 24px rgba(84,200,255,0.5))';
     }, ASSEMBLE_END);
 
-    /* smooth fade-out — the whole overlay dissolves into the site */
     setTimeout(function() {
       overlay.classList.add('fade-out');
-      setTimeout(function() { overlay.remove(); }, 700);
+      setTimeout(function() { overlay.remove(); }, 650);
     }, DISMISS);
-
   });
 }
 
@@ -1972,7 +1960,7 @@ Type <span style="color:var(--blue);">help</span> to view all supported DevOps c
 }
 
   </script>
-  <script src="app.js?v=2.7.0"></script>
+  <script src="app.js?v=3.1.0"></script>
 
 </body>
 </html>
