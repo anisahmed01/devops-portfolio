@@ -3,8 +3,7 @@ name: CI/CD Pipeline - Deploy to anisahmed.in
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   # -----------------------------------------------------------
@@ -34,27 +33,27 @@ jobs:
           head: HEAD
 
   # -----------------------------------------------------------
-  # STAGE 2: Automated Deployment to Hostinger via SFTP
+  # STAGE 2: Automated Deployment to Hostinger via FTP
   # -----------------------------------------------------------
   deploy-to-hostinger:
     name: Deploy to anisahmed.in (Hostinger)
     needs: [audit-and-validate]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
 
-      - name: Deploy to Hostinger via SFTP
+      - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.HOSTINGER_FTP_HOST }}
-          username: ${{ secrets.HOSTINGER_FTP_USER }}
-          password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
-          protocol: ftps
+          server: ${{ secrets.HOSTINGER_FTP_HOST || secrets.HOSTINGER_FTP_SERVER || secrets.FTP_SERVER }}
+          username: ${{ secrets.HOSTINGER_FTP_USER || secrets.HOSTINGER_FTP_USERNAME || secrets.FTP_USERNAME }}
+          password: ${{ secrets.HOSTINGER_FTP_PASSWORD || secrets.FTP_PASSWORD }}
+          protocol: ftp
           port: 21
-          # Target path for addon domain on Hostinger:
-          server-dir: /domains/anisahmed.in/public_html/
+          # Relative to the FTP user's root folder:
+          server-dir: ${{ secrets.HOSTINGER_FTP_DIR || './' }}
           local-dir: ./
           exclude: |
             **/.git*
@@ -73,5 +72,5 @@ jobs:
           if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 301 ]; then
             echo "Deployment verified healthy on https://anisahmed.in!"
           else
-            echo "Warning: Received status $HTTP_STATUS, DNS or propagation in progress."
+            echo "Warning: Received status $HTTP_STATUS, propagation may be in progress."
           fi
