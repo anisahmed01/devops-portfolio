@@ -808,60 +808,28 @@ h1 {
 }
 
 
+
 /* ==========================================
-   CINEMATIC INTRO SPLASH — 3D VOXEL SQUARES (OPTION 1)
+   CINEMATIC INTRO SPLASH OVERLAY
    ========================================== */
 #introOverlay {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 85%);
+  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 75%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
 #introOverlay.fade-out {
   opacity: 0;
-  transform: scale(1.08);
-  pointer-events: none;
-}
-
-/* Initially hidden: no overlapping text from the start! */
-.intro-badge,
-#introQuoteWrap,
-.intro-author {
-  position: relative;
-  z-index: 2;
-  opacity: 0;
-  transform: scale(0.85) translateY(15px);
-  filter: blur(6px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Coming close & assembled state */
-#introOverlay.intro-revealed .intro-badge,
-#introOverlay.intro-revealed #introQuoteWrap,
-#introOverlay.intro-revealed .intro-author {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-  filter: blur(0px);
-}
-
-/* Going away & disappearing state */
-#introOverlay.intro-disperse .intro-badge,
-#introOverlay.intro-disperse #introQuoteWrap,
-#introOverlay.intro-disperse .intro-author {
-  opacity: 0;
-  transform: scale(1.15) translateY(-20px);
+  transform: scale(1.06);
   filter: blur(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+  pointer-events: none;
 }
 
 .intro-badge {
@@ -900,7 +868,6 @@ h1 {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 25px rgba(84, 200, 255, 0.35));
 }
 
 .intro-author {
@@ -910,6 +877,15 @@ h1 {
   letter-spacing: 2.5px;
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
   text-transform: uppercase;
+}
+
+.intro-piece {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  overflow: visible;
 }
 
 
@@ -1557,165 +1533,121 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 function initIntroSplash() {
   const overlay = document.getElementById('introOverlay');
-  if (!overlay) return;
+  const wrap = document.getElementById('introQuoteWrap');
+  const quote = wrap ? wrap.querySelector('.intro-quote') : null;
+  const badge = overlay ? overlay.querySelector('.intro-badge') : null;
+  const author = overlay ? overlay.querySelector('.intro-author') : null;
+  if (!overlay || !wrap || !quote) return;
 
-  const quoteWrap = document.getElementById('introQuoteWrap');
-  const badge = overlay.querySelector('.intro-badge');
-  const author = overlay.querySelector('.intro-author');
+  // Make sure original quote starts 100% hidden — NO OVERLAPPING!
+  quote.style.opacity = '0';
+  if (badge) badge.style.opacity = '0';
+  if (author) author.style.opacity = '0';
 
-  // Create full-screen high-DPI canvas for the squares
-  const canvas = document.createElement('canvas');
-  canvas.id = 'introSquareCanvas';
-  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;';
-  overlay.insertBefore(canvas, overlay.firstChild);
+  const ROWS = 5;
+  const COLS = 8;
+  const DUR_COLLECT = 1200; // ms — pieces fly in smoothly over 1.2s
+  const STAGGER_IN = 22;    // ms — stagger between consecutive pieces
+  const HOLD_DURATION = 1500; // ms — hold so text is fully readable
 
-  const ctx = canvas.getContext('2d');
-  let width = (canvas.width = window.innerWidth);
-  let height = (canvas.height = window.innerHeight);
+  function build() {
+    const qRect = quote.getBoundingClientRect();
+    let W = qRect.width;
+    let H = qRect.height;
 
-  window.addEventListener('resize', () => {
-    if (!overlay.parentNode) return;
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-  });
+    // Retry if fonts/layout not settled yet
+    if (W < 20 || H < 10) { setTimeout(build, 80); return; }
 
-  // Small squares particle system
-  const NUM_SQUARES = 160;
-  const colors = ['#54c8ff', '#57e6a5', '#a78bfa', '#ffd166', '#ffffff'];
-  const squares = [];
+    const pw = W / COLS;
+    const ph = H / ROWS;
 
-  const centerX = width / 2;
-  const centerY = height / 2;
+    wrap.style.width = W + 'px';
+    wrap.style.height = H + 'px';
+    wrap.style.position = 'relative';
 
-  // Initialize squares scattered across full screen in 3D
-  for (let i = 0; i < NUM_SQUARES; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const dist = Math.random() * Math.max(width, height) * 0.85 + 120;
-    const startX = centerX + Math.cos(angle) * dist;
-    const startY = centerY + Math.sin(angle) * dist;
+    const pieces = [];
 
-    // Target region around center
-    const targetX = centerX + (Math.random() - 0.5) * Math.min(width * 0.75, 820);
-    const targetY = centerY + (Math.random() - 0.5) * 240;
+    // Fade in the badge and author
+    if (badge) {
+      badge.style.transition = 'opacity 0.6s ease';
+      badge.style.opacity = '1';
+    }
+    if (author) {
+      author.style.transition = 'opacity 0.6s ease';
+      author.style.opacity = '1';
+    }
 
-    // Exit vector when dispersing away
-    const exitAngle = angle + (Math.random() - 0.5) * 0.6;
-    const exitDist = Math.max(width, height) * 1.5;
-    const exitX = centerX + Math.cos(exitAngle) * exitDist;
-    const exitY = centerY + Math.sin(exitAngle) * exitDist;
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const piece = document.createElement('div');
+        piece.className = 'intro-piece';
+        piece.style.width = W + 'px';
+        piece.style.height = H + 'px';
 
-    squares.push({
-      startX,
-      startY,
-      targetX,
-      targetY,
-      exitX,
-      exitY,
-      currX: startX,
-      currY: startY,
-      baseSize: Math.floor(Math.random() * 11) + 6, // 6px to 16px small squares
-      currSize: 0,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      rot: Math.random() * Math.PI * 2,
-      rotSpeed: (Math.random() - 0.5) * 0.08,
-      delay: Math.random() * 0.35, // staggered arrival
-      alpha: 0
-    });
-  }
+        // Clip to this exact grid cell
+        const cT = r * ph;
+        const cR = W - (c + 1) * pw;
+        const cB = H - (r + 1) * ph;
+        const cL = c * pw;
+        piece.style.clipPath = `inset(${cT}px ${cR}px ${cB}px ${cL}px)`;
 
-  const startTime = performance.now();
-  const PHASE1_DUR = 1200; // ms: collecting pieces & coming close
-  const PHASE2_DUR = 1100; // ms: hold & glow
-  const PHASE3_DUR = 850;  // ms: disappearing / going away into distance
+        // Clone quote inside for matching gradient
+        const inner = quote.cloneNode(true);
+        inner.style.cssText = `position:absolute;top:0;left:0;width:${W}px;opacity:1;animation:none;margin:0;padding:0;pointer-events:none;`;
+        piece.appendChild(inner);
 
-  let animFrameId;
+        // Scatter starting position (flying in from outside viewport)
+        const ox = (Math.random() - 0.5) * window.innerWidth * 1.8;
+        const oy = (Math.random() - 0.5) * window.innerHeight * 1.8;
+        const orot = (Math.random() - 0.5) * 80;
+        piece.style.transform = `translate(${ox}px, ${oy}px) rotate(${orot}deg) scale(0.3)`;
+        piece.style.opacity = '0';
+        piece.style.transition = 'none';
 
-  function render(now) {
-    const elapsed = now - startTime;
-    ctx.clearRect(0, 0, width, height);
-
-    if (elapsed < PHASE1_DUR) {
-      // --- PHASE 1: COLLECTING & COMING CLOSE ---
-      const p = Math.min(1, elapsed / PHASE1_DUR);
-
-      squares.forEach(sq => {
-        const sqP = Math.max(0, Math.min(1, (p - sq.delay) / (1 - sq.delay)));
-        const ease = 1 - Math.pow(1 - sqP, 3);
-
-        sq.currX = sq.startX + (sq.targetX - sq.startX) * ease;
-        sq.currY = sq.startY + (sq.targetY - sq.startY) * ease;
-        // Coming close: zoom size up as they fly toward the viewer
-        sq.currSize = sq.baseSize * ease;
-        sq.alpha = ease * 0.95;
-        sq.rot += sq.rotSpeed;
-
-        drawSquare(ctx, sq);
-      });
-
-      // Reveal text cleanly from scratch as pieces arrive
-      if (p > 0.55) {
-        overlay.classList.add('intro-revealed');
+        wrap.appendChild(piece);
+        pieces.push(piece);
       }
+    }
 
-    } else if (elapsed < PHASE1_DUR + PHASE2_DUR) {
-      // --- PHASE 2: HOLD & VIBRANT GLOW ---
-      overlay.classList.add('intro-revealed');
+    // PHASE 1: COLLECT PIECES FROM NOTHING
+    pieces.forEach((el, i) => {
+      setTimeout(() => {
+        el.style.transition = `transform ${DUR_COLLECT}ms cubic-bezier(0.16, 1, 0.3, 1), opacity 500ms ease`;
+        el.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
+        el.style.opacity = '1';
+      }, 100 + i * STAGGER_IN);
+    });
 
-      squares.forEach(sq => {
-        sq.currX = sq.targetX;
-        sq.currY = sq.targetY;
-        sq.currSize = sq.baseSize;
-        sq.alpha = 0.75 + Math.sin(now * 0.005 + sq.startX) * 0.2;
-        sq.rot += sq.rotSpeed * 0.4;
+    const collectEnd = 100 + (pieces.length - 1) * STAGGER_IN + DUR_COLLECT;
 
-        drawSquare(ctx, sq);
+    // PHASE 2: ASSEMBLE SEAMLESSLY TO FULL GLOWING QUOTE
+    setTimeout(() => {
+      quote.style.transition = 'opacity 0.35s ease';
+      quote.style.opacity = '1';
+      pieces.forEach(el => {
+        el.style.transition = 'opacity 0.35s ease';
+        el.style.opacity = '0';
       });
+    }, collectEnd);
 
-    } else if (elapsed < PHASE1_DUR + PHASE2_DUR + PHASE3_DUR) {
-      // --- PHASE 3: GOING AWAY & DISAPPEARING ---
-      const p3 = Math.min(1, (elapsed - (PHASE1_DUR + PHASE2_DUR)) / PHASE3_DUR);
-      const easeOut = Math.pow(p3, 2.5);
-
-      overlay.classList.add('intro-disperse');
-
-      squares.forEach(sq => {
-        sq.currX = sq.targetX + (sq.exitX - sq.targetX) * easeOut;
-        sq.currY = sq.targetY + (sq.exitY - sq.targetY) * easeOut;
-        // Going away: shrink and dissolve into deep space
-        sq.currSize = Math.max(0, sq.baseSize * (1 - easeOut));
-        sq.alpha = Math.max(0, (1 - easeOut) * 0.9);
-        sq.rot += sq.rotSpeed * 3;
-
-        drawSquare(ctx, sq);
-      });
-
-    } else {
-      // Completed - dismiss overlay cleanly
-      cancelAnimationFrame(animFrameId);
+    // PHASE 3: HOLD AND THEN DISAPPEAR NORMALLY INTO THE WEBSITE
+    const dismissAt = collectEnd + HOLD_DURATION;
+    setTimeout(() => {
       overlay.classList.add('fade-out');
       setTimeout(() => {
         overlay.remove();
-      }, 550);
-      return;
+      }, 700);
+    }, dismissAt);
+  }
+
+  requestAnimationFrame(() => {
+    const start = () => setTimeout(build, 80);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(start);
+    } else {
+      setTimeout(start, 200);
     }
-
-    animFrameId = requestAnimationFrame(render);
-  }
-
-  function drawSquare(c, sq) {
-    if (sq.currSize <= 0 || sq.alpha <= 0) return;
-    c.save();
-    c.translate(sq.currX, sq.currY);
-    c.rotate(sq.rot);
-    c.globalAlpha = sq.alpha;
-    c.fillStyle = sq.color;
-    c.shadowColor = sq.color;
-    c.shadowBlur = 10;
-    c.fillRect(-sq.currSize / 2, -sq.currSize / 2, sq.currSize, sq.currSize);
-    c.restore();
-  }
-
-  animFrameId = requestAnimationFrame(render);
+  });
 }
 
 function initScrollObserver() {
