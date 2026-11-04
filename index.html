@@ -807,63 +807,29 @@ h1 {
   flex-wrap: wrap;
 }
 
-
-
-
 /* ==========================================
    CINEMATIC INTRO SPLASH OVERLAY
+   ========================================== */
+/* ==========================================
+   INTRO SPLASH — PIECE ASSEMBLY ANIMATION
    ========================================== */
 #introOverlay {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 85%);
+  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 75%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  transition: opacity 0.65s ease, filter 0.65s ease;
+  /* NO overflow:hidden — pieces must fly outside the wrap bounds */
+  will-change: opacity;
 }
 
 #introOverlay.fade-out {
   opacity: 0;
-  filter: blur(8px);
   pointer-events: none;
-}
-
-/* ── All text starts INVISIBLE from CSS — no flash before JS ── */
-.intro-badge,
-#introQuoteWrap,
-.intro-author {
-  position: relative;
-  z-index: 20;          /* above canvas (z-index:10) */
-  opacity: 0;
-  transform: translateY(18px) scale(0.95);
-  filter: blur(5px);
-  transition:
-    opacity  0.75s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-    filter   0.75s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* JS adds this class when squares have converged */
-#introOverlay.splash-text-in .intro-badge,
-#introOverlay.splash-text-in #introQuoteWrap,
-#introOverlay.splash-text-in .intro-author {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0px);
-}
-
-/* JS adds this when squares blast away */
-#introOverlay.splash-text-out .intro-badge,
-#introOverlay.splash-text-out #introQuoteWrap,
-#introOverlay.splash-text-out .intro-author {
-  opacity: 0;
-  transform: translateY(-18px) scale(1.06);
-  filter: blur(8px);
-  transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+  transition: opacity 0.7s ease;
 }
 
 .intro-badge {
@@ -877,43 +843,68 @@ h1 {
   letter-spacing: 1.5px;
   color: var(--blue);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  margin-bottom: 22px;
+  margin-bottom: 28px;
   background: rgba(16, 24, 42, 0.7);
   box-shadow: 0 0 20px rgba(84, 200, 255, 0.2);
+  opacity: 0;
+  animation: introFadeUp 0.6s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Wrap must be position:relative so absolute pieces are placed inside it */
 #introQuoteWrap {
   position: relative;
   display: block;
   text-align: center;
   width: min(860px, 88vw);
   margin: 0 auto;
+  /* explicit height injected by JS after measurement */
 }
 
 .intro-quote {
   font-size: clamp(2rem, 5vw, 3.6rem);
   font-weight: 850;
   letter-spacing: -2px;
+  line-height: 1.3;
   text-align: center;
-  max-width: 860px;
-  padding: 0 24px;
-  line-height: 1.15;
   background: linear-gradient(100deg, #54c8ff 0%, #a78bfa 50%, #57e6a5 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 22px rgba(84,200,255,0.4));
+  margin: 0;
+  padding: 0;
+  opacity: 0; /* JS reveals after assembly */
 }
 
 .intro-author {
-  margin-top: 18px;
+  margin-top: 20px;
   color: var(--muted);
   font-size: 0.82rem;
   letter-spacing: 2.5px;
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
   text-transform: uppercase;
+  opacity: 0;
+  animation: introFadeUp 0.6s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+@keyframes introFadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/*
+  Each piece is a FULL-SIZE copy of the wrap (W x H)
+  with a clip-path that reveals only its own grid cell.
+  The piece is what gets animated (transform/opacity).
+*/
+.intro-piece {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  /* overflow visible so clip-path works correctly */
+  overflow: visible;
+}
 
 .contact-meta {
   margin-top: 24px;
@@ -1558,148 +1549,158 @@ document.addEventListener('DOMContentLoaded', () => {
 // 0. CINEMATIC INTRO SPLASH — PIECE ASSEMBLY
 // ==========================================
 function initIntroSplash() {
-  var overlay = document.getElementById('introOverlay');
-  if (!overlay) return;
+  const overlay = document.getElementById('introOverlay');
+  const wrap    = document.getElementById('introQuoteWrap');
+  const quote   = wrap ? wrap.querySelector('.intro-quote') : null;
+  if (!overlay || !wrap || !quote) return;
 
-  // ── all text already invisible via CSS; nothing to hide here ──
-  var W = window.innerWidth;
-  var H = window.innerHeight;
+  // ── Timing constants (slow-mo) ──────────────────────────────────
+  const ROWS         = 5;
+  const COLS         = 8;
+  const DUR_COLLECT  = 1800;  // ms — each piece flies in over 1.8s
+  const STAGGER_IN   = 30;    // ms — delay between consecutive pieces
+  const HOLD         = 2200;  // ms — pause while text is fully visible
+  const DUR_EXPLODE  = 2000;  // ms — each piece explodes over 2s
+  const STAGGER_OUT  = 20;    // ms — delay between consecutive explosions
 
-  // ── CANVAS ────────────────────────────────────────────────────
-  var cvs = document.createElement('canvas');
-  cvs.width  = W;  cvs.height = H;
-  cvs.style.cssText =
-    'position:absolute;inset:0;width:100%;height:100%;' +
-    'pointer-events:none;z-index:10;';
-  overlay.appendChild(cvs);
-  var ctx = cvs.getContext('2d');
+  function build() {
+    // ── Measure the quote after fonts are loaded ──────────────────
+    const qRect = quote.getBoundingClientRect();
+    let W = qRect.width;
+    let H = qRect.height;
 
-  window.addEventListener('resize', function () {
-    W = cvs.width  = window.innerWidth;
-    H = cvs.height = window.innerHeight;
-  });
+    // If layout hasn't settled yet, retry in 150ms
+    if (W < 20 || H < 10) { setTimeout(build, 150); return; }
 
-  // ── SQUARES ───────────────────────────────────────────────────
-  var COLORS = ['#54c8ff','#57e6a5','#a78bfa','#ffd166','#e0eaff'];
-  var NUM    = 200;
-  var CX = W / 2, CY = H / 2;
-  var sqs = [];
+    const pw = W / COLS;   // piece width
+    const ph = H / ROWS;   // piece height
 
-  for (var i = 0; i < NUM; i++) {
-    var ang   = Math.random() * Math.PI * 2;
-    var dist  = 0.55 * Math.max(W, H) + Math.random() * 0.55 * Math.max(W, H);
-    var size  = 6 + Math.random() * 14;
-    var color = COLORS[Math.floor(Math.random() * COLORS.length)];
-    sqs.push({
-      // start: scattered across full screen, far from centre
-      sx: CX + Math.cos(ang) * dist,
-      sy: CY + Math.sin(ang) * dist,
-      // land: loose cluster around centre (full-screen feel)
-      lx: CX + (Math.random() - 0.5) * W * 0.9,
-      ly: CY + (Math.random() - 0.5) * H * 0.9,
-      // exit: blast back outward
-      ex: CX + Math.cos(ang + (Math.random()-0.5)*0.8) * dist * 1.6,
-      ey: CY + Math.sin(ang + (Math.random()-0.5)*0.8) * dist * 1.6,
-      size:  size,
-      color: color,
-      rot:   Math.random() * Math.PI * 2,
-      rspd:  (Math.random() - 0.5) * 0.12,
-      delay: Math.random() * 0.3   // 0–30 % of phase 1
-    });
-  }
+    // Lock wrap to measured size so absolute children position correctly
+    wrap.style.width  = W + 'px';
+    wrap.style.height = H + 'px';
 
-  // ── TIMING ────────────────────────────────────────────────────
-  var T_IN   = 1400;   // ms  squares fly IN  (collect)
-  var T_HOLD = 1600;   // ms  hold (text visible)
-  var T_OUT  = 900;    // ms  squares fly OUT (disperse)
-  var t0 = performance.now();
-  var textRevealed = false;
-  var rafId;
+    const pieces = [];
 
-  // ── helpers ───────────────────────────────────────────────────
-  function ease3(t) { return 1 - Math.pow(1 - t, 3); }   // ease-out cubic
-  function easeIn(t){ return t * t * t; }                  // ease-in cubic
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        /*
+          Each .intro-piece is a FULL-SIZE div (W x H) sitting at 0,0
+          inside the wrap. It contains a clone of the quote so gradient
+          text renders at the exact same position.
+          clip-path: inset() carves out just the grid cell's rectangle.
+          We then animate transform on the piece to fly it around.
+        */
+        const piece = document.createElement('div');
+        piece.className = 'intro-piece';
+        piece.style.width    = W + 'px';
+        piece.style.height   = H + 'px';
 
-  function lerp(a, b, t) { return a + (b - a) * t; }
+        // Clip to only this cell
+        const cT = r * ph;
+        const cR = W - (c + 1) * pw;
+        const cB = H - (r + 1) * ph;
+        const cL = c * pw;
+        piece.style.clipPath = 'inset(' + cT + 'px ' + cR + 'px ' + cB + 'px ' + cL + 'px)';
 
-  function drawSq(sq, cx, cy, alpha, rot) {
-    if (alpha <= 0 || sq.size <= 0) return;
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(rot);
-    ctx.globalAlpha = Math.min(1, alpha);
-    ctx.fillStyle   = sq.color;
-    ctx.shadowColor = sq.color;
-    ctx.shadowBlur  = 14;
-    var s = sq.size / 2;
-    ctx.fillRect(-s, -s, sq.size, sq.size);
-    ctx.restore();
-  }
+        // Clone quote inside — stays at top:0 left:0 so gradient aligns
+        const inner = quote.cloneNode(true);
+        inner.style.cssText = 'position:absolute;top:0;left:0;width:' + W + 'px;'
+          + 'opacity:1;animation:none;margin:0;padding:0;pointer-events:none;';
+        piece.appendChild(inner);
 
-  function revealText() {
-    if (textRevealed) return;
-    textRevealed = true;
-    overlay.classList.add('splash-text-in');
-  }
-  function hideText() {
-    overlay.classList.remove('splash-text-in');
-    overlay.classList.add('splash-text-out');
-  }
+        // Scatter starting position (outside viewport)
+        const ox   = (Math.random() - 0.5) * window.innerWidth  * 2.2;
+        const oy   = (Math.random() - 0.5) * window.innerHeight * 2.2;
+        const orot = (Math.random() - 0.5) * 100;
+        piece.style.transform  = 'translate(' + ox + 'px,' + oy + 'px) rotate(' + orot + 'deg) scale(0.25)';
+        piece.style.opacity    = '0';
+        piece.style.transition = 'none';
 
-  // ── RENDER LOOP ───────────────────────────────────────────────
-  function frame(now) {
-    var el = now - t0;
-    ctx.clearRect(0, 0, W, H);
-
-    if (el < T_IN) {
-      // PHASE 1 — squares stream IN from full-screen edges
-      var p = el / T_IN;
-      sqs.forEach(function(sq) {
-        var sp = Math.max(0, (p - sq.delay) / (1 - sq.delay));
-        var e  = ease3(Math.min(1, sp));
-        var cx = lerp(sq.sx, sq.lx, e);
-        var cy = lerp(sq.sy, sq.ly, e);
-        sq.rot += sq.rspd;
-        drawSq(sq, cx, cy, e, sq.rot);
-      });
-      if (p > 0.6) revealText();
-
-    } else if (el < T_IN + T_HOLD) {
-      // PHASE 2 — hold, squares gently pulse
-      revealText();
-      var t2 = (el - T_IN) / T_HOLD;
-      sqs.forEach(function(sq) {
-        sq.rot += sq.rspd * 0.3;
-        var pulse = 0.65 + 0.3 * Math.sin(now * 0.003 + sq.sx);
-        drawSq(sq, sq.lx, sq.ly, pulse, sq.rot);
-      });
-
-    } else if (el < T_IN + T_HOLD + T_OUT) {
-      // PHASE 3 — squares blast OUT across full screen
-      var p3 = (el - T_IN - T_HOLD) / T_OUT;
-      var e3 = easeIn(Math.min(1, p3));
-      if (p3 > 0.15) hideText();
-      sqs.forEach(function(sq) {
-        sq.rot += sq.rspd * 4;
-        var cx = lerp(sq.lx, sq.ex, e3);
-        var cy = lerp(sq.ly, sq.ey, e3);
-        drawSq(sq, cx, cy, 1 - e3, sq.rot);
-      });
-
-    } else {
-      // DONE — fade overlay out
-      cancelAnimationFrame(rafId);
-      overlay.classList.add('fade-out');
-      setTimeout(function() { overlay.remove(); }, 650);
-      return;
+        wrap.appendChild(piece);
+        pieces.push(piece);
+      }
     }
 
-    rafId = requestAnimationFrame(frame);
+    // ── PHASE 1: COLLECT ─────────────────────────────────────────
+    // Each piece flies slowly to its assembled position
+    pieces.forEach((el, i) => {
+      setTimeout(() => {
+        el.style.transition = 'transform ' + DUR_COLLECT + 'ms cubic-bezier(0.16,1,0.3,1),'
+                            + ' opacity 700ms ease';
+        el.style.transform  = 'translate(0,0) rotate(0deg) scale(1)';
+        el.style.opacity    = '1';
+      }, 400 + i * STAGGER_IN);
+    });
+
+    // When last piece lands + its own duration finishes
+    const collectEnd = 400 + (pieces.length - 1) * STAGGER_IN + DUR_COLLECT;
+
+    // ── PHASE 2: ASSEMBLE ─────────────────────────────────────────
+    // Swap to real quote (seamless — same look), fade pieces out
+    setTimeout(() => {
+      quote.style.transition = 'opacity 0.4s ease';
+      quote.style.opacity    = '1';
+      pieces.forEach(el => {
+        el.style.transition = 'opacity 0.4s ease';
+        el.style.opacity    = '0';
+      });
+    }, collectEnd);
+
+    // ── PHASE 3: HOLD ─────────────────────────────────────────────
+    const holdEnd = collectEnd + 500 + HOLD;
+
+    // ── PHASE 4: EXPLODE ──────────────────────────────────────────
+    setTimeout(() => {
+      // Fade out the real quote text
+      quote.style.transition = 'opacity 0.25s ease';
+      quote.style.opacity    = '0';
+
+      // Snap pieces back to assembled (no transition — instant)
+      pieces.forEach(el => {
+        el.style.transition = 'none';
+        el.style.transform  = 'translate(0,0) rotate(0deg) scale(1)';
+        el.style.opacity    = '1';
+      });
+
+      // Force a layout flush so the snap registers before we add transitions
+      void wrap.getBoundingClientRect();
+
+      // Now explode each piece outward with a stagger
+      pieces.forEach((el, i) => {
+        const ex  = (Math.random() - 0.5) * window.innerWidth  * 3;
+        const ey  = (Math.random() - 0.5) * window.innerHeight * 3;
+        const rot = (Math.random() - 0.5) * 900;
+        setTimeout(() => {
+          el.style.transition = 'transform ' + DUR_EXPLODE + 'ms cubic-bezier(0.6,0,0.9,0.5),'
+                              + ' opacity ' + (DUR_EXPLODE * 0.8) + 'ms ease 200ms';
+          el.style.transform  = 'translate(' + ex + 'px,' + ey + 'px) rotate(' + rot + 'deg) scale(0.04)';
+          el.style.opacity    = '0';
+        }, i * STAGGER_OUT);
+      });
+    }, holdEnd);
+
+    // ── PHASE 5: DISMISS ──────────────────────────────────────────
+    const dismissAt = holdEnd + (pieces.length - 1) * STAGGER_OUT + DUR_EXPLODE + 300;
+    setTimeout(() => {
+      overlay.classList.add('fade-out');
+      setTimeout(() => overlay.remove(), 800);
+    }, dismissAt);
   }
 
-  rafId = requestAnimationFrame(frame);
+  // Wait for Google Fonts to fully load before measuring text dimensions
+  requestAnimationFrame(() => {
+    const go = () => setTimeout(build, 80);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(go);
+    } else {
+      setTimeout(go, 500);
+    }
+  });
 }
 
+// ==========================================
+// 1. ROCK-SOLID SCROLL REVEAL OBSERVER
+// ==========================================
 function initScrollObserver() {
   const elements = document.querySelectorAll('.scroll-reveal');
 
@@ -1892,151 +1893,11 @@ aws_dynamodb_table.terraform_state_locks
   "runtime": "Falco (Kernel eBPF anomaly detection)"
 }
 `,
-    quote: () => {
-      // Build the animated quote inside the terminal
-      const wrapper = document.createElement('div');
-      wrapper.className = 'quote-anim-wrapper';
-
-      const quoteText = '\u201cAutomate everything. Break nothing.\u201d \u2014 Anis Ahmed';
-      [...quoteText].forEach(ch => {
-        const span = document.createElement('span');
-        span.className = 'q-char';
-        span.textContent = ch === ' ' ? '\u00a0' : ch;
-        // random scatter direction for each character
-        const dx = (Math.random() * 160 - 80).toFixed(1);
-        const dy = (Math.random() * 100 - 50).toFixed(1);
-        span.style.setProperty('--dx', dx + 'px');
-        span.style.setProperty('--dy', dy + 'px');
-        wrapper.appendChild(span);
-      });
-
-      const history = document.getElementById('terminalHistory');
-      if (history) {
-        const entry = document.createElement('div');
-        entry.style.margin = '4px 0 12px';
-        entry.appendChild(wrapper);
-        history.appendChild(entry);
-        terminalBody.scrollTop = terminalBody.scrollHeight;
-
-        // Phase 1: assemble (characters fly IN from random positions)
-        // Phase 2 (after 2.4s): shatter into squares and fade out
-        setTimeout(() => {
-          wrapper.classList.add('q-shatter');
-        }, 2400);
-      }
-      return '';
-    },
+    quote: () => `
+<span style="color:var(--emerald); font-weight:700;">“Automate everything. Break nothing.”</span> &mdash; Anis Ahmed
+<span style="color:var(--blue);">Thanks for stopping by!</span> 👋
+`,
     'cat experience.txt': () => `
-<span style="color:var(--blue); font-weight:700;">ANIS AHMED — DEVOPS ENGINEER</span>
-• Experience: 5+ years (July 2021 — Present)
-• Location: Delhi, India (Open to Remote Global)
-• Core Platforms: AWS, GCP, Azure, Kubernetes, Terraform, CI/CD, DevSecOps
-• Mission: Automating platforms that never fail and scaling deployments with confidence.
-`,
-    'cat contact.txt': () => `
-Email:     <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a>
-LinkedIn:  <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline;">linkedin.com/in/webanis</a>
-GitHub:    <a href="https://github.com/anisahmed01" target="_blank" style="color:var(--blue); text-decoration:underline;">github.com/anisahmed01</a>
-Website:   https://anisahmed.in
-`,
-    'deploy --env prod': () => {
-      setTimeout(() => {
-        const lines = [
-          '⚡ [INIT] Connecting to multi-cloud EKS & AKS production clusters...',
-          '🔍 [DEVSECOPS] Gitleaks, SonarQube & Trivy verification: PASSED (0 CVEs)',
-          '📜 [OPA] Evaluated Terraform & K8s plan against Rego compliance: APPROVED',
-          '👤 [SIGN-OFF] Production Approval Gate authorized by Anis Ahmed',
-          '🔄 [GITOPS] ArgoCD syncing canary release across availability zones...',
-          '✅ [READY] Health probes 200 OK. 0 Downtime Canary Rollout Completed on anisahmed.in!',
-        ];
-
-        let i = 0;
-        const interval = setInterval(() => {
-          if (i < lines.length) {
-            appendTerminalOutput(`<span style="color:var(--emerald);">${lines[i]}</span>`);
-            i++;
-          } else {
-            clearInterval(interval);
-          }
-        }, 350);
-      }, 100);
-      return `<span style="color:var(--amber);">🚀 Initiating multi-cloud DevSecOps production rollout...</span>`;
-    },
-    clear: () => {
-      const history = document.getElementById('terminalHistory');
-      if (history) history.innerHTML = '';
-      return '';
-    }
-  };
-
-  function appendTerminalOutput(htmlContent) {
-    const history = document.getElementById('terminalHistory');
-    if (!history) return;
-    const entry = document.createElement('div');
-    entry.style.margin = '4px 0 12px';
-    entry.style.color = '#d2dcf6';
-    entry.style.lineHeight = '1.6';
-    entry.style.whiteSpace = 'pre-wrap';
-    entry.innerHTML = htmlContent;
-    history.appendChild(entry);
-    terminalBody.scrollTop = terminalBody.scrollHeight;
-  }
-
-  function executeCommand(raw) {
-    const cmd = raw.trim().toLowerCase();
-    if (!cmd) return;
-
-    cmdHistory.push(raw);
-    historyIdx = cmdHistory.length;
-
-    // Echo input
-    appendTerminalOutput(`<span style="color:var(--blue); font-weight:600;">$</span> <span style="color:#ffffff;">${raw}</span>`);
-
-    if (commands[cmd]) {
-      const res = commands[cmd]();
-      if (res) appendTerminalOutput(res);
-    } else {
-      appendTerminalOutput(`
-<span style="color:var(--red);">bash: command not found: ${raw}</span>
-Type <span style="color:var(--blue);">help</span> to view all supported DevOps commands.
-`);
-    }
-  }
-
-  // Click on terminal body focuses the input
-  terminal.addEventListener('click', () => {
-    input.focus();
-  });
-
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const val = input.value;
-      input.value = '';
-      executeCommand(val);
-    } else if (e.key === 'ArrowUp') {
-      if (historyIdx > 0) {
-        historyIdx--;
-        input.value = cmdHistory[historyIdx] || '';
-      }
-    } else if (e.key === 'ArrowDown') {
-      if (historyIdx < cmdHistory.length - 1) {
-        historyIdx++;
-        input.value = cmdHistory[historyIdx] || '';
-      } else {
-        historyIdx = cmdHistory.length;
-        input.value = '';
-      }
-    }
-  });
-
-  chips.forEach((chip) => {
-    chip.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const cmd = chip.getAttribute('data-cmd') || chip.innerText.trim();
-      executeCommand(cmd);
-    });
-  });
-}    'cat experience.txt': () => `
 <span style="color:var(--blue); font-weight:700;">ANIS AHMED — DEVOPS ENGINEER</span>
 • Experience: 5+ years (July 2021 — Present)
 • Location: Delhi, India (Open to Remote Global)

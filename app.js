@@ -1,5 +1,5 @@
-// ==========================================
-// Anis Ahmed — DevOps Portfolio Interactive Engine
+﻿// ==========================================
+// Anis Ahmed ΓÇö DevOps Portfolio Interactive Engine
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,148 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
 // 0. CINEMATIC INTRO SPLASH DISSOLVE
 // ==========================================
 function initIntroSplash() {
-  var overlay = document.getElementById('introOverlay');
+  const overlay = document.getElementById('introOverlay');
   if (!overlay) return;
 
-  // ── all text already invisible via CSS; nothing to hide here ──
-  var W = window.innerWidth;
-  var H = window.innerHeight;
-
-  // ── CANVAS ────────────────────────────────────────────────────
-  var cvs = document.createElement('canvas');
-  cvs.width  = W;  cvs.height = H;
-  cvs.style.cssText =
-    'position:absolute;inset:0;width:100%;height:100%;' +
-    'pointer-events:none;z-index:10;';
-  overlay.appendChild(cvs);
-  var ctx = cvs.getContext('2d');
-
-  window.addEventListener('resize', function () {
-    W = cvs.width  = window.innerWidth;
-    H = cvs.height = window.innerHeight;
-  });
-
-  // ── SQUARES ───────────────────────────────────────────────────
-  var COLORS = ['#54c8ff','#57e6a5','#a78bfa','#ffd166','#e0eaff'];
-  var NUM    = 200;
-  var CX = W / 2, CY = H / 2;
-  var sqs = [];
-
-  for (var i = 0; i < NUM; i++) {
-    var ang   = Math.random() * Math.PI * 2;
-    var dist  = 0.55 * Math.max(W, H) + Math.random() * 0.55 * Math.max(W, H);
-    var size  = 6 + Math.random() * 14;
-    var color = COLORS[Math.floor(Math.random() * COLORS.length)];
-    sqs.push({
-      // start: scattered across full screen, far from centre
-      sx: CX + Math.cos(ang) * dist,
-      sy: CY + Math.sin(ang) * dist,
-      // land: loose cluster around centre (full-screen feel)
-      lx: CX + (Math.random() - 0.5) * W * 0.9,
-      ly: CY + (Math.random() - 0.5) * H * 0.9,
-      // exit: blast back outward
-      ex: CX + Math.cos(ang + (Math.random()-0.5)*0.8) * dist * 1.6,
-      ey: CY + Math.sin(ang + (Math.random()-0.5)*0.8) * dist * 1.6,
-      size:  size,
-      color: color,
-      rot:   Math.random() * Math.PI * 2,
-      rspd:  (Math.random() - 0.5) * 0.12,
-      delay: Math.random() * 0.3   // 0–30 % of phase 1
-    });
-  }
-
-  // ── TIMING ────────────────────────────────────────────────────
-  var T_IN   = 1400;   // ms  squares fly IN  (collect)
-  var T_HOLD = 1600;   // ms  hold (text visible)
-  var T_OUT  = 900;    // ms  squares fly OUT (disperse)
-  var t0 = performance.now();
-  var textRevealed = false;
-  var rafId;
-
-  // ── helpers ───────────────────────────────────────────────────
-  function ease3(t) { return 1 - Math.pow(1 - t, 3); }   // ease-out cubic
-  function easeIn(t){ return t * t * t; }                  // ease-in cubic
-
-  function lerp(a, b, t) { return a + (b - a) * t; }
-
-  function drawSq(sq, cx, cy, alpha, rot) {
-    if (alpha <= 0 || sq.size <= 0) return;
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(rot);
-    ctx.globalAlpha = Math.min(1, alpha);
-    ctx.fillStyle   = sq.color;
-    ctx.shadowColor = sq.color;
-    ctx.shadowBlur  = 14;
-    var s = sq.size / 2;
-    ctx.fillRect(-s, -s, sq.size, sq.size);
-    ctx.restore();
-  }
-
-  function revealText() {
-    if (textRevealed) return;
-    textRevealed = true;
-    overlay.classList.add('splash-text-in');
-  }
-  function hideText() {
-    overlay.classList.remove('splash-text-in');
-    overlay.classList.add('splash-text-out');
-  }
-
-  // ── RENDER LOOP ───────────────────────────────────────────────
-  function frame(now) {
-    var el = now - t0;
-    ctx.clearRect(0, 0, W, H);
-
-    if (el < T_IN) {
-      // PHASE 1 — squares stream IN from full-screen edges
-      var p = el / T_IN;
-      sqs.forEach(function(sq) {
-        var sp = Math.max(0, (p - sq.delay) / (1 - sq.delay));
-        var e  = ease3(Math.min(1, sp));
-        var cx = lerp(sq.sx, sq.lx, e);
-        var cy = lerp(sq.sy, sq.ly, e);
-        sq.rot += sq.rspd;
-        drawSq(sq, cx, cy, e, sq.rot);
-      });
-      if (p > 0.6) revealText();
-
-    } else if (el < T_IN + T_HOLD) {
-      // PHASE 2 — hold, squares gently pulse
-      revealText();
-      var t2 = (el - T_IN) / T_HOLD;
-      sqs.forEach(function(sq) {
-        sq.rot += sq.rspd * 0.3;
-        var pulse = 0.65 + 0.3 * Math.sin(now * 0.003 + sq.sx);
-        drawSq(sq, sq.lx, sq.ly, pulse, sq.rot);
-      });
-
-    } else if (el < T_IN + T_HOLD + T_OUT) {
-      // PHASE 3 — squares blast OUT across full screen
-      var p3 = (el - T_IN - T_HOLD) / T_OUT;
-      var e3 = easeIn(Math.min(1, p3));
-      if (p3 > 0.15) hideText();
-      sqs.forEach(function(sq) {
-        sq.rot += sq.rspd * 4;
-        var cx = lerp(sq.lx, sq.ex, e3);
-        var cy = lerp(sq.ly, sq.ey, e3);
-        drawSq(sq, cx, cy, 1 - e3, sq.rot);
-      });
-
-    } else {
-      // DONE — fade overlay out
-      cancelAnimationFrame(rafId);
-      overlay.classList.add('fade-out');
-      setTimeout(function() { overlay.remove(); }, 650);
-      return;
-    }
-
-    rafId = requestAnimationFrame(frame);
-  }
-
-  rafId = requestAnimationFrame(frame);
+  // Stays visible for 1.1s, then dissolves with blur-scale animation
+  setTimeout(() => {
+    overlay.classList.add('fade-out');
+    setTimeout(() => {
+      overlay.remove();
+    }, 700);
+  }, 1100);
 }
 
+// ==========================================
+// 1. ROCK-SOLID SCROLL REVEAL OBSERVER
+// ==========================================
 function initScrollObserver() {
   const elements = document.querySelectorAll('.scroll-reveal');
 
@@ -348,46 +221,16 @@ aws_dynamodb_table.terraform_state_locks
   "runtime": "Falco (Kernel eBPF anomaly detection)"
 }
 `,
-    quote: () => {
-      // Build the animated quote inside the terminal
-      const wrapper = document.createElement('div');
-      wrapper.className = 'quote-anim-wrapper';
-
-      const quoteText = '\u201cAutomate everything. Break nothing.\u201d \u2014 Anis Ahmed';
-      [...quoteText].forEach(ch => {
-        const span = document.createElement('span');
-        span.className = 'q-char';
-        span.textContent = ch === ' ' ? '\u00a0' : ch;
-        // random scatter direction for each character
-        const dx = (Math.random() * 160 - 80).toFixed(1);
-        const dy = (Math.random() * 100 - 50).toFixed(1);
-        span.style.setProperty('--dx', dx + 'px');
-        span.style.setProperty('--dy', dy + 'px');
-        wrapper.appendChild(span);
-      });
-
-      const history = document.getElementById('terminalHistory');
-      if (history) {
-        const entry = document.createElement('div');
-        entry.style.margin = '4px 0 12px';
-        entry.appendChild(wrapper);
-        history.appendChild(entry);
-        terminalBody.scrollTop = terminalBody.scrollHeight;
-
-        // Phase 1: assemble (characters fly IN from random positions)
-        // Phase 2 (after 2.4s): shatter into squares and fade out
-        setTimeout(() => {
-          wrapper.classList.add('q-shatter');
-        }, 2400);
-      }
-      return '';
-    },
+    quote: () => `
+<span style="color:var(--emerald); font-weight:700;">ΓÇ£Automate everything. Break nothing.ΓÇ¥</span> &mdash; Anis Ahmed
+<span style="color:var(--blue);">Thanks for stopping by!</span> ≡ƒæï
+`,
     'cat experience.txt': () => `
-<span style="color:var(--blue); font-weight:700;">ANIS AHMED — DEVOPS ENGINEER</span>
-• Experience: 5+ years (July 2021 — Present)
-• Location: Delhi, India (Open to Remote Global)
-• Core Platforms: AWS, GCP, Azure, Kubernetes, Terraform, CI/CD, DevSecOps
-• Mission: Automating platforms that never fail and scaling deployments with confidence.
+<span style="color:var(--blue); font-weight:700;">ANIS AHMED ΓÇö DEVOPS ENGINEER</span>
+ΓÇó Experience: 5+ years (July 2021 ΓÇö Present)
+ΓÇó Location: Delhi, India (Open to Remote Global)
+ΓÇó Core Platforms: AWS, GCP, Azure, Kubernetes, Terraform, CI/CD, DevSecOps
+ΓÇó Mission: Automating platforms that never fail and scaling deployments with confidence.
 `,
     'cat contact.txt': () => `
 Email:     <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a>
@@ -398,12 +241,12 @@ Website:   https://anisahmed.in
     'deploy --env prod': () => {
       setTimeout(() => {
         const lines = [
-          '⚡ [INIT] Connecting to multi-cloud EKS & AKS production clusters...',
-          '🔍 [DEVSECOPS] Gitleaks, SonarQube & Trivy verification: PASSED (0 CVEs)',
-          '📜 [OPA] Evaluated Terraform & K8s plan against Rego compliance: APPROVED',
-          '👤 [SIGN-OFF] Production Approval Gate authorized by Anis Ahmed',
-          '🔄 [GITOPS] ArgoCD syncing canary release across availability zones...',
-          '✅ [READY] Health probes 200 OK. 0 Downtime Canary Rollout Completed on anisahmed.in!',
+          'ΓÜí [INIT] Connecting to multi-cloud EKS & AKS production clusters...',
+          '≡ƒöì [DEVSECOPS] Gitleaks, SonarQube & Trivy verification: PASSED (0 CVEs)',
+          '≡ƒô£ [OPA] Evaluated Terraform & K8s plan against Rego compliance: APPROVED',
+          '≡ƒæñ [SIGN-OFF] Production Approval Gate authorized by Anis Ahmed',
+          '≡ƒöä [GITOPS] ArgoCD syncing canary release across availability zones...',
+          'Γ£à [READY] Health probes 200 OK. 0 Downtime Canary Rollout Completed on anisahmed.in!',
         ];
 
         let i = 0;
@@ -416,7 +259,7 @@ Website:   https://anisahmed.in
           }
         }, 350);
       }, 100);
-      return `<span style="color:var(--amber);">🚀 Initiating multi-cloud DevSecOps production rollout...</span>`;
+      return `<span style="color:var(--amber);">≡ƒÜÇ Initiating multi-cloud DevSecOps production rollout...</span>`;
     },
     clear: () => {
       const history = document.getElementById('terminalHistory');

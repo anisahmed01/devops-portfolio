@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   color-scheme: dark;
   --bg: #080d1b;
   --panel: #10182a;
@@ -766,9 +766,6 @@ h1 {
   flex-wrap: wrap;
 }
 
-
-
-
 /* ==========================================
    CINEMATIC INTRO SPLASH OVERLAY
    ========================================== */
@@ -776,53 +773,20 @@ h1 {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 85%);
+  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 75%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  transition: opacity 0.65s ease, filter 0.65s ease;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s ease;
+  will-change: opacity, transform, filter;
 }
 
 #introOverlay.fade-out {
   opacity: 0;
-  filter: blur(8px);
+  transform: scale(1.06);
+  filter: blur(10px);
   pointer-events: none;
-}
-
-/* ── All text starts INVISIBLE from CSS — no flash before JS ── */
-.intro-badge,
-#introQuoteWrap,
-.intro-author {
-  position: relative;
-  z-index: 20;          /* above canvas (z-index:10) */
-  opacity: 0;
-  transform: translateY(18px) scale(0.95);
-  filter: blur(5px);
-  transition:
-    opacity  0.75s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-    filter   0.75s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* JS adds this class when squares have converged */
-#introOverlay.splash-text-in .intro-badge,
-#introOverlay.splash-text-in #introQuoteWrap,
-#introOverlay.splash-text-in .intro-author {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0px);
-}
-
-/* JS adds this when squares blast away */
-#introOverlay.splash-text-out .intro-badge,
-#introOverlay.splash-text-out #introQuoteWrap,
-#introOverlay.splash-text-out .intro-author {
-  opacity: 0;
-  transform: translateY(-18px) scale(1.06);
-  filter: blur(8px);
-  transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
 }
 
 .intro-badge {
@@ -841,14 +805,6 @@ h1 {
   box-shadow: 0 0 20px rgba(84, 200, 255, 0.2);
 }
 
-#introQuoteWrap {
-  position: relative;
-  display: block;
-  text-align: center;
-  width: min(860px, 88vw);
-  margin: 0 auto;
-}
-
 .intro-quote {
   font-size: clamp(2rem, 5vw, 3.6rem);
   font-weight: 850;
@@ -861,7 +817,8 @@ h1 {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 22px rgba(84,200,255,0.4));
+  /* hidden from frame 0; JS reveals after pieces assemble */
+  opacity: 0;
 }
 
 .intro-author {
@@ -873,6 +830,18 @@ h1 {
   text-transform: uppercase;
 }
 
+@keyframes introTextReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.95);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
 
 .contact-meta {
   margin-top: 24px;
@@ -975,75 +944,4 @@ h1 {
     flex-direction: column;
     text-align: center;
   }
-}
-
-
-/* =====================================================
-   QUOTE — "Collect & Shatter" Animation
-   ===================================================== */
-.quote-anim-wrapper {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0;
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--emerald);
-  line-height: 1.5;
-  letter-spacing: 0.5px;
-  user-select: none;
-}
-
-/* Each character starts scattered (via --dx/--dy) and flies to its place */
-.q-char {
-  display: inline-block;
-  transform: translate(var(--dx), var(--dy));
-  opacity: 0;
-  animation: q-assemble 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  /* stagger each character's arrival */
-  animation-delay: calc(var(--i, 0) * 20ms);
-}
-
-@keyframes q-assemble {
-  to {
-    transform: translate(0, 0);
-    opacity: 1;
-  }
-}
-
-/* Phase 2: shatter — each character explodes to its random offset and disappears */
-.quote-anim-wrapper.q-shatter .q-char {
-  animation: q-shatter-out 0.65s cubic-bezier(0.55, 0, 1, 0.45) forwards;
-}
-
-@keyframes q-shatter-out {
-  0%   { transform: translate(0, 0);                   opacity: 1; filter: blur(0px);   }
-  40%  { transform: translate(var(--dx), var(--dy));   opacity: 0.6; filter: blur(1px); }
-  100% { transform: translate(calc(var(--dx) * 2.5), calc(var(--dy) * 2.5));
-         opacity: 0; filter: blur(4px); }
-}
-
-
-/* Intro quote wrap and piece assembly styles */
-#introQuoteWrap {
-  position: relative;
-  display: block;
-  text-align: center;
-  width: min(860px, 88vw);
-  margin: 0 auto;
-}
-
-.intro-piece {
-  position: absolute;
-  left: 0;
-  top: 0;
-  pointer-events: none;
-  will-change: transform, opacity;
-  overflow: visible;
-}
-
-.intro-voxel-square {
-  position: absolute;
-  border-radius: 2px;
-  pointer-events: none;
-  will-change: transform, opacity;
 }
