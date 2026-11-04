@@ -852,10 +852,12 @@ h1 {
 
 #introQuoteWrap {
   position: relative;
-  display: inline-block;
+  display: block;
   text-align: center;
   max-width: 860px;
-  padding: 0 24px;
+  width: min(860px, 90vw);
+  margin: 0 auto;
+  /* height set by JS after font measurement */
 }
 
 .intro-quote {
@@ -863,12 +865,14 @@ h1 {
   font-weight: 850;
   letter-spacing: -2px;
   line-height: 1.15;
+  text-align: center;
   background: linear-gradient(100deg, #54c8ff 0%, #a78bfa 50%, #57e6a5 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 0;
-  opacity: 0;
+  padding: 0;
+  opacity: 0; /* hidden until JS reveals it after assembly */
 }
 
 .intro-author {
@@ -1537,103 +1541,129 @@ document.addEventListener('DOMContentLoaded', () => {
 // 0. CINEMATIC INTRO SPLASH — PIECE ASSEMBLY
 // ==========================================
 function initIntroSplash() {
-  const overlay  = document.getElementById('introOverlay');
-  const wrap     = document.getElementById('introQuoteWrap');
-  const quote    = wrap ? wrap.querySelector('.intro-quote') : null;
+  const overlay = document.getElementById('introOverlay');
+  const wrap    = document.getElementById('introQuoteWrap');
+  const quote   = wrap ? wrap.querySelector('.intro-quote') : null;
   if (!overlay || !wrap || !quote) return;
 
   const ROWS = 5, COLS = 8;
 
-  // --- Step 1: Measure the quote element ---
-  const rect = quote.getBoundingClientRect();
-  const W = rect.width, H = rect.height;
-  const pw = W / COLS, ph = H / ROWS;
+  // Wait for fonts + layout to settle before measuring
+  function runAfterLayout() {
+    const rect = wrap.getBoundingClientRect();
+    let W = rect.width, H = rect.height;
 
-  // --- Step 2: Build piece elements ---
-  const pieces = [];
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      const piece = document.createElement('div');
-      piece.className = 'intro-piece';
-      // Size each piece
-      piece.style.width  = pw + 'px';
-      piece.style.height = ph + 'px';
-      // Position it at the correct grid slot (relative to wrap)
-      piece.style.left = (c * pw) + 'px';
-      piece.style.top  = (r * ph) + 'px';
-      // Clone the gradient text via background + clip
-      piece.style.background    = 'linear-gradient(100deg,#54c8ff 0%,#a78bfa 50%,#57e6a5 100%)';
-      piece.style.backgroundClip      = 'text';
-      piece.style.webkitBackgroundClip = 'text';
-      piece.style.webkitTextFillColor  = 'transparent';
-      piece.style.fontSize    = getComputedStyle(quote).fontSize;
-      piece.style.fontWeight  = '850';
-      piece.style.letterSpacing = '-2px';
-      piece.style.lineHeight  = '1.15';
-      piece.style.whiteSpace  = 'nowrap';
-      // Show only its slice via clip-path
-      piece.style.clipPath = 'inset(0 0 0 0)';
-      piece.style.overflow = 'hidden';
-      // Start from a random scattered position
-      const ox = (Math.random() - 0.5) * window.innerWidth * 1.4;
-      const oy = (Math.random() - 0.5) * window.innerHeight * 1.4;
-      piece.style.transform  = 'translate(' + ox + 'px,' + oy + 'px) rotate(' + ((Math.random()-0.5)*60) + 'deg) scale(0.3)';
-      piece.style.opacity    = '0';
-      piece.style.transition = 'none';
-      // The piece renders a shifted copy of the text
-      piece.textContent = quote.textContent;
-      piece.style.backgroundPositionX = -(c * pw) + 'px';
-      piece.style.backgroundPositionY = -(r * ph) + 'px';
-      piece.style.backgroundSize = W + 'px ' + H + 'px';
-      wrap.appendChild(piece);
-      pieces.push({ el: piece, ox, oy });
+    // Fallback if still zero (font not ready yet)
+    if (W < 10) { W = Math.min(window.innerWidth * 0.85, 860); }
+    if (H < 10) { H = 80; }
+
+    const pw = W / COLS;
+    const ph = H / ROWS;
+
+    // Position the wrap so pieces can be absolutely placed inside it
+    wrap.style.width  = W + 'px';
+    wrap.style.height = H + 'px';
+
+    const pieces = [];
+
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const piece = document.createElement('div');
+        piece.className = 'intro-piece';
+
+        // Each piece is a window into the quote at the right position
+        piece.style.width    = pw + 'px';
+        piece.style.height   = ph + 'px';
+        piece.style.left     = (c * pw) + 'px';
+        piece.style.top      = (r * ph) + 'px';
+
+        // Clip to show only this piece's slice of the full quote
+        const clipT = r * ph;
+        const clipR = W - (c + 1) * pw;
+        const clipB = H - (r + 1) * ph;
+        const clipL = c * pw;
+        piece.style.clipPath = 'inset(' + clipT + 'px ' + clipR + 'px ' + clipB + 'px ' + clipL + 'px)';
+
+        // The inner content mirrors the quote exactly
+        const inner = quote.cloneNode(true);
+        inner.style.position = 'absolute';
+        inner.style.top      = '0';
+        inner.style.left     = '0';
+        inner.style.width    = W + 'px';
+        inner.style.opacity  = '1';
+        inner.style.margin   = '0';
+        inner.style.padding  = '0';
+        inner.style.animation = 'none';
+        piece.appendChild(inner);
+
+        // Start scattered offscreen
+        const ox = (Math.random() - 0.5) * window.innerWidth * 1.6;
+        const oy = (Math.random() - 0.5) * window.innerHeight * 1.6;
+        const orot = (Math.random() - 0.5) * 60;
+        piece.style.transform   = 'translate(' + ox + 'px,' + oy + 'px) rotate(' + orot + 'deg) scale(0.4)';
+        piece.style.opacity     = '0';
+        piece.style.transition  = 'none';
+
+        wrap.appendChild(piece);
+        pieces.push({ el: piece });
+      }
     }
+
+    // PHASE 1 — COLLECT: pieces fly into position
+    const delay0 = 100;
+    pieces.forEach(({ el }, i) => {
+      setTimeout(() => {
+        el.style.transition = 'transform 0.75s cubic-bezier(0.16,1,0.3,1), opacity 0.5s ease';
+        el.style.transform  = 'translate(0,0) rotate(0deg) scale(1)';
+        el.style.opacity    = '1';
+      }, delay0 + i * 15);
+    });
+
+    const assembleDone = delay0 + pieces.length * 15 + 750;
+
+    // PHASE 2 — REVEAL: show real quote, hide pieces briefly
+    setTimeout(() => {
+      quote.style.transition = 'opacity 0.15s';
+      quote.style.opacity    = '1';
+      pieces.forEach(p => { p.el.style.opacity = '0'; });
+    }, assembleDone);
+
+    // PHASE 3 — HOLD: user reads for 1s
+    const holdEnd = assembleDone + 1000;
+
+    // PHASE 4 — EXPLODE: pieces burst outward
+    setTimeout(() => {
+      quote.style.transition = 'opacity 0.15s';
+      quote.style.opacity    = '0';
+      pieces.forEach(({ el }, i) => {
+        const ex  = (Math.random() - 0.5) * window.innerWidth  * 2.2;
+        const ey  = (Math.random() - 0.5) * window.innerHeight * 2.2;
+        const rot = (Math.random() - 0.5) * 720;
+        setTimeout(() => {
+          el.style.opacity    = '1';
+          el.style.transition = 'transform 1s cubic-bezier(0.6,0,1,0.4), opacity 0.9s ease';
+          el.style.transform  = 'translate(' + ex + 'px,' + ey + 'px) rotate(' + rot + 'deg) scale(0.05)';
+          el.style.opacity    = '0';
+        }, i * 8);
+      });
+    }, holdEnd);
+
+    // PHASE 5 — DISMISS overlay
+    const totalTime = holdEnd + pieces.length * 8 + 1050;
+    setTimeout(() => {
+      overlay.classList.add('fade-out');
+      setTimeout(() => overlay.remove(), 600);
+    }, totalTime);
   }
 
-  // --- Step 3: COLLECT — fly pieces in from scatter to grid ---
-  const delay0 = 150; // ms before collection starts
-  pieces.forEach(({ el }, i) => {
-    setTimeout(() => {
-      el.style.transition = 'transform 0.7s cubic-bezier(0.16,1,0.3,1), opacity 0.5s ease';
-      el.style.transform  = 'translate(0,0) rotate(0deg) scale(1)';
-      el.style.opacity    = '1';
-    }, delay0 + i * 12);
+  // Use requestAnimationFrame to ensure layout is painted, then wait for fonts
+  requestAnimationFrame(() => {
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(runAfterLayout);
+    } else {
+      setTimeout(runAfterLayout, 300);
+    }
   });
-
-  const assembleDone = delay0 + pieces.length * 12 + 700;
-
-  // --- Step 4: Show the real quote text once assembled ---
-  setTimeout(() => {
-    quote.style.transition = 'opacity 0.1s';
-    quote.style.opacity    = '1';
-    pieces.forEach(p => p.el.style.opacity = '0');
-  }, assembleDone);
-
-  // --- Step 5: HOLD — 900ms pause ---
-  const holdEnd = assembleDone + 900;
-
-  // --- Step 6: EXPLODE — pieces fly outward in squares ---
-  setTimeout(() => {
-    quote.style.opacity = '0';
-    pieces.forEach(({ el }, i) => {
-      const ex = (Math.random() - 0.5) * window.innerWidth * 2;
-      const ey = (Math.random() - 0.5) * window.innerHeight * 2;
-      const rot = (Math.random() - 0.5) * 720;
-      setTimeout(() => {
-        el.style.opacity    = '1';
-        el.style.transition = 'transform 0.9s cubic-bezier(0.55,0,1,0.45), opacity 0.9s ease';
-        el.style.transform  = 'translate(' + ex + 'px,' + ey + 'px) rotate(' + rot + 'deg) scale(0.1)';
-        el.style.opacity    = '0';
-      }, i * 6);
-    });
-  }, holdEnd);
-
-  // --- Step 7: DISMISS overlay ---
-  const totalTime = holdEnd + pieces.length * 6 + 950;
-  setTimeout(() => {
-    overlay.classList.add('fade-out');
-    setTimeout(() => overlay.remove(), 600);
-  }, totalTime);
 }
 
 // ==========================================
