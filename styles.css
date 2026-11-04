@@ -325,11 +325,57 @@ h1 {
 }
 
 .terminal-body {
-  padding: 22px;
+  padding: 20px 22px;
   font-family: 'Fira Code', ui-monospace, SFMono-Regular, Consolas, monospace;
   font-size: 0.8rem;
-  line-height: 1.7;
-  min-height: 230px;
+  line-height: 1.65;
+  height: 290px;
+  overflow-y: auto;
+  cursor: text;
+}
+
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f2f5ff;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  caret-color: var(--blue);
+  padding: 0;
+}
+
+.terminal-quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.terminal-chip {
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-family: 'Fira Code', monospace;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.terminal-chip:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: rgba(84, 200, 255, 0.08);
 }
 
 .prompt {
