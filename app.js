@@ -14,122 +14,146 @@ document.addEventListener('DOMContentLoaded', () => {
 // 0. CINEMATIC INTRO SPLASH DISSOLVE
 // ==========================================
 function initIntroSplash() {
-  const overlay = document.getElementById('introOverlay');
-  const wrap = document.getElementById('introQuoteWrap');
-  const quote = wrap ? wrap.querySelector('.intro-quote') : null;
-  const badge = overlay ? overlay.querySelector('.intro-badge') : null;
-  const author = overlay ? overlay.querySelector('.intro-author') : null;
-  if (!overlay || !wrap || !quote) return;
+  var overlay = document.getElementById('introOverlay');
+  if (!overlay) return;
 
-  // Make sure original quote starts 100% hidden — NO OVERLAPPING!
-  quote.style.opacity = '0';
-  if (badge) badge.style.opacity = '0';
-  if (author) author.style.opacity = '0';
+  // ── all text already invisible via CSS; nothing to hide here ──
+  var W = window.innerWidth;
+  var H = window.innerHeight;
 
-  const ROWS = 5;
-  const COLS = 8;
-  const DUR_COLLECT = 1200; // ms — pieces fly in smoothly over 1.2s
-  const STAGGER_IN = 22;    // ms — stagger between consecutive pieces
-  const HOLD_DURATION = 1500; // ms — hold so text is fully readable
+  // ── CANVAS ────────────────────────────────────────────────────
+  var cvs = document.createElement('canvas');
+  cvs.width  = W;  cvs.height = H;
+  cvs.style.cssText =
+    'position:absolute;inset:0;width:100%;height:100%;' +
+    'pointer-events:none;z-index:10;';
+  overlay.appendChild(cvs);
+  var ctx = cvs.getContext('2d');
 
-  function build() {
-    const qRect = quote.getBoundingClientRect();
-    let W = qRect.width;
-    let H = qRect.height;
+  window.addEventListener('resize', function () {
+    W = cvs.width  = window.innerWidth;
+    H = cvs.height = window.innerHeight;
+  });
 
-    // Retry if fonts/layout not settled yet
-    if (W < 20 || H < 10) { setTimeout(build, 80); return; }
+  // ── SQUARES ───────────────────────────────────────────────────
+  var COLORS = ['#54c8ff','#57e6a5','#a78bfa','#ffd166','#e0eaff'];
+  var NUM    = 200;
+  var CX = W / 2, CY = H / 2;
+  var sqs = [];
 
-    const pw = W / COLS;
-    const ph = H / ROWS;
-
-    wrap.style.width = W + 'px';
-    wrap.style.height = H + 'px';
-    wrap.style.position = 'relative';
-
-    const pieces = [];
-
-    // Fade in the badge and author
-    if (badge) {
-      badge.style.transition = 'opacity 0.6s ease';
-      badge.style.opacity = '1';
-    }
-    if (author) {
-      author.style.transition = 'opacity 0.6s ease';
-      author.style.opacity = '1';
-    }
-
-    for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) {
-        const piece = document.createElement('div');
-        piece.className = 'intro-piece';
-        piece.style.width = W + 'px';
-        piece.style.height = H + 'px';
-
-        // Clip to this exact grid cell
-        const cT = r * ph;
-        const cR = W - (c + 1) * pw;
-        const cB = H - (r + 1) * ph;
-        const cL = c * pw;
-        piece.style.clipPath = `inset(${cT}px ${cR}px ${cB}px ${cL}px)`;
-
-        // Clone quote inside for matching gradient
-        const inner = quote.cloneNode(true);
-        inner.style.cssText = `position:absolute;top:0;left:0;width:${W}px;opacity:1;animation:none;margin:0;padding:0;pointer-events:none;`;
-        piece.appendChild(inner);
-
-        // Scatter starting position (flying in from outside viewport)
-        const ox = (Math.random() - 0.5) * window.innerWidth * 1.8;
-        const oy = (Math.random() - 0.5) * window.innerHeight * 1.8;
-        const orot = (Math.random() - 0.5) * 80;
-        piece.style.transform = `translate(${ox}px, ${oy}px) rotate(${orot}deg) scale(0.3)`;
-        piece.style.opacity = '0';
-        piece.style.transition = 'none';
-
-        wrap.appendChild(piece);
-        pieces.push(piece);
-      }
-    }
-
-    // PHASE 1: COLLECT PIECES FROM NOTHING
-    pieces.forEach((el, i) => {
-      setTimeout(() => {
-        el.style.transition = `transform ${DUR_COLLECT}ms cubic-bezier(0.16, 1, 0.3, 1), opacity 500ms ease`;
-        el.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
-        el.style.opacity = '1';
-      }, 100 + i * STAGGER_IN);
+  for (var i = 0; i < NUM; i++) {
+    var ang   = Math.random() * Math.PI * 2;
+    var dist  = 0.55 * Math.max(W, H) + Math.random() * 0.55 * Math.max(W, H);
+    var size  = 6 + Math.random() * 14;
+    var color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    sqs.push({
+      // start: scattered across full screen, far from centre
+      sx: CX + Math.cos(ang) * dist,
+      sy: CY + Math.sin(ang) * dist,
+      // land: loose cluster around centre (full-screen feel)
+      lx: CX + (Math.random() - 0.5) * W * 0.9,
+      ly: CY + (Math.random() - 0.5) * H * 0.9,
+      // exit: blast back outward
+      ex: CX + Math.cos(ang + (Math.random()-0.5)*0.8) * dist * 1.6,
+      ey: CY + Math.sin(ang + (Math.random()-0.5)*0.8) * dist * 1.6,
+      size:  size,
+      color: color,
+      rot:   Math.random() * Math.PI * 2,
+      rspd:  (Math.random() - 0.5) * 0.12,
+      delay: Math.random() * 0.3   // 0–30 % of phase 1
     });
-
-    const collectEnd = 100 + (pieces.length - 1) * STAGGER_IN + DUR_COLLECT;
-
-    // PHASE 2: ASSEMBLE SEAMLESSLY TO FULL GLOWING QUOTE
-    setTimeout(() => {
-      quote.style.transition = 'opacity 0.35s ease';
-      quote.style.opacity = '1';
-      pieces.forEach(el => {
-        el.style.transition = 'opacity 0.35s ease';
-        el.style.opacity = '0';
-      });
-    }, collectEnd);
-
-    // PHASE 3: HOLD AND THEN DISAPPEAR NORMALLY INTO THE WEBSITE
-    const dismissAt = collectEnd + HOLD_DURATION;
-    setTimeout(() => {
-      overlay.classList.add('fade-out');
-      setTimeout(() => {
-        overlay.remove();
-      }, 700);
-    }, dismissAt);
   }
 
-  requestAnimationFrame(() => {
-    const start = () => setTimeout(build, 80);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(start);
+  // ── TIMING ────────────────────────────────────────────────────
+  var T_IN   = 1400;   // ms  squares fly IN  (collect)
+  var T_HOLD = 1600;   // ms  hold (text visible)
+  var T_OUT  = 900;    // ms  squares fly OUT (disperse)
+  var t0 = performance.now();
+  var textRevealed = false;
+  var rafId;
+
+  // ── helpers ───────────────────────────────────────────────────
+  function ease3(t) { return 1 - Math.pow(1 - t, 3); }   // ease-out cubic
+  function easeIn(t){ return t * t * t; }                  // ease-in cubic
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function drawSq(sq, cx, cy, alpha, rot) {
+    if (alpha <= 0 || sq.size <= 0) return;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rot);
+    ctx.globalAlpha = Math.min(1, alpha);
+    ctx.fillStyle   = sq.color;
+    ctx.shadowColor = sq.color;
+    ctx.shadowBlur  = 14;
+    var s = sq.size / 2;
+    ctx.fillRect(-s, -s, sq.size, sq.size);
+    ctx.restore();
+  }
+
+  function revealText() {
+    if (textRevealed) return;
+    textRevealed = true;
+    overlay.classList.add('splash-text-in');
+  }
+  function hideText() {
+    overlay.classList.remove('splash-text-in');
+    overlay.classList.add('splash-text-out');
+  }
+
+  // ── RENDER LOOP ───────────────────────────────────────────────
+  function frame(now) {
+    var el = now - t0;
+    ctx.clearRect(0, 0, W, H);
+
+    if (el < T_IN) {
+      // PHASE 1 — squares stream IN from full-screen edges
+      var p = el / T_IN;
+      sqs.forEach(function(sq) {
+        var sp = Math.max(0, (p - sq.delay) / (1 - sq.delay));
+        var e  = ease3(Math.min(1, sp));
+        var cx = lerp(sq.sx, sq.lx, e);
+        var cy = lerp(sq.sy, sq.ly, e);
+        sq.rot += sq.rspd;
+        drawSq(sq, cx, cy, e, sq.rot);
+      });
+      if (p > 0.6) revealText();
+
+    } else if (el < T_IN + T_HOLD) {
+      // PHASE 2 — hold, squares gently pulse
+      revealText();
+      var t2 = (el - T_IN) / T_HOLD;
+      sqs.forEach(function(sq) {
+        sq.rot += sq.rspd * 0.3;
+        var pulse = 0.65 + 0.3 * Math.sin(now * 0.003 + sq.sx);
+        drawSq(sq, sq.lx, sq.ly, pulse, sq.rot);
+      });
+
+    } else if (el < T_IN + T_HOLD + T_OUT) {
+      // PHASE 3 — squares blast OUT across full screen
+      var p3 = (el - T_IN - T_HOLD) / T_OUT;
+      var e3 = easeIn(Math.min(1, p3));
+      if (p3 > 0.15) hideText();
+      sqs.forEach(function(sq) {
+        sq.rot += sq.rspd * 4;
+        var cx = lerp(sq.lx, sq.ex, e3);
+        var cy = lerp(sq.ly, sq.ey, e3);
+        drawSq(sq, cx, cy, 1 - e3, sq.rot);
+      });
+
     } else {
-      setTimeout(start, 200);
+      // DONE — fade overlay out
+      cancelAnimationFrame(rafId);
+      overlay.classList.add('fade-out');
+      setTimeout(function() { overlay.remove(); }, 650);
+      return;
     }
-  });
+
+    rafId = requestAnimationFrame(frame);
+  }
+
+  rafId = requestAnimationFrame(frame);
 }
 
 function initScrollObserver() {
