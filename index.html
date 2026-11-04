@@ -807,6 +807,82 @@ h1 {
   flex-wrap: wrap;
 }
 
+/* ==========================================
+   CINEMATIC INTRO SPLASH OVERLAY
+   ========================================== */
+#introOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 75%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s ease;
+  will-change: opacity, transform, filter;
+}
+
+#introOverlay.fade-out {
+  opacity: 0;
+  transform: scale(1.06);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.intro-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border: 1px solid rgba(84, 200, 255, 0.35);
+  border-radius: 30px;
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  color: var(--blue);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  margin-bottom: 22px;
+  background: rgba(16, 24, 42, 0.7);
+  box-shadow: 0 0 20px rgba(84, 200, 255, 0.2);
+}
+
+.intro-quote {
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-weight: 850;
+  letter-spacing: -2px;
+  text-align: center;
+  max-width: 860px;
+  padding: 0 24px;
+  line-height: 1.15;
+  background: linear-gradient(100deg, #54c8ff 0%, #a78bfa 50%, #57e6a5 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: introTextReveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.intro-author {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 2.5px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  text-transform: uppercase;
+}
+
+@keyframes introTextReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.95);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
 .contact-meta {
   margin-top: 24px;
   color: var(--muted);
@@ -911,10 +987,20 @@ h1 {
 }
 
   </style>
-  <link rel="stylesheet" href="styles.css?v=2.6.1">
+  <link rel="stylesheet" href="styles.css?v=2.7.0">
 </head>
 
 <body>
+
+  <!-- Cinematic Entry Splash Banner -->
+  <div id="introOverlay" aria-hidden="true">
+    <div class="intro-badge">
+      <span class="pulse"></span>
+      SYSTEM INITIALIZED
+    </div>
+    <div class="intro-quote">“Automate everything. Break nothing.”</div>
+    <div class="intro-author">Anis Ahmed &bull; DevOps Platform</div>
+  </div>
 
   <!-- Sticky Navbar -->
   <header class="navbar">
@@ -1417,7 +1503,7 @@ h1 {
       <span class="brand-box">AA</span><span class="brand-dot">.</span>
     </a>
     <p>“Automate everything. Break nothing.” &bull; Thanks for stopping by!</p>
-    <span>v2.6.1 &bull; <a href="https://www.linkedin.com/in/webanis" target="_blank">LinkedIn</a> &bull; <a href="https://github.com/anisahmed01" target="_blank">GitHub</a></span>
+    <span>v2.7.0 &bull; <a href="https://www.linkedin.com/in/webanis" target="_blank">LinkedIn</a> &bull; <a href="https://github.com/anisahmed01" target="_blank">GitHub</a></span>
   </footer>
 
   <!-- Interactive JavaScript Engine -->
@@ -1427,11 +1513,28 @@ h1 {
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  initIntroSplash();
   initScrollObserver();
   initNavScrollTracker();
   initPipelineConsole();
   initMacTerminal();
 });
+
+// ==========================================
+// 0. CINEMATIC INTRO SPLASH DISSOLVE
+// ==========================================
+function initIntroSplash() {
+  const overlay = document.getElementById('introOverlay');
+  if (!overlay) return;
+
+  // Stays visible for 1.1s, then dissolves with blur-scale animation
+  setTimeout(() => {
+    overlay.classList.add('fade-out');
+    setTimeout(() => {
+      overlay.remove();
+    }, 700);
+  }, 1100);
+}
 
 // ==========================================
 // 1. ROCK-SOLID SCROLL REVEAL OBSERVER
@@ -1745,7 +1848,7 @@ Type <span style="color:var(--blue);">help</span> to view all supported DevOps c
 }
 
   </script>
-  <script src="app.js?v=2.6.1"></script>
+  <script src="app.js?v=2.7.0"></script>
 
 </body>
 </html>

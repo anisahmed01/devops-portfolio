@@ -3,11 +3,28 @@
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  initIntroSplash();
   initScrollObserver();
   initNavScrollTracker();
   initPipelineConsole();
   initMacTerminal();
 });
+
+// ==========================================
+// 0. CINEMATIC INTRO SPLASH DISSOLVE
+// ==========================================
+function initIntroSplash() {
+  const overlay = document.getElementById('introOverlay');
+  if (!overlay) return;
+
+  // Stays visible for 1.1s, then dissolves with blur-scale animation
+  setTimeout(() => {
+    overlay.classList.add('fade-out');
+    setTimeout(() => {
+      overlay.remove();
+    }, 700);
+  }, 1100);
+}
 
 // ==========================================
 // 1. ROCK-SOLID SCROLL REVEAL OBSERVER
