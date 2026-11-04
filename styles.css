@@ -79,13 +79,40 @@ a {
 }
 
 .brand {
-  font-size: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 1.5rem;
   font-weight: 850;
-  letter-spacing: -2px;
+  letter-spacing: -1px;
 }
 
-.brand span {
+.brand-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 9px;
+  border: 1px solid rgba(84, 200, 255, 0.35);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(84, 200, 255, 0.12), rgba(16, 24, 42, 0.8));
   color: var(--blue);
+  font-family: 'Inter', sans-serif;
+  font-weight: 850;
+  letter-spacing: -0.5px;
+  transition: all 0.25s ease-in-out;
+}
+
+.brand:hover .brand-box {
+  border-color: var(--blue);
+  box-shadow: 0 0 16px rgba(84, 200, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+.brand-dot {
+  color: var(--purple);
+  font-weight: 900;
+  font-size: 1.6rem;
+  line-height: 1;
 }
 
 nav {

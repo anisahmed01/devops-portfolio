@@ -4,11 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080d1b">
-  <meta name="description" content="Anis Ahmed — DevOps Engineer with 5+ years of experience across AWS, GCP, Azure, Kubernetes, Terraform, CI/CD, and DevSecOps automation.">
-  <title>Anis Ahmed | DevOps Engineer</title>
+  
+  <!-- Primary Meta Tags -->
+  <title>Anis Ahmed | Senior DevOps & Cloud Infrastructure Engineer</title>
+  <meta name="title" content="Anis Ahmed | Senior DevOps & Cloud Infrastructure Engineer">
+  <meta name="description" content="DevOps Engineer with 5+ years of experience across AWS, GCP, Azure, Kubernetes, Terraform, DevSecOps automation, and zero-downtime GitOps.">
+  <meta name="author" content="Anis Ahmed">
 
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://anisahmed.in/">
+  <meta property="og:title" content="Anis Ahmed | Senior DevOps & Cloud Infrastructure Engineer">
+  <meta property="og:description" content="5+ Years Experience · AWS · GCP · Azure · Kubernetes · Terraform · Shift-Left DevSecOps · GitOps with ArgoCD.">
+  <meta property="og:image" content="https://anisahmed.in/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="Anis Ahmed Portfolio">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://anisahmed.in/">
+  <meta name="twitter:title" content="Anis Ahmed | Senior DevOps & Cloud Infrastructure Engineer">
+  <meta name="twitter:description" content="5+ Years Experience · AWS · GCP · Azure · Kubernetes · Terraform · Shift-Left DevSecOps · GitOps with ArgoCD.">
+  <meta name="twitter:image" content="https://anisahmed.in/og-image.png">
+
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
 
   <!-- Google Fonts: Inter & Fira Code -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -97,13 +120,40 @@ a {
 }
 
 .brand {
-  font-size: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 1.5rem;
   font-weight: 850;
-  letter-spacing: -2px;
+  letter-spacing: -1px;
 }
 
-.brand span {
+.brand-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 9px;
+  border: 1px solid rgba(84, 200, 255, 0.35);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(84, 200, 255, 0.12), rgba(16, 24, 42, 0.8));
   color: var(--blue);
+  font-family: 'Inter', sans-serif;
+  font-weight: 850;
+  letter-spacing: -0.5px;
+  transition: all 0.25s ease-in-out;
+}
+
+.brand:hover .brand-box {
+  border-color: var(--blue);
+  box-shadow: 0 0 16px rgba(84, 200, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+.brand-dot {
+  color: var(--purple);
+  font-weight: 900;
+  font-size: 1.6rem;
+  line-height: 1;
 }
 
 nav {
@@ -837,14 +887,16 @@ h1 {
 }
 
   </style>
-  <link rel="stylesheet" href="styles.css?v=2.5.3">
+  <link rel="stylesheet" href="styles.css?v=2.6.0">
 </head>
 
 <body>
 
   <!-- Sticky Navbar -->
   <header class="navbar">
-    <a class="brand" href="#home">AA<span>.</span></a>
+    <a class="brand" href="#home" aria-label="Anis Ahmed Home">
+      <span class="brand-box">AA</span><span class="brand-dot">.</span>
+    </a>
 
     <nav aria-label="Main navigation">
       <a href="#about">About</a>
@@ -878,7 +930,7 @@ h1 {
 
         <div class="hero-actions">
           <a class="button primary" href="#projects">Explore my work ↘</a>
-          <a class="button secondary" href="#pipeline">Simulate pipeline</a>
+          <a class="button secondary" href="https://github.com/anisahmed01" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
           <a class="button secondary" href="https://www.linkedin.com/in/webanis" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
         </div>
 
@@ -1180,7 +1232,7 @@ h1 {
               <span>OPA</span>
             </div>
           </div>
-          <span class="project-arrow" aria-hidden="true">↗</span>
+          <a href="https://github.com/anisahmed01" target="_blank" class="project-arrow" aria-label="View Project on GitHub">↗</a>
         </article>
 
         <!-- Project 2 -->
@@ -1200,7 +1252,7 @@ h1 {
               <span>Canary Rollouts</span>
             </div>
           </div>
-          <span class="project-arrow" aria-hidden="true">↗</span>
+          <a href="https://github.com/anisahmed01" target="_blank" class="project-arrow" aria-label="View Project on GitHub">↗</a>
         </article>
 
         <!-- Project 3 -->
@@ -1219,7 +1271,7 @@ h1 {
               <span>Python Automation</span>
             </div>
           </div>
-          <span class="project-arrow" aria-hidden="true">↗</span>
+          <a href="https://github.com/anisahmed01" target="_blank" class="project-arrow" aria-label="View Project on GitHub">↗</a>
         </article>
 
         <!-- Project 4 -->
@@ -1239,7 +1291,7 @@ h1 {
               <span>OPA Rego</span>
             </div>
           </div>
-          <span class="project-arrow" aria-hidden="true">↗</span>
+          <a href="https://github.com/anisahmed01" target="_blank" class="project-arrow" aria-label="View Project on GitHub">↗</a>
         </article>
 
         <!-- Project 5 -->
@@ -1258,7 +1310,7 @@ h1 {
               <span>CloudWatch</span>
             </div>
           </div>
-          <span class="project-arrow" aria-hidden="true">↗</span>
+          <a href="https://github.com/anisahmed01" target="_blank" class="project-arrow" aria-label="View Project on GitHub">↗</a>
         </article>
 
       </div>
@@ -1311,14 +1363,17 @@ h1 {
         <a class="button secondary" href="https://www.linkedin.com/in/webanis" target="_blank" rel="noopener noreferrer">
           Connect on LinkedIn ↗
         </a>
+        <a class="button secondary" href="https://github.com/anisahmed01" target="_blank" rel="noopener noreferrer">
+          GitHub Profile ↗
+        </a>
       </div>
 
       <div class="contact-meta">
         <span>Email: <strong style="color:var(--text);">contact@anisahmed.in</strong></span>
         &bull;
-        <span>Domain: <strong style="color:var(--text);">https://anisahmed.in</strong></span>
+        <span>GitHub: <strong style="color:var(--text);">github.com/anisahmed01</strong></span>
         &bull;
-        <span>Location: <strong style="color:var(--text);">Delhi, India</strong></span>
+        <span>Domain: <strong style="color:var(--text);">https://anisahmed.in</strong></span>
       </div>
     </section>
 
@@ -1326,9 +1381,11 @@ h1 {
 
   <!-- Footer -->
   <footer class="footer">
-    <a class="brand" href="#home">AA<span>.</span></a>
+    <a class="brand" href="#home" aria-label="Anis Ahmed Home">
+      <span class="brand-box">AA</span><span class="brand-dot">.</span>
+    </a>
     <p>Designed with intent. Deployed with automation.</p>
-    <span>v2.5.3 &bull; <a href="https://www.linkedin.com/in/webanis" target="_blank">LinkedIn</a> &bull; <a href="https://github.com/anisahmed01/devops-portfolio" target="_blank">GitHub</a></span>
+    <span>v2.6.0 &bull; <a href="https://www.linkedin.com/in/webanis" target="_blank">LinkedIn</a> &bull; <a href="https://github.com/anisahmed01" target="_blank">GitHub</a></span>
   </footer>
 
   <!-- Interactive JavaScript Engine -->
@@ -1549,6 +1606,7 @@ aws_dynamodb_table.terraform_state_locks
     'cat contact.txt': () => `
 Email:     <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a>
 LinkedIn:  <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline;">linkedin.com/in/webanis</a>
+GitHub:    <a href="https://github.com/anisahmed01" target="_blank" style="color:var(--blue); text-decoration:underline;">github.com/anisahmed01</a>
 Website:   https://anisahmed.in
 `,
     'deploy --env prod': () => {
@@ -1651,7 +1709,7 @@ Type <span style="color:var(--blue);">help</span> to view all supported DevOps c
 }
 
   </script>
-  <script src="app.js?v=2.5.3"></script>
+  <script src="app.js?v=2.6.0"></script>
 
 </body>
 </html>

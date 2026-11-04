@@ -214,6 +214,7 @@ aws_dynamodb_table.terraform_state_locks
     'cat contact.txt': () => `
 Email:     <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a>
 LinkedIn:  <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline;">linkedin.com/in/webanis</a>
+GitHub:    <a href="https://github.com/anisahmed01" target="_blank" style="color:var(--blue); text-decoration:underline;">github.com/anisahmed01</a>
 Website:   https://anisahmed.in
 `,
     'deploy --env prod': () => {
