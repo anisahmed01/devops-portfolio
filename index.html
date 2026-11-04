@@ -15,7 +15,783 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;850&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css">
+  <style>
+:root {
+  color-scheme: dark;
+  --bg: #080d1b;
+  --panel: #10182a;
+  --panel-hover: #141f35;
+  --text: #f2f5ff;
+  --muted: #98a5bd;
+  --blue: #54c8ff;
+  --purple: #a78bfa;
+  --emerald: #57e6a5;
+  --red: #ff7285;
+  --amber: #ffd166;
+  --border: rgba(155, 177, 221, 0.15);
+  --border-hover: rgba(84, 200, 255, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 85px;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse at 80% 5%, #152047 0, transparent 38%),
+    radial-gradient(ellipse at 20% 50%, rgba(114, 88, 220, 0.08) 0, transparent 40%),
+    radial-gradient(ellipse at 75% 85%, rgba(84, 200, 255, 0.06) 0, transparent 45%),
+    var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ==========================================
+   SCROLL REVEAL ANIMATIONS (SMOOTH & RELIABLE)
+   ========================================== */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger helper delays */
+.delay-1 { transition-delay: 100ms; }
+.delay-2 { transition-delay: 200ms; }
+.delay-3 { transition-delay: 300ms; }
+
+/* ==========================================
+   NAVBAR
+   ========================================== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px max(6%, calc((100% - 1180px) / 2));
+  background: rgba(8, 13, 27, 0.88);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.brand {
+  font-size: 1.6rem;
+  font-weight: 850;
+  letter-spacing: -2px;
+}
+
+.brand span {
+  color: var(--blue);
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+nav a:hover {
+  color: var(--blue);
+}
+
+nav a.active-link {
+  color: var(--blue);
+}
+
+.nav-contact {
+  padding: 8px 15px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  transition: all 0.2s;
+}
+
+.nav-contact:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+  transform: translateY(-1px);
+}
+
+/* ==========================================
+   SECTIONS & LAYOUT
+   ========================================== */
+.section {
+  width: min(1180px, 90%);
+  margin: 0 auto;
+  padding: 90px 0;
+}
+
+.eyebrow {
+  color: var(--blue);
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+h1 {
+  margin: 10px 0 20px;
+  font-size: clamp(2.6rem, 5.2vw, 4.4rem);
+  line-height: 1.08;
+  letter-spacing: -2.5px;
+  font-weight: 800;
+}
+
+.gradient-text {
+  color: var(--blue);
+  background: linear-gradient(100deg, var(--blue), var(--purple));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================
+   HERO
+   ========================================== */
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 50px;
+  min-height: 600px;
+  padding-top: 70px;
+  padding-bottom: 80px;
+}
+
+.hero-copy,
+.terminal-card {
+  position: relative;
+  z-index: 1;
+}
+
+.availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 1.2px;
+  background: rgba(16, 24, 42, 0.4);
+}
+
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald);
+  box-shadow: 0 0 10px var(--emerald);
+  animation: pulseAnim 2s infinite;
+}
+
+@keyframes pulseAnim {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.hero-description {
+  max-width: 540px;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 9px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.primary {
+  color: #06101d;
+  background: linear-gradient(100deg, var(--blue), #a5a4ff);
+  box-shadow: 0 4px 20px rgba(84, 200, 255, 0.25);
+}
+
+.secondary {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+}
+
+.secondary:hover {
+  border-color: var(--blue);
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.hero-meta strong {
+  color: var(--text);
+}
+
+.meta-divider {
+  height: 16px;
+  border-left: 1px solid var(--border);
+}
+
+/* ==========================================
+   TERMINAL CARD (ANGLED & INTERACTIVE)
+   ========================================== */
+.terminal-card {
+  overflow: hidden;
+  border: 1px solid rgba(84, 200, 255, 0.25);
+  border-radius: 16px;
+  background: rgba(12, 19, 36, 0.96);
+  box-shadow: 0 20px 80px rgba(21, 32, 71, 0.4);
+  transform: rotate(1deg);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+}
+
+.terminal-card:hover {
+  transform: rotate(0deg) translateY(-4px);
+  border-color: rgba(84, 200, 255, 0.45);
+}
+
+.terminal-header,
+.terminal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 18px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.025);
+  font-size: 0.74rem;
+}
+
+.terminal-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.window-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.window-dots span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+.window-dots span:nth-child(2) {
+  background: var(--amber);
+}
+
+.window-dots span:nth-child(3) {
+  background: var(--emerald);
+}
+
+.terminal-status {
+  color: var(--emerald);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.terminal-body {
+  padding: 22px;
+  font-family: 'Fira Code', ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  min-height: 230px;
+}
+
+.prompt {
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.terminal-output {
+  margin: 4px 0 16px 16px;
+  color: #d2dcf6;
+}
+
+.success-output {
+  color: var(--emerald);
+  margin: 4px 0 16px 16px;
+}
+
+.cursor {
+  color: var(--purple);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to { visibility: hidden; }
+}
+
+.terminal-footer {
+  justify-content: space-between;
+  border-top: 1px solid var(--border);
+  color: var(--blue);
+  letter-spacing: 0.5px;
+  font-size: 0.72rem;
+}
+
+/* ==========================================
+   SECTION HEADINGS
+   ========================================== */
+.section-heading {
+  max-width: 720px;
+  margin-bottom: 42px;
+}
+
+.section-heading h2 {
+  margin: 8px 0 12px;
+  font-size: clamp(2rem, 3.8vw, 3.1rem);
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+  font-weight: 800;
+}
+
+.section-description {
+  color: var(--muted);
+  font-size: 1.02rem;
+}
+
+/* ==========================================
+   GRIDS & CARDS (ABOUT & SKILLS)
+   ========================================== */
+.about-grid,
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.about-card,
+.skill-card {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: linear-gradient(145deg, var(--panel), rgba(16, 24, 42, 0.5));
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+
+.about-card:hover,
+.skill-card:hover,
+.project-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-hover);
+  box-shadow: 0 12px 30px rgba(8, 13, 27, 0.6);
+}
+
+.card-icon {
+  color: var(--blue);
+  font-size: 1.8rem;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.about-card h3,
+.skill-card h3 {
+  margin: 0 0 10px;
+  font-size: 1.15rem;
+  letter-spacing: -0.5px;
+}
+
+.about-card p,
+.skill-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.skill-index,
+.project-number {
+  color: var(--purple);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ==========================================
+   INTERACTIVE PIPELINE SECTION
+   ========================================== */
+.pipeline-box {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+}
+
+.pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.pipeline-step {
+  padding: 16px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(8, 13, 27, 0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pipeline-step:hover,
+.pipeline-step.active {
+  border-color: var(--blue);
+  background: rgba(84, 200, 255, 0.08);
+  transform: translateY(-3px);
+}
+
+.step-num {
+  font-size: 0.7rem;
+  color: var(--purple);
+  font-family: ui-monospace, monospace;
+  font-weight: 700;
+}
+
+.step-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 6px 0 2px;
+  color: var(--text);
+}
+
+.step-sub {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.step-badge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  background: rgba(87, 230, 165, 0.12);
+  color: var(--emerald);
+  font-family: ui-monospace, monospace;
+}
+
+.pipeline-console {
+  background: #060a14;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.78rem;
+  color: #cbd5e1;
+  line-height: 1.65;
+  overflow-x: auto;
+}
+
+/* ==========================================
+   DEVSECOPS MATRIX
+   ========================================== */
+.devsecops-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.devsecops-card {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: linear-gradient(145deg, var(--panel), rgba(16, 24, 42, 0.5));
+  transition: all 0.25s;
+}
+
+.devsecops-card:hover {
+  border-color: var(--blue);
+  transform: translateY(-4px);
+}
+
+.security-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 0.68rem;
+  font-family: ui-monospace, monospace;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+}
+
+.badge-red { background: rgba(255, 114, 133, 0.12); color: var(--red); border-color: rgba(255, 114, 133, 0.3); }
+.badge-blue { background: rgba(84, 200, 255, 0.12); color: var(--blue); border-color: rgba(84, 200, 255, 0.3); }
+.badge-purple { background: rgba(167, 139, 250, 0.12); color: var(--purple); border-color: rgba(167, 139, 250, 0.3); }
+.badge-emerald { background: rgba(87, 230, 165, 0.12); color: var(--emerald); border-color: rgba(87, 230, 165, 0.3); }
+
+/* ==========================================
+   PROJECTS (CLEAN HORIZONTAL CARDS)
+   ========================================== */
+.projects-list {
+  display: grid;
+  gap: 16px;
+}
+
+.project-card {
+  display: grid;
+  grid-template-columns: 50px 1fr 30px;
+  align-items: start;
+  gap: 24px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+  transition: transform 0.25s, border-color 0.25s;
+}
+
+.project-content h3 {
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+  letter-spacing: -0.5px;
+}
+
+.project-content p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.tags span {
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: #b8c6e1;
+  font-size: 0.74rem;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.project-arrow {
+  color: var(--blue);
+  font-size: 1.4rem;
+  transition: transform 0.2s;
+}
+
+.project-card:hover .project-arrow {
+  transform: translate(3px, -3px);
+}
+
+/* ==========================================
+   EXPERIENCE SECTION
+   ========================================== */
+.experience-card {
+  padding: 34px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--panel);
+}
+
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.exp-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.exp-date {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--blue);
+  font-family: ui-monospace, monospace;
+}
+
+.exp-list {
+  padding-left: 20px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.8;
+}
+
+.exp-list li strong {
+  color: var(--text);
+}
+
+/* ==========================================
+   CONTACT
+   ========================================== */
+.contact {
+  padding: 85px 30px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(114, 88, 220, 0.18), transparent 45%),
+    radial-gradient(ellipse at 20% 80%, rgba(84, 200, 255, 0.12), transparent 45%),
+    var(--panel);
+  text-align: center;
+}
+
+.contact h2 {
+  margin: 12px 0 16px;
+  font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+  letter-spacing: -2px;
+}
+
+.contact > p:not(.eyebrow) {
+  max-width: 580px;
+  margin: 0 auto 28px;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.contact-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.contact-meta {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-family: ui-monospace, monospace;
+}
+
+/* ==========================================
+   FOOTER
+   ========================================== */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: min(1180px, 90%);
+  margin: 0 auto;
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.footer a:hover {
+  color: var(--blue);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 45px;
+    padding-top: 50px;
+  }
+
+  .terminal-card {
+    max-width: 580px;
+  }
+
+  .about-grid,
+  .skills-grid,
+  .devsecops-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pipeline-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  nav {
+    display: none;
+  }
+
+  .about-grid,
+  .skills-grid,
+  .devsecops-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-card {
+    grid-template-columns: 35px 1fr 20px;
+    padding: 20px;
+    gap: 14px;
+  }
+
+  .footer {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+</style>
+  <link rel="stylesheet" href="styles.css?v=2.5.2">
 </head>
 
 <body>
@@ -505,7 +1281,181 @@
   </footer>
 
   <!-- Interactive JavaScript Engine -->
-  <script src="app.js"></script>
+  <script>
+// ==========================================
+// Anis Ahmed — DevOps Portfolio Interactive Engine
+// ==========================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  initScrollObserver();
+  initNavScrollTracker();
+  initPipelineConsole();
+  initTerminalTyping();
+});
+
+// ==========================================
+// 1. ROCK-SOLID SCROLL REVEAL OBSERVER
+// ==========================================
+function initScrollObserver() {
+  const elements = document.querySelectorAll('.scroll-reveal');
+
+  const checkVisibility = () => {
+    const triggerBottom = window.innerHeight * 0.88;
+
+    elements.forEach((el) => {
+      const boxTop = el.getBoundingClientRect().top;
+      if (boxTop < triggerBottom) {
+        el.classList.add('is-visible');
+      }
+    });
+  };
+
+  // Run immediately on load and on scroll
+  window.addEventListener('scroll', checkVisibility, { passive: true });
+  window.addEventListener('resize', checkVisibility, { passive: true });
+
+  // Initial check (slight timeout to allow DOM layout calculation)
+  setTimeout(checkVisibility, 50);
+}
+
+// ==========================================
+// 2. ACTIVE NAVBAR SCROLL TRACKER
+// ==========================================
+function initNavScrollTracker() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.navbar nav a:not(.nav-contact)');
+
+  window.addEventListener('scroll', () => {
+    let currentSection = '';
+    const scrollPos = window.pageYOffset + 120;
+
+    sections.forEach((sec) => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentSection = sec.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach((link) => {
+      link.classList.remove('active-link');
+      if (link.getAttribute('href') === `#${currentSection}`) {
+        link.classList.add('active-link');
+      }
+    });
+  }, { passive: true });
+}
+
+// ==========================================
+// 3. INTERACTIVE CI/CD PIPELINE CONSOLE
+// ==========================================
+function initPipelineConsole() {
+  const steps = document.querySelectorAll('.pipeline-step');
+  const title = document.getElementById('consoleTitle');
+  const output = document.getElementById('consoleOutput');
+
+  const logs = {
+    1: {
+      title: 'Stage 1: Gitleaks Pre-Commit Secret Scanner',
+      log: `[INFO] gitleaks protect --verbose --redact --staged
+[INFO] Scanning staged commits against 140+ credential entropy patterns...
+[INFO] Checked 24 files & 3,210 lines of code.
+[INFO] Private RSA Keys: 0 DETECTED | Cloud API Tokens: 0 DETECTED
+[SUCCESS] Secret audit passed. Clean commit approved for CI pipeline.`
+    },
+    2: {
+      title: 'Stage 2: SonarQube SAST & Snyk Dependency Scan',
+      log: `[INFO] sonar-scanner -Dsonar.projectKey=devops-platform
+[INFO] SonarQube Quality Gate: PASSED (Bugs: 0, Vulns: 0, Code Smells: 0)
+[INFO] snyk test --severity-threshold=high
+[INFO] Tested 348 dependencies: 0 vulnerable paths found
+[SUCCESS] Static analysis and software composition analysis cleared.`
+    },
+    3: {
+      title: 'Stage 3: Docker Multi-Stage Build & Trivy Image Audit',
+      log: `[INFO] docker build -t ghcr.io/anisahmed/portfolio:v2.5.0 .
+[INFO] Multi-stage build completed: Unprivileged user (UID 101)
+[INFO] trivy image --severity HIGH,CRITICAL ghcr.io/anisahmed/portfolio:v2.5.0
+[INFO] Scanned OS packages & binaries: 0 Vulnerabilities Detected
+[SUCCESS] Pushed signed image digest sha256:8fa2b4 to container registry.`
+    },
+    4: {
+      title: 'Stage 4: Checkov & Open Policy Agent (OPA) IaC Validation',
+      log: `[INFO] checkov -d ./terraform --framework terraform
+[INFO] Passed checks: 42, Failed: 0, Skipped: 0
+[INFO] conftest test --policy ./policy/ terraform.tfplan.json
+[INFO] OPA Rego Evaluation: rule 'restrict_public_ssh' - ALLOWED
+[SUCCESS] Terraform configuration meets CIS Level 1 compliance.`
+    },
+    5: {
+      title: 'Stage 5: Production Deployment Approval Gate',
+      log: `[INFO] Change advisory request #CR-9481 generated for production promotion
+[INFO] Webhook sent to Slack #devops-change-advisory with plan summary
+[INFO] Digital authorization received from Lead DevOps Engineer (Anis Ahmed)
+[INFO] Target Clusters: AWS EKS (ap-south-1) & Azure AKS (Central India)
+[SUCCESS] Change approved. Promoting to production GitOps rollout.`
+    },
+    6: {
+      title: 'Stage 6: ArgoCD GitOps Reconciliation & Canary Rollout',
+      log: `[INFO] argocd app sync multi-cloud-portfolio --prune
+[INFO] Git revision 'main' synchronized across multi-cloud clusters
+[INFO] Shifted canary traffic: 10% -> 50% -> 100%
+[INFO] Prometheus health probe check: HTTP 200 OK (P99: 14ms)
+[SUCCESS] Zero-downtime release completed successfully on https://anisahmed.in`
+    }
+  };
+
+  steps.forEach((step) => {
+    step.addEventListener('click', () => {
+      steps.forEach((s) => s.classList.remove('active'));
+      step.classList.add('active');
+
+      const stepNum = step.getAttribute('data-step');
+      if (logs[stepNum] && title && output) {
+        title.innerText = logs[stepNum].title;
+        output.innerText = logs[stepNum].log;
+      }
+    });
+  });
+}
+
+// ==========================================
+// 4. ANGLED TERMINAL REAL-TIME SIMULATION
+// ==========================================
+function initTerminalTyping() {
+  const terminal = document.querySelector('.terminal-card');
+  if (!terminal) return;
+
+  const terminalBody = document.getElementById('terminalOutputBody');
+
+  const extraLogs = [
+    { cmd: 'kubectl get nodes -o wide', res: 'eks-worker-01   Ready   node   v1.30.2   AWS-EKS\naks-worker-01   Ready   node   v1.30.2   Azure-AKS' },
+    { cmd: 'terraform state list', res: 'module.vpc.aws_vpc.this[0]\nmodule.eks.aws_eks_cluster.this[0]\naws_s3_bucket.terraform_remote_state' },
+    { cmd: 'curl -I https://anisahmed.in', res: 'HTTP/2 200\nserver: LiteSpeed\ncontent-type: text/html\nx-managed-by: github-actions' },
+  ];
+
+  let currentIdx = 0;
+  terminal.addEventListener('click', () => {
+    if (currentIdx < extraLogs.length) {
+      const item = extraLogs[currentIdx];
+      const pCmd = document.createElement('p');
+      pCmd.innerHTML = `<span class="prompt">$</span> ${item.cmd}`;
+
+      const pRes = document.createElement('p');
+      pRes.className = 'terminal-output';
+      pRes.style.whiteSpace = 'pre-wrap';
+      pRes.innerText = item.res;
+
+      terminalBody.appendChild(pCmd);
+      terminalBody.appendChild(pRes);
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+      currentIdx++;
+    }
+  });
+}
+
+</script>
+  <script src="app.js?v=2.5.2"></script>
 
 </body>
 </html>
