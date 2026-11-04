@@ -842,41 +842,25 @@ h1 {
   margin-bottom: 22px;
   background: rgba(16, 24, 42, 0.7);
   box-shadow: 0 0 20px rgba(84, 200, 255, 0.2);
-  position: relative;
-  z-index: 10;
 }
 
 #introQuoteWrap {
-  position: relative;
-  z-index: 10;
   text-align: center;
   width: min(860px, 88vw);
 }
 
 .intro-quote {
-  font-size: clamp(2rem, 5vw, 3.6rem);
-  font-weight: 850;
-  letter-spacing: -2px;
-  text-align: center;
-  max-width: 860px;
-  padding: 0 24px;
-  line-height: 1.15;
-  background: linear-gradient(100deg, #54c8ff 0%, #a78bfa 50%, #57e6a5 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 22px rgba(84,200,255,0.4));
+  /* hidden — JS clears and rebuilds this from scratch */
+  display: none;
 }
 
 .intro-author {
-  margin-top: 18px;
+  margin-top: 20px;
   color: var(--muted);
   font-size: 0.82rem;
   letter-spacing: 2.5px;
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
   text-transform: uppercase;
-  position: relative;
-  z-index: 10;
 }
 
 
@@ -1526,143 +1510,136 @@ function initIntroSplash() {
   var overlay = document.getElementById('introOverlay');
   if (!overlay) return;
 
-  /* ── grab the three text nodes ── */
   var badge  = overlay.querySelector('.intro-badge');
   var wrap   = document.getElementById('introQuoteWrap');
   var author = overlay.querySelector('.intro-author');
 
-  /* guarantee hidden BEFORE first paint — inline style wins every time */
+  /* hide everything instantly — inline style beats all CSS */
   [badge, wrap, author].forEach(function(el) {
     if (el) { el.style.opacity = '0'; el.style.transition = 'none'; }
   });
 
-  /* ── full-screen canvas ── */
-  var cvs = document.createElement('canvas');
-  cvs.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:5;';
-  cvs.width  = window.innerWidth;
-  cvs.height = window.innerHeight;
-  overlay.appendChild(cvs);
-  var ctx = cvs.getContext('2d');
-  var W = cvs.width, H = cvs.height;
-  var CX = W * 0.5, CY = H * 0.5;
+  /* ── Build the quote from scratch — nothing pre-existing ── */
+  if (wrap) wrap.innerHTML = '';  /* wipe any HTML text that was there */
 
-  /* ── 180 glowing squares ── */
-  var COLS = ['#54c8ff','#57e6a5','#a78bfa','#ffd166','#c8e8ff'];
-  var sqs  = [];
-  for (var i = 0; i < 180; i++) {
-    var ang  = Math.random() * Math.PI * 2;
-    var dist = (0.65 + Math.random() * 0.55) * Math.max(W, H);
-    sqs.push({
-      /* start position: scattered around the full screen edges */
-      sx: CX + Math.cos(ang) * dist,
-      sy: CY + Math.sin(ang) * dist,
-      /* landing position: spread over the WHOLE screen */
-      lx: CX + (Math.random() - 0.5) * W * 0.9,
-      ly: CY + (Math.random() - 0.5) * H * 0.9,
-      /* exit position: blast back out even further */
-      ex: CX + Math.cos(ang) * dist * 1.6,
-      ey: CY + Math.sin(ang) * dist * 1.6,
-      sz:  7 + Math.random() * 13,
-      col: COLS[Math.floor(Math.random() * COLS.length)],
-      rot: Math.random() * 6.28,
-      rs:  (Math.random() - 0.5) * 0.14,
-      d:   Math.random() * 0.38
-    });
-  }
+  var QUOTE = '\u201cAutomate everything. Break nothing.\u201d';
 
-  /* timing (ms) */
-  var T1 = 1500;   /* phase 1 — collect in */
-  var T2 = 1600;   /* phase 2 — hold */
-  var T3 = 850;    /* phase 3 — blast out */
-
-  var t0    = performance.now();
-  var shown = false;
-  var rafId;
-
-  function easeOut(t) { return 1 - Math.pow(1 - Math.min(1, t), 3); }
-  function easeIn(t)  { return Math.min(1, t) * Math.min(1, t) * Math.min(1, t); }
-
-  function drawSq(sq, x, y, a) {
-    if (a <= 0) return;
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(sq.rot);
-    ctx.globalAlpha   = Math.min(1, a);
-    ctx.fillStyle     = sq.col;
-    ctx.shadowColor   = sq.col;
-    ctx.shadowBlur    = 18;
-    var s = sq.sz / 2;
-    ctx.fillRect(-s, -s, sq.sz, sq.sz);
-    ctx.restore();
-  }
-
-  function showText() {
-    if (shown) return;
-    shown = true;
-    [badge, wrap, author].forEach(function(el) {
-      if (!el) return;
-      el.style.transition = 'opacity 0.7s ease';
-      el.style.opacity    = '1';
-    });
-  }
-
-  function hideText() {
-    [badge, wrap, author].forEach(function(el) {
-      if (!el) return;
-      el.style.transition = 'opacity 0.4s ease';
-      el.style.opacity    = '0';
-    });
-  }
-
-  function frame(now) {
-    var el = now - t0;
-    ctx.clearRect(0, 0, W, H);
-
-    if (el < T1) {
-      /* ─── PHASE 1: squares fly IN from full-screen edges ─── */
-      var p = el / T1;
-      sqs.forEach(function(sq) {
-        sq.rot += sq.rs;
-        var sp = Math.max(0, (p - sq.d) / (1 - sq.d));
-        var e  = easeOut(sp);
-        drawSq(sq, sq.sx + (sq.lx - sq.sx) * e, sq.sy + (sq.ly - sq.sy) * e, e);
-      });
-      if (p > 0.65) showText();
-
-    } else if (el < T1 + T2) {
-      /* ─── PHASE 2: hold — squares gently pulse ─── */
-      showText();
-      sqs.forEach(function(sq) {
-        sq.rot += sq.rs * 0.25;
-        var pulse = 0.55 + 0.4 * Math.sin(now * 0.0022 + sq.sx * 0.008);
-        drawSq(sq, sq.lx, sq.ly, pulse);
-      });
-
-    } else if (el < T1 + T2 + T3) {
-      /* ─── PHASE 3: squares blast OUT across full screen ─── */
-      var p3 = (el - T1 - T2) / T3;
-      var e3 = easeIn(p3);
-      if (p3 > 0.12) hideText();
-      sqs.forEach(function(sq) {
-        sq.rot += sq.rs * 5;
-        drawSq(sq,
-          sq.lx + (sq.ex - sq.lx) * e3,
-          sq.ly + (sq.ey - sq.ly) * e3,
-          1 - e3);
-      });
-
+  /* gradient colours interpolated per character */
+  function charColor(i, total) {
+    var t = i / Math.max(1, total - 1);
+    var r, g, b;
+    if (t < 0.5) {
+      var s = t / 0.5;
+      r = Math.round(0x54 + (0xa7 - 0x54) * s);
+      g = Math.round(0xc8 + (0x8b - 0xc8) * s);
+      b = Math.round(0xff + (0xfa - 0xff) * s);
     } else {
-      /* ─── DONE ─── */
-      cancelAnimationFrame(rafId);
-      overlay.classList.add('fade-out');
-      setTimeout(function() { overlay.remove(); }, 700);
-      return;
+      var s = (t - 0.5) / 0.5;
+      r = Math.round(0xa7 + (0x57 - 0xa7) * s);
+      g = Math.round(0x8b + (0xe6 - 0x8b) * s);
+      b = Math.round(0xfa + (0xa5 - 0xfa) * s);
+    }
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+
+  /* flex container for letters */
+  var box = document.createElement('div');
+  box.style.cssText = [
+    'display:flex',
+    'flex-wrap:wrap',
+    'justify-content:center',
+    'align-items:baseline',
+    'padding:0 24px',
+    'font-size:clamp(2rem,5vw,3.6rem)',
+    'font-weight:850',
+    'letter-spacing:-1px',
+    'line-height:1.2',
+    'text-align:center'
+  ].join(';');
+
+  var letters = [];
+  for (var i = 0; i < QUOTE.length; i++) {
+    var ch  = QUOTE[i];
+    var col = charColor(i, QUOTE.length);
+    var span = document.createElement('span');
+    span.textContent = ch === ' ' ? '\u00a0' : ch;
+
+    /* each letter starts scattered off-screen */
+    var angle = Math.random() * Math.PI * 2;
+    var dist  = 350 + Math.random() * 450;
+    var dx    = (Math.cos(angle) * dist).toFixed(0);
+    var dy    = (Math.sin(angle) * dist).toFixed(0);
+
+    span.style.cssText = [
+      'display:inline-block',
+      'color:' + col,
+      'text-shadow:0 0 18px ' + col,
+      'opacity:0',
+      'transform:translate(' + dx + 'px,' + dy + 'px) scale(0.15)',
+      'transition:none',
+      'will-change:transform,opacity'
+    ].join(';');
+
+    box.appendChild(span);
+    letters.push(span);
+  }
+
+  if (wrap) {
+    wrap.style.opacity = '1';   /* wrap itself visible — letters handle their own opacity */
+    wrap.appendChild(box);
+  }
+
+  /* ── Timing ── */
+  var BADGE_DELAY  = 0;      /* ms — badge appears instantly */
+  var FLY_START    = 150;    /* ms — letters start flying in */
+  var STAGGER      = 22;     /* ms — gap between each letter */
+  var FLY_DUR      = 650;    /* ms — each letter fly duration */
+  var ASSEMBLE_END = FLY_START + (letters.length - 1) * STAGGER + FLY_DUR;
+  var HOLD         = 1300;   /* ms — hold after all assembled */
+  var DISMISS      = ASSEMBLE_END + HOLD;
+
+  requestAnimationFrame(function() {
+
+    /* badge fades in first */
+    if (badge) {
+      setTimeout(function() {
+        badge.style.transition = 'opacity 0.55s ease';
+        badge.style.opacity    = '1';
+      }, BADGE_DELAY);
     }
 
-    rafId = requestAnimationFrame(frame);
-  }
+    /* letters fly in with stagger */
+    letters.forEach(function(span, i) {
+      setTimeout(function() {
+        span.style.transition =
+          'transform ' + FLY_DUR + 'ms cubic-bezier(0.16,1,0.3,1),' +
+          'opacity 420ms ease';
+        span.style.transform = 'translate(0,0) scale(1)';
+        span.style.opacity   = '1';
+      }, FLY_START + i * STAGGER);
+    });
 
-  rafId = requestAnimationFrame(frame);
+    /* author appears after letters land */
+    if (author) {
+      setTimeout(function() {
+        author.style.transition = 'opacity 0.55s ease';
+        author.style.opacity    = '1';
+      }, ASSEMBLE_END - 200);
+    }
+
+    /* add a soft glow to the assembled quote */
+    setTimeout(function() {
+      box.style.transition = 'filter 0.5s ease';
+      box.style.filter     = 'drop-shadow(0 0 28px rgba(84,200,255,0.55))';
+    }, ASSEMBLE_END);
+
+    /* smooth fade-out — the whole overlay dissolves into the site */
+    setTimeout(function() {
+      overlay.classList.add('fade-out');
+      setTimeout(function() { overlay.remove(); }, 700);
+    }, DISMISS);
+
+  });
 }
 
 function initScrollObserver() {
