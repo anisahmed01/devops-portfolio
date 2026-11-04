@@ -1,1407 +1,510 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anis Ahmed | Senior DevOps & Cloud Infrastructure Engineer</title>
-  <meta name="description" content="DevOps & Cloud Infrastructure Engineer with 5+ years of experience across AWS, GCP, Azure, Kubernetes, Terraform, DevSecOps, and GitOps automation.">
+  <meta name="theme-color" content="#080d1b">
+  <meta name="description" content="Anis Ahmed — DevOps Engineer with 5+ years of experience across AWS, GCP, Azure, Kubernetes, Terraform, CI/CD, and DevSecOps automation.">
+  <title>Anis Ahmed | DevOps Engineer</title>
 
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Inter & Fira Code -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['Fira Code', 'monospace'],
-            tech: ['Orbitron', 'sans-serif'],
-          },
-          colors: {
-            cyber: {
-              black: '#06090e',
-              darker: '#0a0f18',
-              card: '#0f172a',
-              border: '#1e293b',
-              cyan: '#00f2fe',
-              emerald: '#00ff88',
-              purple: '#a855f7',
-              amber: '#f59e0b',
-              red: '#ef4444',
-            }
-          },
-          boxShadow: {
-            'neon-cyan': '0 0 20px -3px rgba(0, 242, 254, 0.4)',
-            'neon-emerald': '0 0 20px -3px rgba(0, 255, 136, 0.4)',
-            'neon-purple': '0 0 20px -3px rgba(168, 85, 247, 0.4)',
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;850&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="bg-cyber-black text-slate-200 font-sans selection:bg-cyber-cyan selection:text-black overflow-x-hidden antialiased">
+<body>
 
-  <!-- Background Particle Network Canvas -->
-  <canvas id="networkCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+  <!-- Sticky Navbar -->
+  <header class="navbar">
+    <a class="brand" href="#home">AA<span>.</span></a>
 
-  <!-- Cyber Grid Overlay -->
-  <div class="fixed inset-0 bg-[linear-gradient(to_right,#1e293b12_1px,transparent_1px),linear-gradient(to_bottom,#1e293b12_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none z-0"></div>
-
-  <!-- CRT Scanline (Optional Toggle) -->
-  <div id="scanline" class="fixed inset-0 pointer-events-none z-50 opacity-20 hidden"></div>
-
-  <!-- TOP HUD / MISSION CONTROL STATUS BAR -->
-  <header class="fixed top-0 left-0 right-0 z-40 bg-cyber-darker/90 backdrop-blur-md border-b border-cyber-border">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      
-      <!-- Logo / Cluster Indicator -->
-      <a href="#" class="flex items-center gap-3 group">
-        <div class="relative flex items-center justify-center w-10 h-10 rounded-lg bg-cyber-card border border-cyber-cyan/40 group-hover:border-cyber-cyan transition-all shadow-neon-cyan">
-          <i data-lucide="terminal" class="w-5 h-5 text-cyber-cyan"></i>
-          <span class="absolute -top-1 -right-1 flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-emerald opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-cyber-emerald"></span>
-          </span>
-        </div>
-        <div>
-          <div class="font-tech text-sm tracking-wider font-bold text-white flex items-center gap-2">
-            <span>ANIS AHMED</span>
-            <span class="text-xs px-1.5 py-0.5 rounded bg-cyber-cyan/10 text-cyber-cyan font-mono border border-cyber-cyan/30">v2.5.0</span>
-          </div>
-          <div class="text-[10px] font-mono text-slate-400 flex items-center gap-1.5">
-            <span class="text-cyber-emerald">●</span> 5+ YRS DEVOPS | AWS • GCP • AZURE
-          </div>
-        </div>
-      </a>
-
-      <!-- Desktop Nav -->
-      <nav class="hidden lg:flex items-center gap-1 font-mono text-xs text-slate-300">
-        <a href="#control-plane" class="nav-link px-2.5 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1">
-          <span class="text-cyber-cyan/70 font-semibold">[01]</span> OVERVIEW
-        </a>
-        <a href="#pipeline" class="nav-link px-2.5 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1">
-          <span class="text-cyber-cyan/70 font-semibold">[02]</span> PIPELINE
-        </a>
-        <a href="#devsecops" class="nav-link px-2.5 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1">
-          <span class="text-cyber-cyan/70 font-semibold">[03]</span> DEVSECOPS
-        </a>
-        <a href="#projects" class="nav-link px-2.5 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1">
-          <span class="text-cyber-cyan/70 font-semibold">[04]</span> PROJECTS
-        </a>
-        <a href="#experience" class="nav-link px-2.5 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1">
-          <span class="text-cyber-cyan/70 font-semibold">[05]</span> EXPERIENCE
-        </a>
-        <a href="#skills" class="nav-link px-2.5 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1">
-          <span class="text-cyber-cyan/70 font-semibold">[06]</span> RADAR
-        </a>
-        <a href="#terminal" class="nav-link px-2.5 py-1.5 rounded hover:text-cyber-cyan hover:bg-slate-800/50 transition-all flex items-center gap-1">
-          <span class="text-cyber-cyan/70 font-semibold">[07]</span> CLI
-        </a>
-      </nav>
-
-      <!-- Right Controls: Audio + Scanline + Contact Button -->
-      <div class="flex items-center gap-2">
-        <!-- Audio Synth Toggle -->
-        <button id="soundToggle" title="Toggle UI Audio SFX" class="p-2 rounded-lg bg-cyber-card border border-cyber-border hover:border-cyber-cyan text-slate-400 hover:text-cyber-cyan transition-all text-xs font-mono flex items-center gap-1">
-          <i data-lucide="volume-2" id="soundIcon" class="w-4 h-4 text-cyber-cyan"></i>
-          <span class="hidden sm:inline text-[10px]">SFX: ON</span>
-        </button>
-
-        <!-- CTA Contact Button -->
-        <a href="#contact" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-semibold text-xs tracking-wide hover:brightness-110 transition-all shadow-neon-cyan flex items-center gap-1.5">
-          <i data-lucide="zap" class="w-3.5 h-3.5 text-black"></i>
-          <span>INIT DISCUSS</span>
-        </a>
-
-        <!-- Mobile menu toggle -->
-        <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-lg bg-cyber-card border border-cyber-border text-slate-300">
-          <i data-lucide="menu" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-    </div>
-
-    <!-- Mobile Nav Drawer -->
-    <div id="mobileMenu" class="hidden lg:hidden bg-cyber-darker border-b border-cyber-border px-4 py-4 space-y-2 font-mono text-sm">
-      <a href="#control-plane" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">01. Overview</a>
-      <a href="#pipeline" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">02. Pipeline</a>
-      <a href="#devsecops" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">03. DevSecOps Matrix</a>
-      <a href="#projects" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">04. Flagship Projects</a>
-      <a href="#experience" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">05. Experience Timeline</a>
-      <a href="#skills" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">06. Tech Radar</a>
-      <a href="#terminal" class="block px-3 py-2 rounded hover:bg-slate-800 text-slate-200">07. Interactive CLI</a>
-    </div>
+    <nav aria-label="Main navigation">
+      <a href="#about">About</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#devsecops">DevSecOps</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a class="nav-contact" href="#contact">Contact ↗</a>
+    </nav>
   </header>
 
-  <main class="relative z-10 pt-24 space-y-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <main>
 
-    <!-- ==================== SECTION 1: HERO / CONTROL PLANE ==================== -->
-    <section id="control-plane" class="reveal-on-scroll relative pt-8 pb-12">
-      
-      <!-- Top Status Banner -->
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyber-card border border-cyber-border text-xs font-mono text-slate-300 mb-6 shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-cyber-emerald animate-pulse"></span>
-        <span class="text-cyber-cyan font-semibold">5+ YEARS DEVOPS EXPERIENCE</span>
-        <span class="text-slate-500">|</span>
-        <span class="text-slate-400">DELHI, INDIA &mdash; OPEN TO REMOTE GLOBAL</span>
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="hero section" id="home">
+      <div class="hero-copy scroll-reveal">
+        <div class="availability">
+          <span class="pulse"></span>
+          CLOUD · AUTOMATION · DEVSECOPS
+        </div>
+
+        <p class="eyebrow">HELLO, WORLD. I'M</p>
+        <h1>Anis Ahmed<br>
+          <span class="gradient-text">DevOps Engineer.</span>
+        </h1>
+
+        <p class="hero-description">
+          DevOps Engineer with <strong>5+ years of experience</strong> across AWS, GCP, and Azure. I build resilient cloud platforms, automate delivery pipelines, enforce zero-trust security gates, and help teams ship software with confidence.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button primary" href="#projects">Explore my work ↘</a>
+          <a class="button secondary" href="#pipeline">Simulate pipeline</a>
+          <a class="button secondary" href="https://www.linkedin.com/in/webanis" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+        </div>
+
+        <div class="hero-meta">
+          <span><strong>5+ years</strong> experience</span>
+          <span class="meta-divider"></span>
+          <span>AWS · GCP · Azure</span>
+          <span class="meta-divider"></span>
+          <span>Cloud-first mindset</span>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-        
-        <!-- Left: Hero Headline & Value Proposition -->
-        <div class="lg:col-span-7 space-y-6">
-          <div class="space-y-2">
-            <h2 class="font-mono text-sm tracking-widest text-cyber-cyan uppercase font-bold flex items-center gap-2">
-              <i data-lucide="shield-check" class="w-4 h-4 text-cyber-cyan"></i>
-              DevOps Engineer | AWS • GCP • Azure • Kubernetes • IaC
-            </h2>
-            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white font-tech leading-none">
-              ANIS AHMED <br>
-              <span class="bg-gradient-to-r from-cyber-cyan via-blue-400 to-cyber-purple bg-clip-text text-transparent">
-                SCALING RESILIENT
-              </span> <br>
-              CLOUD PLATFORMS.
-            </h1>
+      <!-- Angled Terminal Card (Interactive) -->
+      <div class="terminal-card scroll-reveal delay-1" aria-label="DevOps terminal">
+        <div class="terminal-header">
+          <div class="window-dots">
+            <span></span><span></span><span></span>
           </div>
+          <span>~/anisahmed-devops</span>
+          <span class="terminal-status">● live</span>
+        </div>
 
-          <p class="text-base sm:text-lg text-slate-300 leading-relaxed font-sans max-w-2xl">
-            DevOps Engineer with <strong class="text-white">5+ years of experience</strong> across multi-cloud infrastructure (<strong class="text-cyber-cyan">AWS, GCP, Azure</strong>), building enterprise end-to-end CI/CD pipelines, enforcing strict <strong class="text-cyber-emerald">DevSecOps security gates (Gitleaks, SonarQube, Snyk, Checkov, Trivy, OPA)</strong>, automating declarative infrastructure with <strong class="text-cyber-purple">Terraform & Ansible</strong>, and orchestrating zero-downtime deployments via <strong class="text-cyber-amber">Kubernetes & ArgoCD</strong>.
+        <div class="terminal-body" id="terminalOutputBody">
+          <p><span class="prompt">$</span> whoami</p>
+          <p class="terminal-output">anis-ahmed &mdash; senior devops engineer</p>
+
+          <p><span class="prompt">$</span> cat mission.txt</p>
+          <p class="terminal-output">
+            Automate infrastructure as code.<br>
+            Enforce shift-left security gates.<br>
+            Achieve zero-downtime releases.
           </p>
 
-          <!-- Action Buttons -->
-          <div class="flex flex-wrap items-center gap-4 pt-2 font-mono text-xs">
-            <a href="#pipeline" class="px-5 py-3 rounded-lg bg-cyber-cyan text-black font-bold tracking-wider hover:bg-cyan-300 transition-all shadow-neon-cyan flex items-center gap-2">
-              <i data-lucide="play" class="w-4 h-4 fill-black"></i>
-              SIMULATE GITOPS PIPELINE
-            </a>
-            <a href="#devsecops" class="px-5 py-3 rounded-lg bg-cyber-card border border-cyber-border hover:border-cyber-cyan text-white hover:text-cyber-cyan transition-all flex items-center gap-2">
-              <i data-lucide="shield" class="w-4 h-4 text-cyber-emerald"></i>
-              INSPECT DEVSECOPS GATES
-            </a>
-            <a href="https://www.linkedin.com/in/webanis" target="_blank" rel="noopener noreferrer" class="p-3 rounded-lg bg-cyber-card border border-cyber-border hover:border-blue-400 text-slate-300 hover:text-blue-400 transition-all" title="LinkedIn Profile (webanis)">
-              <i data-lucide="linkedin" class="w-4 h-4"></i>
-            </a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="p-3 rounded-lg bg-cyber-card border border-cyber-border hover:border-white text-slate-300 hover:text-white transition-all" title="GitHub Profile">
-              <i data-lucide="github" class="w-4 h-4"></i>
-            </a>
-          </div>
-
-          <!-- Quick Metrics Bar -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-cyber-border">
-            <div class="p-3 rounded-lg bg-cyber-card/60 border border-cyber-border/80">
-              <div class="font-tech text-2xl font-bold text-cyber-cyan">5+ Yrs</div>
-              <div class="text-[11px] font-mono text-slate-400">Production Experience</div>
-            </div>
-            <div class="p-3 rounded-lg bg-cyber-card/60 border border-cyber-border/80">
-              <div class="font-tech text-2xl font-bold text-cyber-emerald">3 Clouds</div>
-              <div class="text-[11px] font-mono text-slate-400">AWS • GCP • Azure</div>
-            </div>
-            <div class="p-3 rounded-lg bg-cyber-card/60 border border-cyber-border/80">
-              <div class="font-tech text-2xl font-bold text-cyber-purple">7 Gates</div>
-              <div class="text-[11px] font-mono text-slate-400">DevSecOps Shift-Left</div>
-            </div>
-            <div class="p-3 rounded-lg bg-cyber-card/60 border border-cyber-border/80">
-              <div class="font-tech text-2xl font-bold text-cyber-amber">100%</div>
-              <div class="text-[11px] font-mono text-slate-400">GitOps & IaC Compliant</div>
-            </div>
-          </div>
+          <p><span class="prompt">$</span> ./deploy-multi-cloud.sh</p>
+          <p class="success-output">✓ Verified: Gitleaks · SonarQube · Trivy · OPA</p>
+          <p class="success-output">✓ ArgoCD synced to AWS EKS & Azure AKS</p>
+          <p><span class="prompt">$</span> <span class="cursor">▋</span></p>
         </div>
 
-        <!-- Right: Real-time Cluster Node Telemetry HUD -->
-        <div class="lg:col-span-5">
-          <div class="hud-scanline-card rounded-xl bg-cyber-darker border border-cyber-border p-5 shadow-2xl relative overflow-hidden backdrop-blur-xl group hover:border-cyber-cyan/50 transition-all">
-            
-            <!-- Window Bar -->
-            <div class="flex items-center justify-between pb-4 mb-4 border-b border-cyber-border text-xs font-mono">
-              <div class="flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
-                <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
-                <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
-                <span class="ml-2 text-slate-400 font-semibold">multi-cloud-telemetry.json</span>
-              </div>
-              <div class="flex items-center gap-1.5 text-cyber-emerald text-[11px]">
-                <span class="w-2 h-2 rounded-full bg-cyber-emerald animate-ping"></span>
-                OPERATIONAL
-              </div>
-            </div>
-
-            <!-- Telemetry Items -->
-            <div class="space-y-4 font-mono text-xs">
-              
-              <!-- Multi-Cloud Cluster Identity -->
-              <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border/60 space-y-1.5">
-                <div class="flex justify-between items-center text-slate-400 text-[11px]">
-                  <span>Active Contexts:</span>
-                  <span class="text-cyber-cyan font-bold">AWS EKS + Azure AKS</span>
-                </div>
-                <div class="flex justify-between items-center text-slate-400 text-[11px]">
-                  <span>Security Baseline:</span>
-                  <span class="text-cyber-emerald flex items-center gap-1">
-                    <i data-lucide="shield-check" class="w-3 h-3"></i> OPA Policy Compliant
-                  </span>
-                </div>
-                <div class="flex justify-between items-center text-slate-400 text-[11px]">
-                  <span>GitOps Controller:</span>
-                  <span class="text-cyber-purple flex items-center gap-1">
-                    <i data-lucide="git-pull-request" class="w-3 h-3"></i> ArgoCD Synced (HEAD)
-                  </span>
-                </div>
-              </div>
-
-              <!-- Node Pool Metrics -->
-              <div>
-                <div class="flex justify-between text-[11px] text-slate-400 mb-1">
-                  <span>Multi-Cluster CPU Capacity</span>
-                  <span class="text-cyber-cyan font-bold" id="cpuPercentage">42%</span>
-                </div>
-                <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                  <div id="cpuBar" class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-700 w-[42%]"></div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex justify-between text-[11px] text-slate-400 mb-1">
-                  <span>Cluster Memory Allocated</span>
-                  <span class="text-cyber-purple font-bold" id="memPercentage">68%</span>
-                </div>
-                <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                  <div id="memBar" class="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-700 w-[68%]"></div>
-                </div>
-              </div>
-
-              <!-- Pod Mesh Grid -->
-              <div class="pt-2">
-                <div class="flex justify-between items-center text-[11px] text-slate-400 mb-2">
-                  <span>Microservices Mesh (32 Active Pods)</span>
-                  <span class="text-cyber-emerald text-[10px]">0 CrashLoops</span>
-                </div>
-                <div class="grid grid-cols-8 gap-1.5" id="podMesh">
-                  <!-- Generated by JS -->
-                </div>
-              </div>
-
-              <!-- Live Rolling Terminal Log Line -->
-              <div class="pt-2 text-[11px] text-slate-400 border-t border-cyber-border flex items-center gap-2">
-                <span class="text-cyber-cyan">❯</span>
-                <span id="telemetryLog" class="text-slate-300 truncate">opa-gatekeeper: all resource constraints validated (0 violations)</span>
-              </div>
-
-            </div>
-
-          </div>
+        <div class="terminal-footer">
+          <span>BUILD</span>
+          <span>TEST</span>
+          <span>SECURE</span>
+          <span>GITOPS</span>
         </div>
-
       </div>
     </section>
 
-    <!-- ==================== SECTION 2: INTERACTIVE CI/CD & GITOPS PIPELINE ==================== -->
-    <section id="pipeline" class="reveal-on-scroll relative pt-6">
-      
-      <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple text-xs font-mono">
-          <i data-lucide="git-branch" class="w-3.5 h-3.5"></i> CONTINUOUS INTEGRATION & DELIVERY
-        </div>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
-          END-TO-END AUTOMATED PIPELINE
-        </h2>
-        <p class="text-sm sm:text-base text-slate-400 font-sans">
-          Engineered across <strong>Jenkins, GitHub Actions, GitLab CI & Azure DevOps</strong>. Click any stage below to inspect live build logs and verification gates.
+    <!-- ==================== 01 / ABOUT ==================== -->
+    <section class="section about" id="about">
+      <div class="section-heading scroll-reveal">
+        <p class="eyebrow">01 / ABOUT</p>
+        <h2>Bridging code, security, and <span class="gradient-text">cloud.</span></h2>
+        <p class="section-description">
+          Designing infrastructure that survives failure, scales with demand, and accelerates developer throughput.
         </p>
       </div>
 
-      <!-- Pipeline Canvas & Stages Container -->
-      <div class="relative bg-cyber-darker border border-cyber-border rounded-2xl p-6 sm:p-8 shadow-2xl overflow-hidden">
-        
-        <!-- Background Flow Line (Desktop) -->
-        <div class="hidden lg:block absolute top-[72px] left-12 right-12 h-1 bg-slate-800 z-0">
-          <div id="pipelineProgress" class="h-full bg-gradient-to-r from-cyber-cyan via-cyber-emerald to-cyber-purple w-full transition-all duration-1000 shadow-neon-cyan"></div>
+      <div class="about-grid">
+        <article class="about-card scroll-reveal delay-1">
+          <span class="card-icon">⌘</span>
+          <h3>Automation first</h3>
+          <p>
+            Eliminating repetitive manual operations by engineering declarative CI/CD pipelines across Jenkins, GitHub Actions, and Azure DevOps.
+          </p>
+        </article>
+
+        <article class="about-card scroll-reveal delay-2">
+          <span class="card-icon">☁</span>
+          <h3>Multi-cloud engineering</h3>
+          <p>
+            Architecting scalable infrastructure across AWS, GCP, and Azure using modular Terraform and Ansible for complete reproducibility.
+          </p>
+        </article>
+
+        <article class="about-card scroll-reveal delay-3">
+          <span class="card-icon">↗</span>
+          <h3>GitOps & security</h3>
+          <p>
+            Enforcing continuous delivery via ArgoCD alongside shift-left security scanners (Gitleaks, SonarQube, Snyk, Checkov, Trivy, OPA).
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ==================== 02 / PIPELINE ==================== -->
+    <section class="section pipeline-section" id="pipeline">
+      <div class="section-heading scroll-reveal">
+        <p class="eyebrow">02 / CI/CD AUTOMATION</p>
+        <h2>Interactive delivery <span class="gradient-text">engine.</span></h2>
+        <p class="section-description">
+          Click on any stage below to inspect real security audits, container builds, and deployment verification logs.
+        </p>
+      </div>
+
+      <div class="pipeline-box scroll-reveal">
+        <div class="pipeline-grid">
+          <div class="pipeline-step active" data-step="1">
+            <span class="step-num">01</span>
+            <div class="step-title">Gitleaks</div>
+            <div class="step-sub">Secret Scan</div>
+            <span class="step-badge">PASSED</span>
+          </div>
+
+          <div class="pipeline-step" data-step="2">
+            <span class="step-num">02</span>
+            <div class="step-title">Sonar & Snyk</div>
+            <div class="step-sub">SAST & SCA</div>
+            <span class="step-badge">GRADE A</span>
+          </div>
+
+          <div class="pipeline-step" data-step="3">
+            <span class="step-num">03</span>
+            <div class="step-title">Docker Build</div>
+            <div class="step-sub">Trivy Image Scan</div>
+            <span class="step-badge">0 CVEs</span>
+          </div>
+
+          <div class="pipeline-step" data-step="4">
+            <span class="step-num">04</span>
+            <div class="step-title">Checkov & OPA</div>
+            <div class="step-sub">Policy as Code</div>
+            <span class="step-badge">COMPLIANT</span>
+          </div>
+
+          <div class="pipeline-step" data-step="5">
+            <span class="step-num">05</span>
+            <div class="step-title">Approval Gate</div>
+            <div class="step-sub">Production Sign-off</div>
+            <span class="step-badge">APPROVED</span>
+          </div>
+
+          <div class="pipeline-step" data-step="6">
+            <span class="step-num">06</span>
+            <div class="step-title">ArgoCD</div>
+            <div class="step-sub">GitOps Canary</div>
+            <span class="step-badge">SYNCED</span>
+          </div>
         </div>
 
-        <!-- 6 Pipeline Stages -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 relative z-10">
-          
-          <!-- Stage 1 -->
-          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="1">
-            <div class="flex items-center justify-between mb-3">
-              <span class="w-8 h-8 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/40 text-cyber-cyan flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
-                01
-              </span>
-              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
-                PASSED
-              </span>
-            </div>
-            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
-              <i data-lucide="git-commit" class="w-3.5 h-3.5 text-cyber-cyan"></i> Gitleaks & Commit
-            </h3>
-            <p class="text-[11px] text-slate-400 mb-2 font-mono">Secret & Key Detection</p>
-            <div class="text-[10px] font-mono text-slate-500">Leak Check: <span class="text-cyber-emerald">0 Leaks</span></div>
+        <div class="pipeline-console">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px; color:var(--blue); font-weight:700;">
+            <span id="consoleTitle">Stage 1: Gitleaks Pre-Commit Secret Scanner</span>
+            <span style="color:var(--emerald);">[EXIT CODE: 0]</span>
           </div>
-
-          <!-- Stage 2 -->
-          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="2">
-            <div class="flex items-center justify-between mb-3">
-              <span class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/40 text-blue-400 flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
-                02
-              </span>
-              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
-                PASSED
-              </span>
-            </div>
-            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
-              <i data-lucide="shield" class="w-3.5 h-3.5 text-blue-400"></i> SonarQube & Snyk
-            </h3>
-            <p class="text-[11px] text-slate-400 mb-2 font-mono">SAST & Dependency SCA</p>
-            <div class="text-[10px] font-mono text-slate-500">Gate: <span class="text-cyber-emerald">Grade A (Passed)</span></div>
-          </div>
-
-          <!-- Stage 3 -->
-          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="3">
-            <div class="flex items-center justify-between mb-3">
-              <span class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/40 text-cyan-400 flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
-                03
-              </span>
-              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
-                PASSED
-              </span>
-            </div>
-            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
-              <i data-lucide="box" class="w-3.5 h-3.5 text-cyan-400"></i> Docker & Trivy
-            </h3>
-            <p class="text-[11px] text-slate-400 mb-2 font-mono">Multi-Stage + CVE Scan</p>
-            <div class="text-[10px] font-mono text-slate-500">Vulnerabilities: <span class="text-cyber-emerald">0 Critical</span></div>
-          </div>
-
-          <!-- Stage 4 -->
-          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="4">
-            <div class="flex items-center justify-between mb-3">
-              <span class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/40 text-purple-400 flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
-                04
-              </span>
-              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
-                PASSED
-              </span>
-            </div>
-            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
-              <i data-lucide="file-check" class="w-3.5 h-3.5 text-purple-400"></i> Checkov & OPA
-            </h3>
-            <p class="text-[11px] text-slate-400 mb-2 font-mono">IaC Policy as Code</p>
-            <div class="text-[10px] font-mono text-slate-500">Compliance: <span class="text-cyber-emerald">CIS Compliant</span></div>
-          </div>
-
-          <!-- Stage 5 -->
-          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="5">
-            <div class="flex items-center justify-between mb-3">
-              <span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/40 text-amber-400 flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
-                05
-              </span>
-              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
-                APPROVED
-              </span>
-            </div>
-            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
-              <i data-lucide="user-check" class="w-3.5 h-3.5 text-amber-400"></i> Approval Gate
-            </h3>
-            <p class="text-[11px] text-slate-400 mb-2 font-mono">Prod Change Advisory</p>
-            <div class="text-[10px] font-mono text-slate-500">Sign-off: <span class="text-cyber-emerald">Validated (Lead)</span></div>
-          </div>
-
-          <!-- Stage 6 -->
-          <div class="pipeline-card cursor-pointer p-4 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan transition-all group" data-stage="6">
-            <div class="flex items-center justify-between mb-3">
-              <span class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-mono font-bold text-xs group-hover:scale-110 transition-transform">
-                06
-              </span>
-              <span class="status-badge px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
-                LIVE
-              </span>
-            </div>
-            <h3 class="font-mono text-xs font-bold text-white mb-1 flex items-center gap-1.5">
-              <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-emerald-400"></i> ArgoCD GitOps
-            </h3>
-            <p class="text-[11px] text-slate-400 mb-2 font-mono">K8s Multi-Cluster Sync</p>
-            <div class="text-[10px] font-mono text-slate-500">Sync: <span class="text-cyber-emerald">0s Downtime</span></div>
-          </div>
-
-        </div>
-
-        <!-- Live Pipeline Inspector Console Output -->
-        <div class="mt-8 rounded-xl bg-black border border-cyber-border p-4 font-mono text-xs shadow-inner">
-          <div class="flex items-center justify-between pb-2 mb-3 border-b border-cyber-border/70 text-slate-400">
-            <div class="flex items-center gap-2">
-              <span class="text-cyber-cyan font-bold" id="inspectorStageTitle">Stage 1: Gitleaks Pre-Commit Secret Scanner</span>
-              <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300">Duration: 1.1s</span>
-            </div>
-            <button id="retriggerPipeline" class="px-2.5 py-1 rounded bg-cyber-card hover:bg-slate-800 text-cyber-cyan border border-cyber-cyan/30 text-[11px] flex items-center gap-1 transition-all">
-              <i data-lucide="play" class="w-3 h-3"></i> Rerun Simulation
-            </button>
-          </div>
-          <pre id="inspectorLogOutput" class="text-slate-300 leading-relaxed overflow-x-auto p-1 font-mono text-[11px]">
-[INFO] 17:10:02 - gitleaks protect --verbose --redact --staged
-[INFO] 17:10:03 - Scanning git diff against 140+ entropy and credential regex rules...
-[INFO] 17:10:04 - Checked 18 files, 2,186 lines of code
-[INFO] 17:10:04 - AWS Access Keys: NONE DETECTED
-[INFO] 17:10:04 - Private RSA / SSH Keys: NONE DETECTED
-[SUCCESS] Gitleaks secret verification passed. Clean commit approved.
+          <pre id="consoleOutput" style="margin:0; font-family:inherit; white-space:pre-wrap;">
+[INFO] gitleaks protect --verbose --redact --staged
+[INFO] Scanning staged commits against 140+ credential entropy patterns...
+[INFO] Checked 24 files & 3,210 lines of code.
+[INFO] Private RSA Keys: 0 DETECTED | Cloud API Tokens: 0 DETECTED
+[SUCCESS] Secret audit passed. Clean commit approved for CI pipeline.
           </pre>
         </div>
-
       </div>
     </section>
 
-    <!-- ==================== SECTION 3: DEVSECOPS & SECURITY MATRIX ==================== -->
-    <section id="devsecops" class="reveal-on-scroll relative pt-6">
-      
-      <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-red/10 border border-cyber-red/30 text-cyber-red text-xs font-mono">
-          <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> ZERO-TRUST SHIFT-LEFT DEFENSE
-        </div>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
-          DEVSECOPS SECURITY ARCHITECTURE
-        </h2>
-        <p class="text-sm sm:text-base text-slate-400 font-sans">
-          Enforcing strict security gates, automated vulnerability scanning, policy-as-code, and runtime threat detection across the entire SDLC.
+    <!-- ==================== 03 / DEVSECOPS ==================== -->
+    <section class="section devsecops" id="devsecops">
+      <div class="section-heading scroll-reveal">
+        <p class="eyebrow">03 / ZERO-TRUST SECURITY</p>
+        <h2>Shift-left security <span class="gradient-text">matrix.</span></h2>
+        <p class="section-description">
+          Integrating security into every stage of the pipeline to eliminate vulnerabilities before reaching production.
         </p>
       </div>
 
-      <!-- DevSecOps 6-Pillar Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-        <!-- Pillar 1: Secret Scanning -->
-        <div class="security-tool-card rounded-xl bg-cyber-darker border border-cyber-border p-6 space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="p-2.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/30">
-              <i data-lucide="key" class="w-5 h-5"></i>
-            </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/10 text-red-400 border border-red-500/30">PRE-COMMIT</span>
-          </div>
-          <h3 class="font-mono text-sm font-bold text-white">Gitleaks & Git-Secrets</h3>
-          <p class="text-xs text-slate-400 font-sans leading-relaxed">
+      <div class="devsecops-grid">
+        <article class="devsecops-card scroll-reveal delay-1">
+          <span class="security-badge badge-red">PRE-COMMIT</span>
+          <h3>Gitleaks & Git-Secrets</h3>
+          <p>
             Automated pre-commit hooks and CI scans blocking unencrypted cloud credentials, private SSH keys, and API tokens before entering version control.
           </p>
-          <div class="font-mono text-[11px] text-cyber-cyan flex items-center gap-1.5 pt-2 border-t border-cyber-border/60">
-            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-cyber-emerald"></i> Zero-Leak Guarantee
-          </div>
-        </div>
+        </article>
 
-        <!-- Pillar 2: SAST & Quality Gates -->
-        <div class="security-tool-card rounded-xl bg-cyber-darker border border-cyber-border p-6 space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="p-2.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
-              <i data-lucide="code" class="w-5 h-5"></i>
-            </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-400 border border-blue-500/30">SAST GATE</span>
-          </div>
-          <h3 class="font-mono text-sm font-bold text-white">SonarQube Code Analysis</h3>
-          <p class="text-xs text-slate-400 font-sans leading-relaxed">
+        <article class="devsecops-card scroll-reveal delay-2">
+          <span class="security-badge badge-blue">SAST GATE</span>
+          <h3>SonarQube Code Quality</h3>
+          <p>
             Static Application Security Testing enforcing custom quality gates. Blocks merge requests exhibiting security hotspots, code smells, or low test coverage.
           </p>
-          <div class="font-mono text-[11px] text-cyber-cyan flex items-center gap-1.5 pt-2 border-t border-cyber-border/60">
-            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-cyber-emerald"></i> Grade A Quality Standard
-          </div>
-        </div>
+        </article>
 
-        <!-- Pillar 3: Dependency Vulnerabilities -->
-        <div class="security-tool-card rounded-xl bg-cyber-darker border border-cyber-border p-6 space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="p-2.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/30">
-              <i data-lucide="package-search" class="w-5 h-5"></i>
-            </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-500/10 text-purple-400 border border-purple-500/30">SCA SCAN</span>
-          </div>
-          <h3 class="font-mono text-sm font-bold text-white">Snyk Dependency Scanner</h3>
-          <p class="text-xs text-slate-400 font-sans leading-relaxed">
-            Software Composition Analysis (SCA) auditing application packages and open-source libraries for known CVEs with automated PR patching.
+        <article class="devsecops-card scroll-reveal delay-3">
+          <span class="security-badge badge-purple">SCA SCAN</span>
+          <h3>Snyk Dependency Scanner</h3>
+          <p>
+            Software Composition Analysis (SCA) auditing application packages and open-source libraries for known CVEs with automated patch PRs.
           </p>
-          <div class="font-mono text-[11px] text-cyber-cyan flex items-center gap-1.5 pt-2 border-t border-cyber-border/60">
-            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-cyber-emerald"></i> Automated Patch PRs
-          </div>
-        </div>
+        </article>
 
-        <!-- Pillar 4: Container Security -->
-        <div class="security-tool-card rounded-xl bg-cyber-darker border border-cyber-border p-6 space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="p-2.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-              <i data-lucide="container" class="w-5 h-5"></i>
-            </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">IMAGE AUDIT</span>
-          </div>
-          <h3 class="font-mono text-sm font-bold text-white">Trivy Container Scanner</h3>
-          <p class="text-xs text-slate-400 font-sans leading-relaxed">
+        <article class="devsecops-card scroll-reveal delay-1">
+          <span class="security-badge badge-blue">IMAGE AUDIT</span>
+          <h3>Trivy Container Scanner</h3>
+          <p>
             Scans multi-stage Docker images in CI before registry push. Fails pipeline builds on CRITICAL or HIGH severity CVEs in OS packages.
           </p>
-          <div class="font-mono text-[11px] text-cyber-cyan flex items-center gap-1.5 pt-2 border-t border-cyber-border/60">
-            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-cyber-emerald"></i> Zero Critical CVEs
-          </div>
-        </div>
+        </article>
 
-        <!-- Pillar 5: IaC & Policy as Code -->
-        <div class="security-tool-card rounded-xl bg-cyber-darker border border-cyber-border p-6 space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-              <i data-lucide="file-code-2" class="w-5 h-5"></i>
-            </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">POLICY AS CODE</span>
-          </div>
-          <h3 class="font-mono text-sm font-bold text-white">Checkov & Open Policy Agent (OPA)</h3>
-          <p class="text-xs text-slate-400 font-sans leading-relaxed">
+        <article class="devsecops-card scroll-reveal delay-2">
+          <span class="security-badge badge-emerald">POLICY AS CODE</span>
+          <h3>Checkov & Open Policy Agent</h3>
+          <p>
             Evaluates Terraform and K8s manifests against CIS benchmarks and custom Rego policies (enforcing encryption, tags, and restricting public ingress).
           </p>
-          <div class="font-mono text-[11px] text-cyber-cyan flex items-center gap-1.5 pt-2 border-t border-cyber-border/60">
-            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-cyber-emerald"></i> Rego Policy Compliance
-          </div>
-        </div>
+        </article>
 
-        <!-- Pillar 6: Runtime Cloud Threat Detection -->
-        <div class="security-tool-card rounded-xl bg-cyber-darker border border-cyber-border p-6 space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="p-2.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/30">
-              <i data-lucide="radar" class="w-5 h-5"></i>
-            </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30">RUNTIME MONITOR</span>
-          </div>
-          <h3 class="font-mono text-sm font-bold text-white">Falco Cloud-Native Runtime</h3>
-          <p class="text-xs text-slate-400 font-sans leading-relaxed">
+        <article class="devsecops-card scroll-reveal delay-3">
+          <span class="security-badge badge-purple">RUNTIME MONITOR</span>
+          <h3>Falco eBPF Threat Detection</h3>
+          <p>
             Kernel-level eBPF behavioral monitoring inside Kubernetes clusters, detecting unexpected shell executions, privilege escalations, and namespace drifts.
           </p>
-          <div class="font-mono text-[11px] text-cyber-cyan flex items-center gap-1.5 pt-2 border-t border-cyber-border/60">
-            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-cyber-emerald"></i> Real-time Incident Triggers
-          </div>
-        </div>
-
+        </article>
       </div>
-
-      <!-- Live Policy-as-Code Rego Snippet & Approval Gate Preview -->
-      <div class="mt-8 rounded-2xl bg-cyber-darker border border-cyber-border p-6 font-mono text-xs shadow-xl">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b border-cyber-border gap-2">
-          <div class="flex items-center gap-2">
-            <span class="text-cyber-emerald font-bold flex items-center gap-1.5">
-              <i data-lucide="shield-check" class="w-4 h-4 text-cyber-emerald"></i>
-              Live OPA Rego Policy Enforcement: Restrict Public SSH (Port 22)
-            </span>
-          </div>
-          <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300">policy/terraform_security.rego</span>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <pre class="bg-black/80 rounded-xl p-4 text-[11px] leading-relaxed text-slate-300 overflow-x-auto border border-cyber-border/60">
-<span class="text-cyber-purple">package</span> terraform.security
-
-<span class="text-slate-500"># Deny any AWS Security Group with 0.0.0.0/0 on Port 22</span>
-<span class="text-cyber-cyan">deny</span>[msg] {
-  resource := input.resource_changes[_]
-  resource.type == <span class="text-cyber-emerald">"aws_security_group_rule"</span>
-  resource.change.after.from_port <= 22
-  resource.change.after.to_port >= 22
-  resource.change.after.cidr_blocks[_] == <span class="text-cyber-red">"0.0.0.0/0"</span>
-
-  msg := sprintf(<span class="text-amber-400">"CRITICAL: Resource '%v' opens SSH port 22 to the public internet."</span>, [resource.address])
-}
-          </pre>
-          <div class="bg-black/80 rounded-xl p-4 text-[11px] leading-relaxed text-slate-300 border border-cyber-border/60 flex flex-col justify-between">
-            <div class="space-y-2">
-              <div class="text-cyber-cyan font-bold flex items-center gap-2">
-                <i data-lucide="git-pull-request" class="w-4 h-4 text-cyber-cyan"></i>
-                Production Deployment Approval Gate
-              </div>
-              <p class="text-slate-400 text-xs font-sans">
-                Production promotions in Jenkins & Azure DevOps require dual sign-off from Platform Leads. Notification payloads with Terraform plan diffs are dispatched to Slack/Teams with interactive approve/reject buttons.
-              </p>
-              <div class="p-2.5 rounded bg-cyber-card border border-cyber-border text-[10px] font-mono text-slate-300">
-                <span class="text-cyber-emerald">[APPROVED]</span> Change request #CR-9481 signed by Lead DevOps Engineer. Target: AWS EKS Production Cluster.
-              </div>
-            </div>
-            <div class="pt-3 border-t border-cyber-border/60 flex justify-between text-[10px] text-slate-500 font-mono">
-              <span>Security Audited: 100%</span>
-              <span class="text-cyber-emerald">Zero Non-Compliant Commits</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </section>
 
-    <!-- ==================== SECTION 4: PRODUCTION FLAGSHIP CASE STUDIES ==================== -->
-    <section id="projects" class="reveal-on-scroll relative pt-6">
-      
-      <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-emerald/10 border border-cyber-emerald/30 text-cyber-emerald text-xs font-mono">
-          <i data-lucide="folder-git-2" class="w-3.5 h-3.5"></i> ARCHITECTURAL BLUEPRINTS
-        </div>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
-          FLAGSHIP PRODUCTION PROJECTS
-        </h2>
-        <p class="text-sm sm:text-base text-slate-400 font-sans">
-          Proven multi-cloud architectures demonstrating end-to-end CI/CD automation, DevSecOps compliance, GitOps scaling, and AI-assisted observability.
+    <!-- ==================== 04 / TOOLKIT ==================== -->
+    <section class="section skills" id="skills">
+      <div class="section-heading scroll-reveal">
+        <p class="eyebrow">04 / TOOLKIT</p>
+        <h2>Tools of the <span class="gradient-text">trade.</span></h2>
+        <p class="section-description">
+          Technologies and platforms I use daily to automate, build, secure, and monitor systems.
         </p>
       </div>
 
-      <div class="space-y-10">
-        
-        <!-- Case Study 1: Multi-Cloud DevSecOps Pipeline with Automated Security Gates -->
-        <div class="rounded-2xl bg-cyber-darker border border-cyber-border overflow-hidden p-6 sm:p-8 hover:border-cyber-cyan transition-all">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            <div class="lg:col-span-7 space-y-4">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/30">DEVSECOPS PIPELINE</span>
-                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">JENKINS • GITHUB ACTIONS • AZURE DEVOPS</span>
-              </div>
-              <h3 class="text-2xl font-bold text-white font-tech">
-                Zero-Trust Multi-Cloud CI/CD with 7-Stage Automated Security Gates
-              </h3>
-              <p class="text-slate-300 text-sm leading-relaxed">
-                Architected enterprise-grade CI/CD pipelines across Jenkins, GitHub Actions, and Azure DevOps integrating 7 layers of automated scanning: Gitleaks for secret detection, SonarQube for static analysis, Snyk for vulnerable packages, Checkov & OPA for IaC compliance, and Trivy for container image inspection. Configured manual approval gates and automated rollbacks on any security violation.
-              </p>
-              
-              <div class="grid grid-cols-2 gap-3 pt-2 font-mono text-xs">
-                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
-                  <div class="text-slate-400 text-[11px]">Security Vulnerabilities:</div>
-                  <div class="text-cyber-cyan font-bold text-sm">0 Critical In Prod</div>
-                </div>
-                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
-                  <div class="text-slate-400 text-[11px]">Deploy Frequency:</div>
-                  <div class="text-cyber-emerald font-bold text-sm">45+ Deploys / Week</div>
-                </div>
-              </div>
+      <div class="skills-grid">
+        <article class="skill-card scroll-reveal delay-1">
+          <span class="skill-index">01</span>
+          <h3>Cloud Infrastructure</h3>
+          <p>AWS (EC2, S3, IAM, VPC, RDS, CloudWatch) · Azure (VM, AKS, Azure DevOps) · GCP · Hostinger LiteSpeed</p>
+        </article>
 
-              <div class="flex flex-wrap gap-2 pt-2 font-mono text-xs text-slate-400">
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Jenkins</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">GitHub Actions</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Azure DevOps</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">SonarQube</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Snyk</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Checkov</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Trivy</span>
-              </div>
-            </div>
+        <article class="skill-card scroll-reveal delay-2">
+          <span class="skill-index">02</span>
+          <h3>Containers & Orchestration</h3>
+          <p>Kubernetes (EKS, AKS, K3s) · Docker · Helm Charts · Ingress-Nginx · Cert-Manager · Kustomize</p>
+        </article>
 
-            <!-- Architecture Diagram Box -->
-            <div class="lg:col-span-5 bg-black/60 rounded-xl border border-cyber-border p-5 font-mono text-xs space-y-3">
-              <div class="flex justify-between items-center text-slate-400 pb-2 border-b border-cyber-border">
-                <span class="text-cyber-cyan flex items-center gap-1.5 font-bold">
-                  <i data-lucide="git-merge" class="w-4 h-4"></i> Security Gate Flow
-                </span>
-                <span class="text-[10px] text-cyber-emerald">Shift-Left</span>
-              </div>
-              <div class="space-y-2 text-[11px] text-slate-300 font-mono">
-                <div class="p-2 rounded bg-cyber-card border border-cyber-border flex items-center justify-between">
-                  <span>1. Gitleaks (Secret Detection)</span>
-                  <span class="text-cyber-emerald">Passed</span>
-                </div>
-                <div class="p-2 rounded bg-cyber-card border border-cyber-border flex items-center justify-between">
-                  <span>2. SonarQube & Snyk (SAST & SCA)</span>
-                  <span class="text-cyber-emerald">Grade A</span>
-                </div>
-                <div class="p-2 rounded bg-cyber-card border border-cyber-border flex items-center justify-between">
-                  <span>3. Checkov + OPA (IaC Policy)</span>
-                  <span class="text-cyber-emerald">Compliant</span>
-                </div>
-                <div class="p-2 rounded bg-cyber-card border border-cyber-border flex items-center justify-between">
-                  <span>4. Trivy Container Audit</span>
-                  <span class="text-cyber-emerald">0 CVEs</span>
-                </div>
-                <div class="p-2 rounded bg-cyber-card border border-cyber-cyan/40 flex items-center justify-between text-cyber-cyan">
-                  <span>5. Production Approval Gate</span>
-                  <span class="text-cyber-emerald">Signed-Off</span>
-                </div>
-              </div>
-            </div>
+        <article class="skill-card scroll-reveal delay-3">
+          <span class="skill-index">03</span>
+          <h3>CI/CD & GitOps</h3>
+          <p>Jenkins · GitHub Actions · Azure DevOps · GitLab CI · ArgoCD (GitOps Engine) · Webhooks</p>
+        </article>
 
-          </div>
-        </div>
+        <article class="skill-card scroll-reveal delay-1">
+          <span class="skill-index">04</span>
+          <h3>Infrastructure as Code</h3>
+          <p>Terraform · OpenTofu · Ansible · Open Policy Agent (OPA) · Shell/Bash Scripting · Python</p>
+        </article>
 
-        <!-- Case Study 2: Multi-Cluster GitOps with ArgoCD across AWS EKS & Azure AKS -->
-        <div class="rounded-2xl bg-cyber-darker border border-cyber-border overflow-hidden p-6 sm:p-8 hover:border-cyber-purple transition-all">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            <div class="lg:col-span-7 space-y-4">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-purple/10 text-cyber-purple border border-cyber-purple/30">GITOPS & KUBERNETES</span>
-                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/30">AWS EKS • AZURE AKS</span>
-              </div>
-              <h3 class="text-2xl font-bold text-white font-tech">
-                Multi-Cluster Kubernetes GitOps Synchronization via ArgoCD & Helm
-              </h3>
-              <p class="text-slate-300 text-sm leading-relaxed">
-                Constructed high-availability Kubernetes deployments across AWS EKS and Azure AKS using ArgoCD ApplicationSets. Managed declarative Helm chart releases, automated TLS certificate lifecycles via cert-manager, configured Ingress-Nginx controllers, and enabled zero-downtime canary rollouts based on real-time Prometheus error rates.
-              </p>
-              
-              <div class="grid grid-cols-2 gap-3 pt-2 font-mono text-xs">
-                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
-                  <div class="text-slate-400 text-[11px]">Configuration Drift:</div>
-                  <div class="text-cyber-purple font-bold text-sm">0% (Self-Healing GitOps)</div>
-                </div>
-                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
-                  <div class="text-slate-400 text-[11px]">Release Downtime:</div>
-                  <div class="text-cyber-emerald font-bold text-sm">0 Seconds (Canary)</div>
-                </div>
-              </div>
+        <article class="skill-card scroll-reveal delay-2">
+          <span class="skill-index">05</span>
+          <h3>Observability & Telemetry</h3>
+          <p>Prometheus · Grafana Dashboards · ELK Stack (Elasticsearch) · AWS CloudWatch · Alertmanager</p>
+        </article>
 
-              <div class="flex flex-wrap gap-2 pt-2 font-mono text-xs text-slate-400">
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">AWS EKS</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Azure AKS</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">ArgoCD</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Helm 3</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Cert-Manager</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Falco Runtime</span>
-              </div>
-            </div>
-
-            <!-- ArgoCD Cluster Topology Box -->
-            <div class="lg:col-span-5 bg-black/60 rounded-xl border border-cyber-border p-5 font-mono text-xs space-y-3">
-              <div class="flex justify-between items-center text-slate-400 pb-2 border-b border-cyber-border">
-                <span class="text-cyber-purple flex items-center gap-1.5 font-bold">
-                  <i data-lucide="network" class="w-4 h-4"></i> GitOps Topology
-                </span>
-                <span class="text-[10px] text-cyber-emerald">Synchronized</span>
-              </div>
-              <div class="space-y-2 text-[11px] text-slate-300 font-mono">
-                <div class="p-2 rounded bg-cyber-card border border-cyber-border flex items-center justify-between">
-                  <span>Git Repository (Single Source of Truth)</span>
-                  <span class="text-cyber-cyan">HEAD</span>
-                </div>
-                <div class="text-center text-slate-500">▼ ArgoCD Controller Polling</div>
-                <div class="p-2 rounded bg-cyber-card border border-cyber-purple/40 flex items-center justify-between text-cyber-purple">
-                  <span>ArgoCD Engine (Auto-Sync & Prune)</span>
-                  <span class="text-cyber-emerald">Synced</span>
-                </div>
-                <div class="text-center text-slate-500">▼ Multi-Cluster Reconcile</div>
-                <div class="grid grid-cols-2 gap-2">
-                  <div class="p-2 rounded bg-cyber-card border border-cyber-border text-center text-cyber-cyan">
-                    AWS EKS (Prod)
-                  </div>
-                  <div class="p-2 rounded bg-cyber-card border border-cyber-border text-center text-blue-400">
-                    Azure AKS (DR)
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Case Study 3: AI-Augmented Observability & Harness Automation -->
-        <div class="rounded-2xl bg-cyber-darker border border-cyber-border overflow-hidden p-6 sm:p-8 hover:border-cyber-amber transition-all">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            <div class="lg:col-span-7 space-y-4">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-amber/10 text-cyber-amber border border-cyber-amber/30">AI & LLM DEVOPS</span>
-                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-purple/10 text-cyber-purple border border-cyber-purple/30">HARNESS AI • AMAZON BEDROCK</span>
-              </div>
-              <h3 class="text-2xl font-bold text-white font-tech">
-                AI-Driven Automated Incident Root-Cause Triaging & Harness Verification
-              </h3>
-              <p class="text-slate-300 text-sm leading-relaxed">
-                Pioneered AI-augmented operations by integrating Harness AI and Amazon Bedrock LLMs into the platform observability pipeline. Automated log anomaly detection across Prometheus and CloudWatch alerts, generating automated incident summaries, remediation runbooks, and self-healing deployment rollbacks.
-              </p>
-              
-              <div class="grid grid-cols-2 gap-3 pt-2 font-mono text-xs">
-                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
-                  <div class="text-slate-400 text-[11px]">MTTR (Mean Time to Resolution):</div>
-                  <div class="text-cyber-amber font-bold text-sm">Reduced by 65%</div>
-                </div>
-                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
-                  <div class="text-slate-400 text-[11px]">False Positive Alerts:</div>
-                  <div class="text-cyber-emerald font-bold text-sm">Filtered by 80%</div>
-                </div>
-              </div>
-
-              <div class="flex flex-wrap gap-2 pt-2 font-mono text-xs text-slate-400">
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Amazon Bedrock</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Harness AI</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Prometheus</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">CloudWatch</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Python Automation</span>
-              </div>
-            </div>
-
-            <!-- AI Telemetry Output Box -->
-            <div class="lg:col-span-5 bg-black/60 rounded-xl border border-cyber-border p-5 font-mono text-xs space-y-3">
-              <div class="flex justify-between items-center text-slate-400 pb-2 border-b border-cyber-border">
-                <span class="text-cyber-amber flex items-center gap-1.5 font-bold">
-                  <i data-lucide="bot" class="w-4 h-4"></i> Bedrock LLM Triaging Engine
-                </span>
-                <span class="text-[10px] text-cyber-emerald">Live</span>
-              </div>
-              <pre class="text-[11px] text-slate-300 leading-relaxed overflow-x-auto">
-<span class="text-cyber-amber">[ALERT]</span> HighLatencySpike detected on worker-02
-<span class="text-cyber-purple">[BEDROCK-LLM]</span> Correlating container logs with Git commit #8fa2b...
-<span class="text-cyber-cyan">[ROOT CAUSE]</span> Unindexed SQL query on RDS Postgres instance.
-<span class="text-cyber-emerald">[REMEDIATION]</span> Automated Harness rollback initiated; traffic shifted to healthy replica set.
-              </pre>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Case Study 4: Multi-Environment Terraform Architecture with OPA Policies -->
-        <div class="rounded-2xl bg-cyber-darker border border-cyber-border overflow-hidden p-6 sm:p-8 hover:border-cyber-cyan transition-all">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            <div class="lg:col-span-7 space-y-4">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/30">TERRAFORM & OPENTOFO</span>
-                <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-cyber-purple/10 text-cyber-purple border border-cyber-purple/30">AWS & GCP MULTI-CLOUD</span>
-              </div>
-              <h3 class="text-2xl font-bold text-white font-tech">
-                Modular Multi-Cloud Terraform Framework with OPA Policy as Code
-              </h3>
-              <p class="text-slate-300 text-sm leading-relaxed">
-                Engineered DRY, modular Terraform infrastructure provisioning VPCs, IAM roles, EKS/AKS clusters, and CloudWatch log groups across AWS and GCP. Implemented remote encrypted state handling using AWS S3 and DynamoDB distributed locks, with Checkov and Open Policy Agent (OPA) validating every plan before apply.
-              </p>
-              
-              <div class="grid grid-cols-2 gap-3 pt-2 font-mono text-xs">
-                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
-                  <div class="text-slate-400 text-[11px]">Env Provisioning Time:</div>
-                  <div class="text-cyber-cyan font-bold text-sm">Under 10 Minutes</div>
-                </div>
-                <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border">
-                  <div class="text-slate-400 text-[11px]">Cloud Cost Optimized:</div>
-                  <div class="text-cyber-emerald font-bold text-sm">38% AWS Spend Reduced</div>
-                </div>
-              </div>
-
-              <div class="flex flex-wrap gap-2 pt-2 font-mono text-xs text-slate-400">
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Terraform</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">AWS (VPC, IAM, EKS, S3)</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">GCP Compute</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">DynamoDB Lock</span>
-                <span class="px-2 py-1 rounded bg-slate-800 text-slate-300">Ansible</span>
-              </div>
-            </div>
-
-            <!-- Terraform Code Preview Box -->
-            <div class="lg:col-span-5 bg-black/60 rounded-xl border border-cyber-border p-5 font-mono text-xs space-y-3">
-              <div class="flex justify-between items-center text-slate-400 pb-2 border-b border-cyber-border">
-                <span class="text-cyber-cyan flex items-center gap-1.5 font-bold">
-                  <i data-lucide="file-code" class="w-4 h-4"></i> main.tf &bull; Modular IaC
-                </span>
-                <span class="text-[10px] text-cyber-emerald">v1.8.0</span>
-              </div>
-              <pre class="text-[11px] text-slate-300 leading-relaxed overflow-x-auto">
-<span class="text-cyber-purple">module</span> <span class="text-cyber-cyan">"multi_cloud_vpc"</span> {
-  source             = "./modules/aws-vpc"
-  cidr_block         = "10.0.0.0/16"
-  enable_nat_gateway = <span class="text-cyber-emerald">true</span>
-  enable_flow_logs   = <span class="text-cyber-emerald">true</span>
-  tags = {
-    Environment = var.environment
-    ManagedBy   = "Terraform"
-    Compliance  = "CIS-Level-1"
-  }
-}
-              </pre>
-            </div>
-
-          </div>
-        </div>
-
+        <article class="skill-card scroll-reveal delay-3">
+          <span class="skill-index">06</span>
+          <h3>AI Tools & Security</h3>
+          <p>Amazon Bedrock LLM · Harness AI · Gitleaks · SonarQube · Snyk · Trivy · Checkov · Falco</p>
+        </article>
       </div>
     </section>
 
-    <!-- ==================== SECTION 5: WORK EXPERIENCE & CAREER MILESTONES ==================== -->
-    <section id="experience" class="reveal-on-scroll relative pt-6">
-      
-      <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-xs font-mono">
-          <i data-lucide="briefcase" class="w-3.5 h-3.5"></i> PROFESSIONAL TRACK RECORD
-        </div>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
-          WORK EXPERIENCE & CAREER MILESTONES
-        </h2>
-        <p class="text-sm sm:text-base text-slate-400 font-sans">
-          5+ years engineering scalable cloud platforms, driving release velocity, and hardening infrastructure reliability.
+    <!-- ==================== 05 / PROJECTS ==================== -->
+    <section class="section projects" id="projects">
+      <div class="section-heading scroll-reveal">
+        <p class="eyebrow">05 / SELECTED WORK</p>
+        <h2>Built with purpose<span class="gradient-text">.</span></h2>
+        <p class="section-description">
+          Production systems engineered for zero downtime, multi-cloud resilience, and automated delivery.
         </p>
       </div>
 
-      <!-- Experience Timeline Card -->
-      <div class="max-w-4xl mx-auto rounded-2xl bg-cyber-darker border border-cyber-border p-8 shadow-2xl relative">
-        <div class="relative pl-6 sm:pl-8 border-l-2 border-cyber-cyan/50 space-y-8">
-          
-          <!-- Experience Item -->
-          <div class="relative group">
-            <span class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-cyber-darker border-2 border-cyber-cyan group-hover:bg-cyber-cyan transition-all shadow-neon-cyan"></span>
-            
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
-              <h3 class="text-xl font-bold text-white font-tech">
-                DevOps Engineer
-              </h3>
-              <span class="px-3 py-1 rounded-full bg-cyber-card border border-cyber-border text-cyber-cyan font-mono text-xs w-fit">
-                July 2021 &mdash; Present (5 Years 5 Months)
-              </span>
-            </div>
-
-            <div class="text-slate-400 font-mono text-xs mb-4 flex items-center gap-2">
-              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-cyber-emerald"></i> Delhi, India
-              <span>•</span>
-              <a href="https://www.linkedin.com/in/webanis" target="_blank" class="text-cyber-cyan hover:underline flex items-center gap-1">
-                <i data-lucide="linkedin" class="w-3 h-3"></i> linkedin.com/in/webanis
-              </a>
-            </div>
-
-            <ul class="space-y-3 text-slate-300 text-sm font-sans leading-relaxed list-disc list-outside pl-4">
-              <li>
-                <strong class="text-white">Multi-Cloud CI/CD Architecture:</strong> Designed, deployed, and maintained robust CI/CD pipelines using <strong class="text-cyber-cyan">Jenkins, GitHub Actions, GCP, and Azure DevOps</strong>, drastically enhancing deployment throughput and release predictability.
-              </li>
-              <li>
-                <strong class="text-white">Infrastructure as Code & Configuration:</strong> Automated infrastructure provisioning and configuration across AWS, GCP, and Azure using <strong class="text-cyber-purple">Terraform and Ansible</strong>, ensuring consistent, repeatable, and scalable cloud environments.
-              </li>
-              <li>
-                <strong class="text-white">Containerization & Orchestration:</strong> Deployed, monitored, and scaled containerized microservices across development, staging, and production clusters using <strong class="text-cyber-emerald">Docker and Kubernetes</strong>.
-              </li>
-              <li>
-                <strong class="text-white">Cloud Platforms Leadership:</strong> Worked extensively across <strong class="text-white">AWS (EC2, S3, IAM, VPC, RDS, CloudWatch)</strong>, <strong class="text-white">Azure (VMs, AKS, Azure DevOps)</strong>, and <strong class="text-white">Google Cloud Platform (GCP)</strong>.
-              </li>
-              <li>
-                <strong class="text-white">Observability & Incident Management:</strong> Implemented comprehensive monitoring, alerting, and telemetry frameworks using <strong class="text-cyber-amber">Prometheus, Grafana, ELK Stack, and CloudWatch</strong>, ensuring high availability and minimal MTTR.
-              </li>
-              <li>
-                <strong class="text-white">Automation Scripting & Linux Administration:</strong> Authored Shell and Python scripts for operational maintenance, patching, backup automation, and server health optimization across CloudLinux and Ubuntu servers.
-              </li>
-              <li>
-                <strong class="text-white">Security & Code Quality Gate Integration:</strong> Embedded automated security scanning (<strong class="text-cyber-red">Gitleaks, SonarQube, Snyk, Checkov, Trivy</strong>) directly into deployment workflows to enforce strict compliance.
-              </li>
-            </ul>
-
-          </div>
-
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ==================== SECTION 6: OBSERVABILITY & METRICS HUD ==================== -->
-    <section id="observability" class="reveal-on-scroll relative pt-6">
-      
-      <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-amber/10 border border-cyber-amber/30 text-cyber-amber text-xs font-mono">
-          <i data-lucide="activity" class="w-3.5 h-3.5"></i> PROMETHEUS + GRAFANA TELEMETRY
-        </div>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
-          OBSERVABILITY MISSION CONTROL
-        </h2>
-        <p class="text-sm sm:text-base text-slate-400 font-sans">
-          Simulated live Prometheus telemetry feeds visualizing system throughput, error budgets, and latency percentiles.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="projects-list">
         
-        <!-- Metric Card 1: Request Rate & Latency -->
-        <div class="rounded-xl bg-cyber-darker border border-cyber-border p-5 shadow-lg space-y-4">
-          <div class="flex justify-between items-start">
-            <div>
-              <div class="text-[11px] font-mono text-slate-400">rate(http_requests_total[5m])</div>
-              <div class="text-2xl font-bold font-tech text-white flex items-baseline gap-2">
-                <span id="metricRPS">1,842</span> <span class="text-xs font-mono text-cyber-cyan">req/sec</span>
-              </div>
-            </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/30">
-              P99: 14ms
-            </span>
-          </div>
-          <!-- Live Canvas Graph -->
-          <canvas id="chartRPS" class="w-full h-28 bg-black/40 rounded-lg border border-cyber-border/40"></canvas>
-          <div class="flex justify-between text-[11px] font-mono text-slate-500">
-            <span>T - 60s</span>
-            <span class="text-cyber-emerald flex items-center gap-1">● Nominal HTTP 2xx: 99.98%</span>
-            <span>Now</span>
-          </div>
-        </div>
-
-        <!-- Metric Card 2: Cluster Memory & Heap Allocation -->
-        <div class="rounded-xl bg-cyber-darker border border-cyber-border p-5 shadow-lg space-y-4">
-          <div class="flex justify-between items-start">
-            <div>
-              <div class="text-[11px] font-mono text-slate-400">container_memory_working_set_bytes</div>
-              <div class="text-2xl font-bold font-tech text-white flex items-baseline gap-2">
-                <span id="metricMem">3.42</span> <span class="text-xs font-mono text-cyber-purple">GiB / 8.00 GiB</span>
-              </div>
-            </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-purple/10 text-cyber-purple border border-cyber-purple/30">
-              HPA: 4/10 Replicas
-            </span>
-          </div>
-          <!-- Live Canvas Graph -->
-          <canvas id="chartMem" class="w-full h-28 bg-black/40 rounded-lg border border-cyber-border/40"></canvas>
-          <div class="flex justify-between text-[11px] font-mono text-slate-500">
-            <span>T - 60s</span>
-            <span class="text-cyber-purple flex items-center gap-1">● Memory Saturation: Stable</span>
-            <span>Now</span>
-          </div>
-        </div>
-
-        <!-- Metric Card 3: Alertmanager & SLO Status -->
-        <div class="rounded-xl bg-cyber-darker border border-cyber-border p-5 shadow-lg space-y-4 md:col-span-2 lg:col-span-1">
-          <div class="flex justify-between items-start">
-            <div>
-              <div class="text-[11px] font-mono text-slate-400">alertmanager_active_alerts</div>
-              <div class="text-2xl font-bold font-tech text-cyber-emerald flex items-baseline gap-2">
-                0 FIRING <span class="text-xs font-mono text-slate-400 font-normal">(All Clear)</span>
-              </div>
-            </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-cyber-emerald/10 text-cyber-emerald border border-cyber-emerald/30">
-              SLO: 99.99% Met
-            </span>
-          </div>
-
-          <!-- Alert Stack Items -->
-          <div class="space-y-2 font-mono text-xs">
-            <div class="p-2.5 rounded-lg bg-cyber-card border border-cyber-border flex items-center justify-between">
-              <span class="flex items-center gap-2 text-slate-300 text-[11px]">
-                <i data-lucide="check" class="w-3.5 h-3.5 text-cyber-emerald"></i> KubePodCrashLooping
-              </span>
-              <span class="text-[10px] text-cyber-emerald">Resolved</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-cyber-card border border-cyber-border flex items-center justify-between">
-              <span class="flex items-center gap-2 text-slate-300 text-[11px]">
-                <i data-lucide="check" class="w-3.5 h-3.5 text-cyber-emerald"></i> HighErrorBudgetBurn
-              </span>
-              <span class="text-[10px] text-cyber-emerald">0.00%</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-cyber-card border border-cyber-border flex items-center justify-between">
-              <span class="flex items-center gap-2 text-slate-300 text-[11px]">
-                <i data-lucide="check" class="w-3.5 h-3.5 text-cyber-emerald"></i> CertManagerExpiryNotice
-              </span>
-              <span class="text-[10px] text-cyber-cyan">Auto-Renewed (89d)</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ==================== SECTION 7: DEVOPS TECH RADAR & ARSENAL ==================== -->
-    <section id="skills" class="reveal-on-scroll relative pt-6">
-      
-      <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-xs font-mono">
-          <i data-lucide="cpu" class="w-3.5 h-3.5"></i> CORE COMPETENCIES & TOOLING
-        </div>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
-          DEVOPS ARSENAL & TECH RADAR
-        </h2>
-        <p class="text-sm sm:text-base text-slate-400 font-sans">
-          Production battle-tested tools utilized daily across AWS, GCP, Azure, and on-premise environments.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-        <!-- Domain 1: Multi-Cloud Infrastructure -->
-        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="p-2.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/30">
-              <i data-lucide="cloud" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-mono text-sm font-bold text-white">Multi-Cloud Infrastructure</h3>
-              <p class="text-[11px] font-mono text-slate-400">AWS • GCP • Azure</p>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2 font-mono text-xs">
-            <span class="skill-tag">AWS (EC2, S3, IAM, VPC, RDS)</span>
-            <span class="skill-tag">Azure (VM, AKS, Azure DevOps)</span>
-            <span class="skill-tag">GCP (Compute Engine, GKE)</span>
-            <span class="skill-tag">Hostinger & LiteSpeed</span>
-            <span class="skill-tag">Linux / Ubuntu / CloudLinux</span>
-          </div>
-        </div>
-
-        <!-- Domain 2: Containers & Orchestration -->
-        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="p-2.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
-              <i data-lucide="boxes" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-mono text-sm font-bold text-white">Containers & Kubernetes</h3>
-              <p class="text-[11px] font-mono text-slate-400">Cluster Orchestration</p>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2 font-mono text-xs">
-            <span class="skill-tag">Kubernetes (EKS & AKS)</span>
-            <span class="skill-tag">Docker & Multi-Stage Builds</span>
-            <span class="skill-tag">Helm Charts & Repos</span>
-            <span class="skill-tag">Kustomize Overlays</span>
-            <span class="skill-tag">Ingress-Nginx & Cert-Manager</span>
-          </div>
-        </div>
-
-        <!-- Domain 3: GitOps & CI/CD Automation -->
-        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="p-2.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-              <i data-lucide="git-merge" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-mono text-sm font-bold text-white">CI/CD & GitOps</h3>
-              <p class="text-[11px] font-mono text-slate-400">Continuous Automation</p>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2 font-mono text-xs">
-            <span class="skill-tag">Jenkins Pipelines</span>
-            <span class="skill-tag">GitHub Actions</span>
-            <span class="skill-tag">Azure DevOps Pipelines</span>
-            <span class="skill-tag">GitLab CI/CD</span>
-            <span class="skill-tag">ArgoCD (GitOps Engine)</span>
-          </div>
-        </div>
-
-        <!-- Domain 4: Infrastructure as Code & Config -->
-        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="p-2.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/30">
-              <i data-lucide="code-2" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-mono text-sm font-bold text-white">IaC & Automation</h3>
-              <p class="text-[11px] font-mono text-slate-400">Declarative Infrastructure</p>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2 font-mono text-xs">
-            <span class="skill-tag">Terraform & OpenTofu</span>
-            <span class="skill-tag">Ansible Playbooks</span>
-            <span class="skill-tag">Open Policy Agent (OPA)</span>
-            <span class="skill-tag">Remote State S3 + DynamoDB</span>
-            <span class="skill-tag">Python & Shell Scripting</span>
-          </div>
-        </div>
-
-        <!-- Domain 5: Observability & Telemetry -->
-        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-              <i data-lucide="gauge" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-mono text-sm font-bold text-white">Observability & Logs</h3>
-              <p class="text-[11px] font-mono text-slate-400">Metrics, Tracing & Logs</p>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2 font-mono text-xs">
-            <span class="skill-tag">Prometheus & Alertmanager</span>
-            <span class="skill-tag">Grafana Dashboards</span>
-            <span class="skill-tag">ELK Stack (Elasticsearch)</span>
-            <span class="skill-tag">AWS CloudWatch</span>
-            <span class="skill-tag">Loki & Promtail</span>
-          </div>
-        </div>
-
-        <!-- Domain 6: AI DevOps & Cloud Security -->
-        <div class="tech-card rounded-xl bg-cyber-darker border border-cyber-border p-6 hover:border-cyber-cyan transition-all group">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="p-2.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/30">
-              <i data-lucide="sparkles" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-mono text-sm font-bold text-white">AI Tools & DevSecOps</h3>
-              <p class="text-[11px] font-mono text-slate-400">Intelligence & Hardening</p>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-2 font-mono text-xs">
-            <span class="skill-tag">Amazon Bedrock LLM</span>
-            <span class="skill-tag">Harness AI Automation</span>
-            <span class="skill-tag">Gitleaks & SonarQube</span>
-            <span class="skill-tag">Snyk & Trivy Scanners</span>
-            <span class="skill-tag">Checkov & Falco Runtime</span>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ==================== SECTION 8: INTERACTIVE DEVOPS TERMINAL ==================== -->
-    <section id="terminal" class="reveal-on-scroll relative pt-6">
-      
-      <div class="text-center max-w-3xl mx-auto space-y-3 mb-10">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-xs font-mono">
-          <i data-lucide="terminal" class="w-3.5 h-3.5"></i> LIVE KUBERNETES & LINUX CLI
-        </div>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
-          INTERACTIVE DEVOPS TERMINAL
-        </h2>
-        <p class="text-sm sm:text-base text-slate-400 font-sans">
-          Test real terminal commands below. Type <code class="text-cyber-cyan font-mono bg-cyber-card px-1.5 py-0.5 rounded border border-cyber-border">help</code> to see all available commands.
-        </p>
-      </div>
-
-      <!-- Terminal Window Box -->
-      <div class="max-w-4xl mx-auto rounded-2xl bg-[#090d16] border border-cyber-border shadow-2xl overflow-hidden font-mono text-xs group hover:border-cyber-cyan/60 transition-all">
-        
-        <!-- Terminal Header -->
-        <div class="flex items-center justify-between px-4 py-3 bg-[#0d131f] border-b border-cyber-border">
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-red-500/80 cursor-pointer"></span>
-            <span class="w-3 h-3 rounded-full bg-yellow-500/80 cursor-pointer"></span>
-            <span class="w-3 h-3 rounded-full bg-green-500/80 cursor-pointer"></span>
-            <span class="ml-2 text-slate-400 font-semibold tracking-wide text-[11px]">anisahmed@cloud-control-plane: ~ (bash)</span>
-          </div>
-          <div class="flex items-center gap-2 text-slate-400 text-[10px]">
-            <span class="hidden sm:inline">TYPE 'help' FOR CMDS</span>
-            <button id="clearTerminalBtn" class="px-2 py-0.5 rounded bg-cyber-card border border-cyber-border hover:text-white transition-all">
-              CLEAR
-            </button>
-          </div>
-        </div>
-
-        <!-- Terminal Output Body -->
-        <div id="terminalBody" class="p-5 space-y-3 min-h-[340px] max-h-[500px] overflow-y-auto font-mono text-[12px] leading-relaxed scrollbar-thin scrollbar-thumb-slate-800">
-          <div class="text-slate-400">
-            Welcome to <span class="text-cyber-cyan font-bold">Anis Ahmed's</span> Interactive DevOps Environment.<br>
-            Role: <span class="text-white">DevOps Engineer (5+ Years Experience)</span> | Region: <span class="text-cyber-emerald">ap-south-1</span>.<br>
-            Available commands: <span class="text-cyber-cyan">kubectl</span>, <span class="text-cyber-cyan">helm</span>, <span class="text-cyber-cyan">terraform</span>, <span class="text-cyber-cyan">docker</span>, <span class="text-cyber-cyan">cat</span>, <span class="text-cyber-cyan">deploy</span>, <span class="text-cyber-cyan">help</span>, <span class="text-cyber-cyan">clear</span>.
-          </div>
-          <div id="terminalHistory" class="space-y-3"></div>
-          
-          <!-- Terminal Prompt Line -->
-          <div class="flex items-center gap-2 text-cyber-emerald pt-1">
-            <span class="font-bold text-cyber-cyan">anisahmed@devops:~$</span>
-            <input type="text" id="terminalInput" autofocus spellcheck="false" autocomplete="off" class="flex-1 bg-transparent text-white outline-none font-mono caret-cyber-cyan" placeholder="type 'help' and press Enter...">
-          </div>
-        </div>
-
-        <!-- Quick Command Chips for Mobile / Quick Click -->
-        <div class="px-4 py-2.5 bg-[#0d131f] border-t border-cyber-border flex items-center gap-2 overflow-x-auto text-[11px] text-slate-400">
-          <span class="text-[10px] text-slate-500 shrink-0">Quick Run:</span>
-          <button class="quick-cmd px-2 py-1 rounded bg-cyber-card hover:bg-cyber-cyan hover:text-black border border-cyber-border hover:border-cyber-cyan transition-all shrink-0">kubectl get nodes</button>
-          <button class="quick-cmd px-2 py-1 rounded bg-cyber-card hover:bg-cyber-cyan hover:text-black border border-cyber-border hover:border-cyber-cyan transition-all shrink-0">cat devsecops.json</button>
-          <button class="quick-cmd px-2 py-1 rounded bg-cyber-card hover:bg-cyber-cyan hover:text-black border border-cyber-border hover:border-cyber-cyan transition-all shrink-0">cat ai-tools.json</button>
-          <button class="quick-cmd px-2 py-1 rounded bg-cyber-card hover:bg-cyber-cyan hover:text-black border border-cyber-border hover:border-cyber-cyan transition-all shrink-0">cat experience.txt</button>
-          <button class="quick-cmd px-2 py-1 rounded bg-cyber-card hover:bg-cyber-cyan hover:text-black border border-cyber-border hover:border-cyber-cyan transition-all shrink-0">deploy --env prod</button>
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- ==================== SECTION 9: CONTACT / MISSION TRANSMISSION ==================== -->
-    <section id="contact" class="reveal-on-scroll relative pt-6 pb-20">
-      
-      <div class="rounded-3xl bg-gradient-to-b from-cyber-darker to-[#090d16] border border-cyber-border p-8 sm:p-12 shadow-2xl relative overflow-hidden">
-        
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          
-          <div class="lg:col-span-7 space-y-4">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-xs font-mono">
-              <i data-lucide="radio" class="w-3.5 h-3.5 animate-pulse"></i> INITIATE TRANSMISSION
-            </div>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-tech">
-              LET'S SCALE YOUR PLATFORM
-            </h2>
-            <p class="text-slate-300 text-sm leading-relaxed max-w-xl font-sans">
-              Currently open to Senior DevOps Engineer / Cloud Infrastructure roles, contract consultancy, and DevSecOps platform scaling. Available for immediate discussion.
+        <!-- Project 1 -->
+        <article class="project-card scroll-reveal delay-1">
+          <div class="project-number">01</div>
+          <div class="project-content">
+            <h3>Zero-Trust Multi-Cloud CI/CD with 7-Stage Automated Security Gates</h3>
+            <p>
+              Architected enterprise-grade CI/CD pipelines across Jenkins, GitHub Actions, and Azure DevOps integrating 7 layers of automated scanning: Gitleaks for secret detection, SonarQube for static analysis, Snyk for vulnerable packages, Checkov & OPA for IaC compliance, and Trivy for container images. Configured manual approval gates and automated rollbacks on any security violation.
             </p>
-
-            <div class="space-y-3 pt-4 font-mono text-xs">
-              <div class="flex items-center gap-3 text-slate-300">
-                <div class="p-2 rounded bg-cyber-card border border-cyber-border text-blue-400">
-                  <i data-lucide="linkedin" class="w-4 h-4"></i>
-                </div>
-                <div>
-                  <div class="text-[10px] text-slate-500">LINKEDIN PROFILE</div>
-                  <a href="https://www.linkedin.com/in/webanis" target="_blank" class="hover:text-cyber-cyan transition-colors font-bold text-white">linkedin.com/in/webanis</a>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 text-slate-300">
-                <div class="p-2 rounded bg-cyber-card border border-cyber-border text-cyber-cyan">
-                  <i data-lucide="mail" class="w-4 h-4"></i>
-                </div>
-                <div>
-                  <div class="text-[10px] text-slate-500">DIRECT EMAIL</div>
-                  <a href="mailto:contact@anisahmed.in" class="hover:text-cyber-cyan transition-colors font-bold text-white">contact@anisahmed.in</a>
-                </div>
-              </div>
-              <div class="flex items-center gap-3 text-slate-300">
-                <div class="p-2 rounded bg-cyber-card border border-cyber-border text-cyber-emerald">
-                  <i data-lucide="globe" class="w-4 h-4"></i>
-                </div>
-                <div>
-                  <div class="text-[10px] text-slate-500">CUSTOM DOMAIN</div>
-                  <span class="text-white font-bold">https://anisahmed.in</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Download Resume / Email Button -->
-            <div class="pt-4 flex flex-wrap gap-4">
-              <a href="mailto:contact@anisahmed.in?subject=DevOps%20Opportunity%20-%20Anis%20Ahmed" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyber-cyan to-blue-500 text-black font-bold font-mono text-xs tracking-wider hover:brightness-110 transition-all shadow-neon-cyan">
-                <i data-lucide="send" class="w-4 h-4"></i> TRANSMIT MESSAGE VIA EMAIL
-              </a>
-              <a href="https://www.linkedin.com/in/webanis" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan text-white font-mono text-xs tracking-wider hover:text-cyber-cyan transition-all">
-                <i data-lucide="linkedin" class="w-4 h-4 text-blue-400"></i> CONNECT ON LINKEDIN
-              </a>
+            <div class="tags">
+              <span>Jenkins</span>
+              <span>GitHub Actions</span>
+              <span>Azure DevOps</span>
+              <span>SonarQube</span>
+              <span>Snyk</span>
+              <span>Trivy</span>
+              <span>OPA</span>
             </div>
           </div>
+          <span class="project-arrow" aria-hidden="true">↗</span>
+        </article>
 
-          <!-- PGP / Security Aesthetic Card -->
-          <div class="lg:col-span-5 bg-black/60 rounded-2xl border border-cyber-border p-6 font-mono text-xs flex flex-col justify-between">
-            <div>
-              <div class="flex justify-between items-center text-slate-400 pb-3 mb-4 border-b border-cyber-border">
-                <span class="text-cyber-cyan font-bold flex items-center gap-2">
-                  <i data-lucide="key" class="w-4 h-4"></i> PGP FINGERPRINT
-                </span>
-                <span class="text-[10px] text-cyber-emerald">VERIFIED</span>
-              </div>
-              <p class="text-[11px] text-slate-400 mb-3">Public Security & Cryptographic Identity:</p>
-              <div class="p-3 rounded-lg bg-cyber-card border border-cyber-border/70 text-cyber-cyan break-all font-mono text-[10px] leading-relaxed">
-                4A8F B2C1 9D7E 04F3 81AA 66CD EF12 3456 7890 ABCD
-              </div>
-            </div>
-            
-            <div class="pt-6 border-t border-cyber-border/60 text-[11px] text-slate-400">
-              <div class="flex items-center justify-between">
-                <span>Infrastructure:</span>
-                <span class="text-white">Hostinger LiteSpeed + SSL</span>
-              </div>
-              <div class="flex items-center justify-between mt-1">
-                <span>Delivery:</span>
-                <span class="text-cyber-emerald">GitHub Actions CI/CD</span>
-              </div>
+        <!-- Project 2 -->
+        <article class="project-card scroll-reveal delay-2">
+          <div class="project-number">02</div>
+          <div class="project-content">
+            <h3>Multi-Cluster Kubernetes GitOps Synchronization via ArgoCD & Helm</h3>
+            <p>
+              Constructed high-availability Kubernetes deployments across AWS EKS and Azure AKS using ArgoCD ApplicationSets. Managed declarative Helm chart releases, automated TLS certificate lifecycles via cert-manager, configured Ingress-Nginx controllers, and enabled zero-downtime canary rollouts based on real-time Prometheus error rates.
+            </p>
+            <div class="tags">
+              <span>ArgoCD</span>
+              <span>AWS EKS</span>
+              <span>Azure AKS</span>
+              <span>Helm 3</span>
+              <span>Cert-Manager</span>
+              <span>Canary Rollouts</span>
             </div>
           </div>
+          <span class="project-arrow" aria-hidden="true">↗</span>
+        </article>
 
-        </div>
+        <!-- Project 3 -->
+        <article class="project-card scroll-reveal delay-1">
+          <div class="project-number">03</div>
+          <div class="project-content">
+            <h3>AI-Driven Automated Incident Root-Cause Triaging & Harness Verification</h3>
+            <p>
+              Pioneered AI-augmented operations by integrating Harness AI and Amazon Bedrock LLMs into the platform observability pipeline. Automated log anomaly detection across Prometheus and CloudWatch alerts, generating automated incident summaries, remediation runbooks, and self-healing deployment rollbacks.
+            </p>
+            <div class="tags">
+              <span>Amazon Bedrock</span>
+              <span>Harness AI</span>
+              <span>Prometheus</span>
+              <span>CloudWatch</span>
+              <span>Python Automation</span>
+            </div>
+          </div>
+          <span class="project-arrow" aria-hidden="true">↗</span>
+        </article>
+
+        <!-- Project 4 -->
+        <article class="project-card scroll-reveal delay-2">
+          <div class="project-number">04</div>
+          <div class="project-content">
+            <h3>Modular Multi-Cloud Terraform Framework with OPA Policy as Code</h3>
+            <p>
+              Engineered DRY, modular Terraform infrastructure provisioning VPCs, IAM roles, EKS/AKS clusters, and CloudWatch log groups across AWS and GCP. Implemented remote encrypted state handling using AWS S3 and DynamoDB distributed locks, with Checkov and Open Policy Agent (OPA) validating every plan before apply.
+            </p>
+            <div class="tags">
+              <span>Terraform</span>
+              <span>AWS</span>
+              <span>GCP</span>
+              <span>S3 Remote State</span>
+              <span>DynamoDB Lock</span>
+              <span>OPA Rego</span>
+            </div>
+          </div>
+          <span class="project-arrow" aria-hidden="true">↗</span>
+        </article>
+
+        <!-- Project 5 -->
+        <article class="project-card scroll-reveal delay-1">
+          <div class="project-number">05</div>
+          <div class="project-content">
+            <h3>Enterprise Observability & Centralized Logging Stack</h3>
+            <p>
+              Constructed a unified telemetry stack using Prometheus, Grafana, ELK Stack (Elasticsearch), and AWS CloudWatch. Configured automated Alertmanager routing to Slack, custom PromQL SLO error budget tracking, and real-time distributed tracing.
+            </p>
+            <div class="tags">
+              <span>Prometheus</span>
+              <span>Grafana</span>
+              <span>ELK Stack</span>
+              <span>Alertmanager</span>
+              <span>CloudWatch</span>
+            </div>
+          </div>
+          <span class="project-arrow" aria-hidden="true">↗</span>
+        </article>
 
       </div>
+    </section>
 
+    <!-- ==================== 06 / EXPERIENCE ==================== -->
+    <section class="section experience" id="experience">
+      <div class="section-heading scroll-reveal">
+        <p class="eyebrow">06 / CAREER</p>
+        <h2>5+ years of engineering <span class="gradient-text">excellence.</span></h2>
+        <p class="section-description">
+          Demonstrated history of designing, automating, and maintaining high-availability multi-cloud systems.
+        </p>
+      </div>
+
+      <div class="experience-card scroll-reveal">
+        <div class="exp-header">
+          <div>
+            <h3 class="exp-title">DevOps Engineer</h3>
+            <span style="color:var(--muted); font-size:0.88rem;">Delhi, India &bull; <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue);">linkedin.com/in/webanis</a></span>
+          </div>
+          <span class="exp-date">July 2021 &mdash; Present (5 Years 5 Months)</span>
+        </div>
+
+        <ul class="exp-list">
+          <li><strong>Multi-Cloud CI/CD:</strong> Designed and maintained production CI/CD pipelines using Jenkins, GitHub Actions, GCP, and Azure DevOps, enhancing release predictability and eliminating manual steps.</li>
+          <li><strong>Infrastructure as Code:</strong> Automated infrastructure provisioning and configuration management using Terraform and Ansible across AWS, GCP, and Azure.</li>
+          <li><strong>Kubernetes Orchestration:</strong> Deployed, managed, and scaled containerized microservices across development, staging, and production clusters using Docker and Kubernetes.</li>
+          <li><strong>Cloud Management:</strong> Extensively operated AWS (EC2, S3, IAM, VPC, RDS, CloudWatch), Azure (VMs, AKS, Azure DevOps), and GCP environments.</li>
+          <li><strong>Monitoring & Reliability:</strong> Implemented monitoring, alerting, and centralized logging solutions using Prometheus, Grafana, ELK Stack, and CloudWatch.</li>
+          <li><strong>Shift-Left Security:</strong> Embedded Gitleaks, SonarQube, Snyk, Checkov, Trivy, and OPA directly into deployment gates to ensure compliance.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ==================== 07 / CONTACT ==================== -->
+    <section class="section contact scroll-reveal" id="contact">
+      <p class="eyebrow">07 / WHAT'S NEXT?</p>
+      <h2>Let's build something<br>
+        <span class="gradient-text">reliable.</span>
+      </h2>
+      <p>
+        Interested in scaling cloud platforms, automating zero-trust delivery workflows, or discussing senior DevOps engineering roles?
+      </p>
+
+      <div class="contact-actions">
+        <a class="button primary" href="mailto:contact@anisahmed.in?subject=DevOps%20Opportunity%20-%20Anis%20Ahmed">
+          Get in touch ↗
+        </a>
+        <a class="button secondary" href="https://www.linkedin.com/in/webanis" target="_blank" rel="noopener noreferrer">
+          Connect on LinkedIn ↗
+        </a>
+      </div>
+
+      <div class="contact-meta">
+        <span>Email: <strong style="color:var(--text);">contact@anisahmed.in</strong></span>
+        &bull;
+        <span>Domain: <strong style="color:var(--text);">https://anisahmed.in</strong></span>
+        &bull;
+        <span>Location: <strong style="color:var(--text);">Delhi, India</strong></span>
+      </div>
     </section>
 
   </main>
 
-  <!-- ==================== FOOTER ==================== -->
-  <footer class="border-t border-cyber-border bg-cyber-black py-8 relative z-10 font-mono text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div>
-        &copy; 2026 <strong class="text-slate-300">Anis Ahmed</strong> (5+ Years DevOps). Architected for Multi-Cloud Resilience.
-      </div>
-      <div class="flex items-center gap-4 text-slate-400">
-        <a href="#control-plane" class="hover:text-cyber-cyan transition-colors">Top</a>
-        <span>•</span>
-        <a href="https://www.linkedin.com/in/webanis" target="_blank" class="hover:text-cyber-cyan transition-colors">LinkedIn (webanis)</a>
-        <span>•</span>
-        <a href="https://github.com" target="_blank" class="hover:text-cyber-cyan transition-colors">GitHub</a>
-      </div>
-    </div>
+  <!-- Footer -->
+  <footer class="footer">
+    <a class="brand" href="#home">AA<span>.</span></a>
+    <p>Designed with intent. Deployed with automation.</p>
+    <span>v2.5.0 &bull; <a href="https://www.linkedin.com/in/webanis" target="_blank">LinkedIn</a> &bull; <a href="https://github.com/anisahmed01/devops-portfolio" target="_blank">GitHub</a></span>
   </footer>
 
-  <!-- Main JavaScript Logic -->
+  <!-- Interactive JavaScript Engine -->
   <script src="app.js"></script>
 
 </body>
