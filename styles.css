@@ -944,3 +944,74 @@ h1 {
     text-align: center;
   }
 }
+
+
+/* =====================================================
+   QUOTE — "Collect & Shatter" Animation
+   ===================================================== */
+.quote-anim-wrapper {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--emerald);
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+/* Each character starts scattered (via --dx/--dy) and flies to its place */
+.q-char {
+  display: inline-block;
+  transform: translate(var(--dx), var(--dy));
+  opacity: 0;
+  animation: q-assemble 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* stagger each character's arrival */
+  animation-delay: calc(var(--i, 0) * 20ms);
+}
+
+@keyframes q-assemble {
+  to {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+/* Phase 2: shatter — each character explodes to its random offset and disappears */
+.quote-anim-wrapper.q-shatter .q-char {
+  animation: q-shatter-out 0.65s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+
+@keyframes q-shatter-out {
+  0%   { transform: translate(0, 0);                   opacity: 1; filter: blur(0px);   }
+  40%  { transform: translate(var(--dx), var(--dy));   opacity: 0.6; filter: blur(1px); }
+  100% { transform: translate(calc(var(--dx) * 2.5), calc(var(--dy) * 2.5));
+         opacity: 0; filter: blur(4px); }
+}
+
+
+/* Intro quote wrap and piece assembly styles */
+#introQuoteWrap {
+  position: relative;
+  display: block;
+  text-align: center;
+  width: min(860px, 88vw);
+  margin: 0 auto;
+}
+
+.intro-piece {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  overflow: visible;
+}
+
+.intro-voxel-square {
+  position: absolute;
+  border-radius: 2px;
+  pointer-events: none;
+  will-change: transform, opacity;
+}

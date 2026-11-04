@@ -15,20 +15,174 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 function initIntroSplash() {
   const overlay = document.getElementById('introOverlay');
-  if (!overlay) return;
+  const wrap = document.getElementById('introQuoteWrap');
+  const quote = wrap ? wrap.querySelector('.intro-quote') : null;
+  if (!overlay || !wrap || !quote) return;
 
-  // Stays visible for 1.1s, then dissolves with blur-scale animation
-  setTimeout(() => {
-    overlay.classList.add('fade-out');
+  function build() {
+    const qRect = quote.getBoundingClientRect();
+    let W = qRect.width;
+    let H = qRect.height;
+    if (W < 20 || H < 10) { setTimeout(build, 80); return; }
+
+    // Grid of square/rectangular pieces
+    const ROWS = 6;
+    const COLS = 12;
+    const pw = W / COLS;
+    const ph = H / ROWS;
+
+    wrap.style.width = W + 'px';
+    wrap.style.height = H + 'px';
+    wrap.style.position = 'relative';
+
+    const pieces = [];
+
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const piece = document.createElement('div');
+        piece.className = 'intro-piece';
+        piece.style.width = W + 'px';
+        piece.style.height = H + 'px';
+
+        const cT = r * ph;
+        const cR = W - (c + 1) * pw;
+        const cB = H - (r + 1) * ph;
+        const cL = c * pw;
+        piece.style.clipPath = `inset(${cT}px ${cR}px ${cB}px ${cL}px round 3px)`;
+
+        const inner = quote.cloneNode(true);
+        inner.style.cssText = `position:absolute;top:0;left:0;width:${W}px;opacity:1;animation:none;margin:0;padding:0;pointer-events:none;`;
+        piece.appendChild(inner);
+
+        // Scattered starting positions: flying in like fragmented pieces from outer space
+        const startX = (Math.random() - 0.5) * window.innerWidth * 1.5;
+        const startY = (Math.random() - 0.5) * window.innerHeight * 1.5;
+        const startRot = (Math.random() - 0.5) * 180;
+        const startScale = 0.2 + Math.random() * 0.3;
+
+        piece.style.transform = `translate(${startX}px, ${startY}px) rotate(${startRot}deg) scale(${startScale})`;
+        piece.style.opacity = '0';
+        piece.style.transition = 'none';
+
+        wrap.appendChild(piece);
+        pieces.push(piece);
+      }
+    }
+
+    // PHASE 1: Collect pieces smoothly into the quote
+    pieces.forEach((el, i) => {
+      const delay = 100 + (i % COLS) * 25 + Math.floor(i / COLS) * 35;
+      setTimeout(() => {
+        el.style.transition = 'transform 1000ms cubic-bezier(0.16, 1, 0.3, 1), opacity 600ms ease';
+        el.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
+        el.style.opacity = '1';
+      }, delay);
+    });
+
+    // PHASE 2: Hold & Seamless swap to glowing quote
+    const assembleTime = 100 + (COLS - 1) * 25 + (ROWS - 1) * 35 + 1000;
+
     setTimeout(() => {
-      overlay.remove();
-    }, 700);
-  }, 1100);
+      quote.style.transition = 'opacity 0.3s ease, filter 0.3s ease';
+      quote.style.opacity = '1';
+      quote.style.filter = 'drop-shadow(0 0 16px rgba(84, 200, 255, 0.6))';
+      pieces.forEach(el => {
+        el.style.transition = 'opacity 0.3s ease';
+        el.style.opacity = '0';
+      });
+    }, assembleTime);
+
+    // PHASE 3: Disappear into flying squared pieces & cyber particles
+    const shatterStart = assembleTime + 1100;
+
+    setTimeout(() => {
+      quote.style.transition = 'opacity 0.2s ease';
+      quote.style.opacity = '0';
+
+      // Snap pieces back for the explosion
+      pieces.forEach(el => {
+        el.style.transition = 'none';
+        el.style.transform = 'translate(0,0) rotate(0deg) scale(1)';
+        el.style.opacity = '1';
+      });
+
+      void wrap.getBoundingClientRect(); // flush layout
+
+      // Spawn extra floating glowing square voxels
+      spawnIntroVoxelGrid(overlay);
+
+      // Explode pieces outward as squared tumbling fragments
+      pieces.forEach((el, i) => {
+        const outX = (Math.random() - 0.5) * window.innerWidth * 2.2;
+        const outY = (Math.random() - 0.5) * window.innerHeight * 2.2;
+        const outRot = (Math.random() - 0.5) * 540;
+        const delay = Math.random() * 220;
+
+        setTimeout(() => {
+          el.style.transition = 'transform 850ms cubic-bezier(0.4, 0, 1, 0.5), opacity 650ms ease';
+          el.style.transform = `translate(${outX}px, ${outY}px) rotate(${outRot}deg) scale(0.02)`;
+          el.style.opacity = '0';
+        }, delay);
+      });
+    }, shatterStart);
+
+    // PHASE 4: Dismiss overlay and reveal website
+    const finishTime = shatterStart + 900;
+    setTimeout(() => {
+      overlay.classList.add('fade-out');
+      setTimeout(() => {
+        overlay.remove();
+      }, 700);
+    }, finishTime);
+  }
+
+  function spawnIntroVoxelGrid(parent) {
+    const count = 36;
+    const colors = ['#54c8ff', '#57e6a5', '#a78bfa', '#ffd166', '#ffffff'];
+    for (let i = 0; i < count; i++) {
+      const sq = document.createElement('div');
+      sq.className = 'intro-voxel-square';
+      const size = Math.floor(Math.random() * 14) + 8;
+      const left = Math.random() * 90 + 5;
+      const top = Math.random() * 90 + 5;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const tx = (Math.random() * 600 - 300).toFixed(0);
+      const ty = (Math.random() * 600 - 300).toFixed(0);
+      const r = (Math.random() * 720 - 360).toFixed(0);
+
+      sq.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        left: ${left}%;
+        top: ${top}%;
+        background: ${color};
+        box-shadow: 0 0 12px ${color};
+        border-radius: 2px;
+        pointer-events: none;
+        z-index: 100000;
+        transform: translate(0, 0) rotate(0deg) scale(1);
+        transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.8s ease;
+      `;
+      parent.appendChild(sq);
+
+      requestAnimationFrame(() => {
+        sq.style.transform = `translate(${tx}px, ${ty}px) rotate(${r}deg) scale(0)`;
+        sq.style.opacity = '0';
+      });
+    }
+  }
+
+  requestAnimationFrame(() => {
+    const start = () => setTimeout(build, 60);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(start);
+    } else {
+      setTimeout(start, 200);
+    }
+  });
 }
 
-// ==========================================
-// 1. ROCK-SOLID SCROLL REVEAL OBSERVER
-// ==========================================
 function initScrollObserver() {
   const elements = document.querySelectorAll('.scroll-reveal');
 
@@ -221,10 +375,40 @@ aws_dynamodb_table.terraform_state_locks
   "runtime": "Falco (Kernel eBPF anomaly detection)"
 }
 `,
-    quote: () => `
-<span style="color:var(--emerald); font-weight:700;">“Automate everything. Break nothing.”</span> &mdash; Anis Ahmed
-<span style="color:var(--blue);">Thanks for stopping by!</span> 👋
-`,
+    quote: () => {
+      // Build the animated quote inside the terminal
+      const wrapper = document.createElement('div');
+      wrapper.className = 'quote-anim-wrapper';
+
+      const quoteText = '\u201cAutomate everything. Break nothing.\u201d \u2014 Anis Ahmed';
+      [...quoteText].forEach(ch => {
+        const span = document.createElement('span');
+        span.className = 'q-char';
+        span.textContent = ch === ' ' ? '\u00a0' : ch;
+        // random scatter direction for each character
+        const dx = (Math.random() * 160 - 80).toFixed(1);
+        const dy = (Math.random() * 100 - 50).toFixed(1);
+        span.style.setProperty('--dx', dx + 'px');
+        span.style.setProperty('--dy', dy + 'px');
+        wrapper.appendChild(span);
+      });
+
+      const history = document.getElementById('terminalHistory');
+      if (history) {
+        const entry = document.createElement('div');
+        entry.style.margin = '4px 0 12px';
+        entry.appendChild(wrapper);
+        history.appendChild(entry);
+        terminalBody.scrollTop = terminalBody.scrollHeight;
+
+        // Phase 1: assemble (characters fly IN from random positions)
+        // Phase 2 (after 2.4s): shatter into squares and fade out
+        setTimeout(() => {
+          wrapper.classList.add('q-shatter');
+        }, 2400);
+      }
+      return '';
+    },
     'cat experience.txt': () => `
 <span style="color:var(--blue); font-weight:700;">ANIS AHMED — DEVOPS ENGINEER</span>
 • Experience: 5+ years (July 2021 — Present)
