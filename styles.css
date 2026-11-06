@@ -186,12 +186,106 @@ h1 {
 .hero {
   position: relative;
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: 1.15fr auto 1.1fr;
   align-items: center;
-  gap: 50px;
-  min-height: 600px;
-  padding-top: 70px;
-  padding-bottom: 80px;
+  gap: 36px;
+  min-height: 620px;
+  padding-top: 60px;
+  padding-bottom: 70px;
+}
+
+/* ==========================================
+   HERO PORTRAIT CYBER CAPSULE
+   ========================================== */
+.hero-portrait-capsule {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  margin: 0 auto;
+  user-select: none;
+}
+
+.portrait-glow {
+  position: absolute;
+  inset: -14px;
+  background: radial-gradient(ellipse at center, rgba(84, 200, 255, 0.4) 0%, rgba(167, 139, 250, 0.25) 45%, transparent 70%);
+  border-radius: 9999px;
+  filter: blur(22px);
+  pointer-events: none;
+  z-index: 0;
+  animation: pulsePortraitGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulsePortraitGlow {
+  0% { opacity: 0.55; transform: scale(0.96); }
+  100% { opacity: 0.95; transform: scale(1.04); }
+}
+
+.portrait-frame {
+  position: relative;
+  width: 240px;
+  height: 340px;
+  border-radius: 9999px;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--emerald) 100%);
+  box-shadow: 0 0 32px rgba(84, 200, 255, 0.35), 0 16px 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  z-index: 1;
+}
+
+.hero-portrait-capsule:hover .portrait-frame {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 0 45px rgba(84, 200, 255, 0.55), 0 20px 50px rgba(0, 0, 0, 0.7);
+}
+
+.portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  border-radius: 9999px;
+  display: block;
+  filter: contrast(1.04) brightness(0.98);
+  transition: filter 0.3s ease, transform 0.35s ease;
+}
+
+.hero-portrait-capsule:hover .portrait-img {
+  filter: contrast(1.08) brightness(1.03);
+  transform: scale(1.03);
+}
+
+.portrait-overlay-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, transparent 70%, rgba(8, 13, 27, 0.65) 100%);
+  pointer-events: none;
+}
+
+.portrait-badge {
+  position: relative;
+  margin-top: -18px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(8, 13, 27, 0.94);
+  border: 1px solid rgba(84, 200, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65), 0 0 14px rgba(84, 200, 255, 0.25);
+  color: var(--text);
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  white-space: nowrap;
 }
 
 .hero-copy,
@@ -1144,5 +1238,71 @@ h1 {
   .metric-label {
     font-size: 0.82rem;
     max-width: 280px;
+  }
+}
+
+@media (max-width: 1180px) and (min-width: 901px) {
+  .hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .hero-copy {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .hero-portrait-capsule {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+  }
+  .terminal-card {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    max-width: 760px;
+    margin: 12px auto 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-top: 50px;
+    padding-bottom: 60px;
+    text-align: center;
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    order: 1;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-meta {
+    justify-content: center;
+  }
+
+  .hero-portrait-capsule {
+    order: 2;
+    margin: 10px auto 16px;
+  }
+
+  .portrait-frame {
+    width: 210px;
+    height: 295px;
+  }
+
+  .terminal-card {
+    order: 3;
+    max-width: 580px;
+    margin: 0 auto;
+    width: 100%;
   }
 }
