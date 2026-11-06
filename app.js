@@ -302,7 +302,7 @@ function initMacTerminal() {
   <span style="color:var(--emerald);">terraform state list</span>            Show managed multi-cloud infrastructure
   <span style="color:var(--emerald);">cat devsecops.json</span>              Output SAST, DAST, SCA security tooling
   <span style="color:var(--emerald);">cat achievements.txt</span>            View verified production achievements
-  <span style="color:var(--emerald);">cat experience.txt</span>              View 5.5 years track record @ HCL Tech
+  <span style="color:var(--emerald);">cat experience.txt</span>              View 5.5 years track record
   <span style="color:var(--emerald);">cat contact.txt</span>                 Display email & LinkedIn
   <span style="color:var(--emerald);">deploy --env prod</span>               Simulate live canary rollout
   <span style="color:var(--emerald);">clear</span>                           Clear terminal window
@@ -368,7 +368,7 @@ aws_dynamodb_table.terraform_state_locks
 `,
     'cat experience.txt': () => `
 <span style="color:var(--blue); font-weight:700;">ANIS AHMED — SENIOR DEVOPS ENGINEER</span>
-• Company:    <strong style="color:#ffffff;">HCL Tech, Gurugram</strong>
+• Location:   Gurugram, India (Open to Remote Global)
 • Tenure:     July 2021 — Present (5.5 Years)
 • Core Focus: Google Cloud Platform (GCP), AWS, Kubernetes, Terraform
 • Key Pillars: CI/CD Automation (70% effort reduction), DevSecOps (SAST/DAST/SCA),
