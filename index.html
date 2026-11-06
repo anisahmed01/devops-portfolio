@@ -1481,7 +1481,7 @@ h1 {
   }
 }
 </style>
-  <link rel="stylesheet" href="styles.css?v=3.6.0">
+  <link rel="stylesheet" href="styles.css?v=3.7.0">
 </head>
 
 <body>
@@ -1556,8 +1556,8 @@ h1 {
         <div class="portrait-glow"></div>
         <div class="portrait-frame" oncontextmenu="return false;">
           <picture>
-            <source srcset="profile.webp" type="image/webp">
-            <img src="profile.jpg" alt="Anis Ahmed - Senior DevOps Engineer" class="portrait-img" width="240" height="340" loading="eager" fetchpriority="high" draggable="false" oncontextmenu="return false;">
+            <source srcset="profile.webp?v=3.7.0" type="image/webp">
+            <img src="profile.jpg?v=3.7.0" alt="Anis Ahmed - Senior DevOps Engineer" class="portrait-img" width="240" height="340" loading="eager" fetchpriority="high" draggable="false" oncontextmenu="return false;">
           </picture>
           <div class="portrait-overlay-glow"></div>
           <div class="portrait-shield" aria-hidden="true" title="Anis Ahmed"></div>
@@ -2695,9 +2695,6 @@ Type <span style="color:var(--blue);">help</span> to view all supported DevOps c
   });
 }
 
-  </script>
-  <script src="app.js?v=3.6.0">
-
 // ==========================================
 // 5. VISITOR & PROFILE ANALYTICS TELEMETRY
 // ==========================================
@@ -2770,8 +2767,7 @@ function initVisitorAnalytics() {
     portraitCapsule.addEventListener('dragstart', (e) => e.preventDefault());
   }
 }
-
   </script>
-
+  <script src="app.js?v=3.7.0"></script>
 </body>
 </html>
