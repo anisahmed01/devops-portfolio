@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavScrollTracker();
   initPipelineConsole();
   initMacTerminal();
+  initVisitorAnalytics();
 });
 
 // ==========================================
