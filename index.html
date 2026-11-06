@@ -971,8 +971,111 @@ h1 {
   }
 }
 
-  </style>
-  <link rel="stylesheet" href="styles.css?v=2.7.0">
+/* ==========================================
+   METRICS & KEY ACHIEVEMENTS SECTION
+   ========================================== */
+.metrics-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0 30px;
+  box-sizing: border-box;
+}
+
+.metrics-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: min(1180px, 90%);
+  margin: 0 auto;
+  padding: 24px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(16, 24, 42, 0.75);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-sizing: border-box;
+  align-items: center;
+  justify-items: center;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.metric-number {
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+  font-weight: 850;
+  letter-spacing: -0.5px;
+  background: linear-gradient(100deg, var(--blue), var(--emerald));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  text-align: center;
+  display: block;
+}
+
+.metric-label {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  font-weight: 500;
+  text-align: center;
+  display: block;
+  max-width: 250px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .metrics-section {
+    padding: 0 0 24px;
+  }
+
+  .metrics-bar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 16px;
+    padding: 22px 18px;
+  }
+}
+
+@media (max-width: 520px) {
+  .metrics-section {
+    padding: 0 0 20px;
+  }
+
+  .metrics-bar {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 16px;
+    width: 92%;
+  }
+
+  .metric-item {
+    padding: 6px 4px;
+  }
+
+  .metric-number {
+    font-size: 1.85rem;
+  }
+
+  .metric-label {
+    font-size: 0.82rem;
+    max-width: 280px;
+  }
+}
+</style>
+  <link rel="stylesheet" href="styles.css?v=3.2.0">
 </head>
 
 <body>
@@ -1086,24 +1189,26 @@ h1 {
     </section>
 
     <!-- Key Achievements & Production Metrics Bar -->
-    <div class="metrics-bar scroll-reveal">
-      <div class="metric-item">
-        <span class="metric-number">70%</span>
-        <span class="metric-label">Deployment Effort Reduced via CI/CD Automation</span>
+    <section class="metrics-section" aria-label="Key Achievements and Performance Metrics">
+      <div class="metrics-bar scroll-reveal">
+        <div class="metric-item">
+          <span class="metric-number">70%</span>
+          <span class="metric-label">Deployment Effort Reduced via CI/CD Automation</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-number">5.5 Yrs</span>
+          <span class="metric-label">Senior DevOps & Platform Engineering</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-number">SAST · DAST · SCA</span>
+          <span class="metric-label">Automated DevSecOps Quality & Security Gates</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-number">GenAI & RAG</span>
+          <span class="metric-label">AI-Driven Operational Intelligence & Troubleshooting</span>
+        </div>
       </div>
-      <div class="metric-item">
-        <span class="metric-number">5.5 Yrs</span>
-        <span class="metric-label">Senior DevOps & Platform Engineering</span>
-      </div>
-      <div class="metric-item">
-        <span class="metric-number">SAST · DAST · SCA</span>
-        <span class="metric-label">Automated DevSecOps Quality & Security Gates</span>
-      </div>
-      <div class="metric-item">
-        <span class="metric-number">GenAI & RAG</span>
-        <span class="metric-label">AI-Driven Operational Intelligence & Troubleshooting</span>
-      </div>
-    </div>
+    </section>
 
     <!-- ==================== 01 / ABOUT ==================== -->
     <section class="section about" id="about">
