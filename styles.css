@@ -925,3 +925,65 @@ h1 {
     text-align: center;
   }
 }
+
+
+/* ==========================================
+   METRICS & KEY ACHIEVEMENTS BAR
+   ========================================== */
+.metrics-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 48px auto 0;
+  width: min(1180px, 90%);
+  padding: 24px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(16, 24, 42, 0.75);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 6px 12px;
+}
+
+.metric-number {
+  font-size: clamp(1.7rem, 2.8vw, 2.4rem);
+  font-weight: 850;
+  letter-spacing: -1px;
+  background: linear-gradient(100deg, var(--blue), var(--emerald));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+
+.metric-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+@media (max-width: 880px) {
+  .metrics-bar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 36px;
+  }
+}
+
+@media (max-width: 500px) {
+  .metrics-bar {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 20px 16px;
+  }
+}

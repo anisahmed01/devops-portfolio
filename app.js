@@ -296,33 +296,39 @@ function initMacTerminal() {
   const commands = {
     help: () => `
 <span style="color:var(--blue); font-weight:700;">AVAILABLE DEVOPS COMMANDS:</span>
-  <span style="color:var(--emerald);">kubectl get nodes</span>      List AWS EKS & Azure AKS nodes
-  <span style="color:var(--emerald);">kubectl get pods</span>       List active microservice pods
-  <span style="color:var(--emerald);">helm list</span>               List deployed Helm releases
-  <span style="color:var(--emerald);">terraform state list</span>    Show managed cloud infrastructure
-  <span style="color:var(--emerald);">cat devsecops.json</span>      Output 7-pillar security tooling
-  <span style="color:var(--emerald);">cat experience.txt</span>      View 5+ years track record
-  <span style="color:var(--emerald);">cat contact.txt</span>         Display email & LinkedIn
-  <span style="color:var(--emerald);">deploy --env prod</span>       Simulate live canary rollout
-  <span style="color:var(--emerald);">clear</span>                   Clear terminal window
+  <span style="color:var(--emerald);">gcloud container clusters list</span>  List GCP GKE production clusters
+  <span style="color:var(--emerald);">kubectl get nodes</span>              List AWS EKS & Azure AKS nodes
+  <span style="color:var(--emerald);">kubectl get pods</span>               List active microservice pods
+  <span style="color:var(--emerald);">terraform state list</span>            Show managed multi-cloud infrastructure
+  <span style="color:var(--emerald);">cat devsecops.json</span>              Output SAST, DAST, SCA security tooling
+  <span style="color:var(--emerald);">cat achievements.txt</span>            View verified production achievements
+  <span style="color:var(--emerald);">cat experience.txt</span>              View 5.5 years track record @ HCL Tech
+  <span style="color:var(--emerald);">cat contact.txt</span>                 Display email & LinkedIn
+  <span style="color:var(--emerald);">deploy --env prod</span>               Simulate live canary rollout
+  <span style="color:var(--emerald);">clear</span>                           Clear terminal window
+`,
+    'gcloud container clusters list': () => `
+NAME                      LOCATION       MASTER_VERSION  STATUS   NUM_NODES
+gke-prod-cluster-asia-s1  asia-south1-a  1.30.2-gke.1    RUNNING  6
+gke-rag-aiops-cluster     asia-south1-b  1.30.2-gke.1    RUNNING  4
 `,
     'kubectl get nodes': () => `
 NAME                             STATUS   ROLES           CLUSTER     VERSION
+gke-asia-south1-worker-01        Ready    node,worker     GCP-GKE     v1.30.2
 eks-ap-south-1a-worker-01        Ready    node,worker     AWS-EKS     v1.30.2
 eks-ap-south-1b-worker-02        Ready    node,worker     AWS-EKS     v1.30.2
-aks-centralindia-nodepool-01     Ready    node,worker     Azure-AKS   v1.30.2
 `,
     'kubectl get nodes -o wide': () => `
 NAME                             STATUS   ROLES           CLUSTER     VERSION   OS-IMAGE
+gke-asia-south1-worker-01        Ready    node,worker     GCP-GKE     v1.30.2   Container-Optimized OS
 eks-ap-south-1a-worker-01        Ready    node,worker     AWS-EKS     v1.30.2   Amazon Linux 2023
 eks-ap-south-1b-worker-02        Ready    node,worker     AWS-EKS     v1.30.2   Amazon Linux 2023
-aks-centralindia-nodepool-01     Ready    node,worker     Azure-AKS   v1.30.2   Ubuntu 22.04 LTS
 `,
     'kubectl get pods': () => `
 NAMESPACE     NAME                                   READY   STATUS    RESTARTS   AGE
 production    portfolio-frontend-6b87d89bf5-2zpq7   1/1     Running   0          5d
 production    argocd-server-7965448f7f-k9p6q         1/1     Running   0          42d
-ingress-nginx ingress-nginx-controller-6d7c6-m5w4q   1/1     Running   0          42d
+security      sast-dast-orchestrator-8bc9d-1vqp4     1/1     Running   0          12d
 monitoring    prometheus-k8s-0                       2/2     Running   0          42d
 `,
     'helm list': () => `
@@ -331,36 +337,42 @@ argo-cd           argocd        3         deployed  argo-cd-6.7.18           v2.
 cert-manager      cert-manager  1         deployed  cert-manager-v1.14.4     v1.14.4
 ingress-nginx     ingress-nginx 4         deployed  ingress-nginx-4.10.0     1.10.0
 kube-prometheus   monitoring    2         deployed  kube-prometheus-58.2.2   v0.73.2
-falco-runtime     security      1         deployed  falco-3.8.4              0.37.1
+trivy-scanner     security      1         deployed  trivy-operator-0.18.2    0.50.0
 `,
     'terraform state list': () => `
+google_compute_network.gcp_vpc
+google_container_cluster.primary_gke
 module.multi_cloud_vpc.aws_vpc.this[0]
-module.multi_cloud_vpc.aws_subnet.private[0]
 module.eks.aws_eks_cluster.this[0]
-module.azure_aks.azurerm_kubernetes_cluster.k8s
 aws_s3_bucket.terraform_remote_state
 aws_dynamodb_table.terraform_state_locks
 `,
     'cat devsecops.json': () => `
 {
-  "secrets": "Gitleaks (Entropy detection & pre-commit blocking)",
-  "sast": "SonarQube (Grade A quality gate)",
-  "sca": "Snyk (Vulnerable third-party dependency scanner)",
-  "container": "Trivy (Image CVE & SBOM auditor)",
+  "sast": "SonarQube (Static Application Security Testing — Code Quality Gate)",
+  "dast": "Dynamic Application Security Testing (Runtime API & Endpoint audit)",
+  "sca": "Snyk (Software Composition Analysis for vulnerable dependencies)",
+  "secrets": "Gitleaks (Entropy credential detection & pre-commit blocking)",
+  "container": "Trivy (Container Image CVE & SBOM auditor)",
   "iac_policy": ["Checkov (CIS benchmarks)", "Open Policy Agent (Rego rules)"],
-  "runtime": "Falco (Kernel eBPF anomaly detection)"
+  "aiops": "GCP Cloud Monitoring & Anomaly Detection"
 }
 `,
-    quote: () => `
-<span style="color:var(--emerald); font-weight:700;">ΓÇ£Automate everything. Break nothing.ΓÇ¥</span> &mdash; Anis Ahmed
-<span style="color:var(--blue);">Thanks for stopping by!</span> ≡ƒæï
+    'cat achievements.txt': () => `
+<span style="color:var(--emerald); font-weight:700;">KEY PRODUCTION ACHIEVEMENTS — ANIS AHMED:</span>
+• <span style="color:var(--blue);">CI/CD Optimization:</span> Reduced manual deployment efforts by <strong style="color:#ffffff;">70%</strong> across pipelines.
+• <span style="color:var(--blue);">Shift-Left Security:</span> Integrated SAST, DAST, and SCA scanning into delivery gates.
+• <span style="color:var(--blue);">Generative AI & RAG:</span> Explored RAG & LLM solutions for DevOps operational support.
+• <span style="color:var(--blue);">Cloud Scalability:</span> Managed resilient, high-availability GCP & AWS infrastructure.
+• <span style="color:var(--blue);">IaC Reproducibility:</span> Engineered reusable Terraform modules and Ansible playbooks.
 `,
     'cat experience.txt': () => `
-<span style="color:var(--blue); font-weight:700;">ANIS AHMED ΓÇö DEVOPS ENGINEER</span>
-ΓÇó Experience: 5+ years (July 2021 ΓÇö Present)
-ΓÇó Location: Delhi, India (Open to Remote Global)
-ΓÇó Core Platforms: AWS, GCP, Azure, Kubernetes, Terraform, CI/CD, DevSecOps
-ΓÇó Mission: Automating platforms that never fail and scaling deployments with confidence.
+<span style="color:var(--blue); font-weight:700;">ANIS AHMED — SENIOR DEVOPS ENGINEER</span>
+• Company:    <strong style="color:#ffffff;">HCL Tech, Gurugram</strong>
+• Tenure:     July 2021 — Present (5.5 Years)
+• Core Focus: Google Cloud Platform (GCP), AWS, Kubernetes, Terraform
+• Key Pillars: CI/CD Automation (70% effort reduction), DevSecOps (SAST/DAST/SCA),
+              AIOps & GenAI/RAG, Site Reliability Engineering (SRE)
 `,
     'cat contact.txt': () => `
 Email:     <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a>
@@ -371,12 +383,12 @@ Website:   https://anisahmed.in
     'deploy --env prod': () => {
       setTimeout(() => {
         const lines = [
-          'ΓÜí [INIT] Connecting to multi-cloud EKS & AKS production clusters...',
-          '≡ƒöì [DEVSECOPS] Gitleaks, SonarQube & Trivy verification: PASSED (0 CVEs)',
-          '≡ƒô£ [OPA] Evaluated Terraform & K8s plan against Rego compliance: APPROVED',
-          '≡ƒæñ [SIGN-OFF] Production Approval Gate authorized by Anis Ahmed',
-          '≡ƒöä [GITOPS] ArgoCD syncing canary release across availability zones...',
-          'Γ£à [READY] Health probes 200 OK. 0 Downtime Canary Rollout Completed on anisahmed.in!',
+          '⚡ [INIT] Connecting to multi-cloud GCP GKE & AWS EKS production clusters...',
+          '🔍 [DEVSECOPS] SAST, DAST, SCA (SonarQube, Snyk, Trivy): PASSED (0 CVEs)',
+          '📜 [OPA] Evaluated Terraform & K8s plan against CIS benchmark rules: APPROVED',
+          '👤 [SIGN-OFF] Production Approval Gate authorized by Senior DevOps Engineer (Anis Ahmed)',
+          '🔄 [GITOPS] ArgoCD syncing canary release across availability zones...',
+          '✅ [READY] Health probes 200 OK. Zero-downtime release active on anisahmed.in!',
         ];
 
         let i = 0;
@@ -389,8 +401,9 @@ Website:   https://anisahmed.in
           }
         }, 350);
       }, 100);
-      return `<span style="color:var(--amber);">≡ƒÜÇ Initiating multi-cloud DevSecOps production rollout...</span>`;
+      return `<span style="color:var(--amber);">🚀 Initiating multi-cloud GCP & AWS DevSecOps production rollout...</span>`;
     },
+
     clear: () => {
       const history = document.getElementById('terminalHistory');
       if (history) history.innerHTML = '';
