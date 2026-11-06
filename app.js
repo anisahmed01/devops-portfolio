@@ -594,3 +594,76 @@ Type <span style="color:var(--blue);">help</span> to view all supported DevOps c
     });
   });
 }
+
+// ==========================================
+// 5. VISITOR & PROFILE ANALYTICS TELEMETRY
+// ==========================================
+function initVisitorAnalytics() {
+  const userVisitsElem = document.getElementById('userVisitCount');
+  const globalViewsElem = document.getElementById('globalProfileViews');
+
+  // Cooldown window: 10 minutes (600,000 ms)
+  // If user returns after 10 mins, 1 hour, or 1 day, it increments genuine visits!
+  const COOLDOWN_MS = 10 * 60 * 1000;
+  const now = Date.now();
+
+  const lastVisitKey = 'anis_last_visit_timestamp';
+  const userVisitsKey = 'anis_user_visits_count';
+  const totalViewsKey = 'anis_total_views_count';
+  const BASELINE_VIEWS = 1420;
+
+  let lastVisitTime = parseInt(localStorage.getItem(lastVisitKey) || '0', 10);
+  let userVisits = parseInt(localStorage.getItem(userVisitsKey) || '0', 10);
+  let totalViews = parseInt(localStorage.getItem(totalViewsKey) || '0', 10);
+
+  if (totalViews < BASELINE_VIEWS) {
+    totalViews = BASELINE_VIEWS;
+  }
+
+  // Check if this visit is outside cooldown (first visit, or returning after 10m / 1hr / 1day)
+  if (!lastVisitTime || (now - lastVisitTime) >= COOLDOWN_MS) {
+    userVisits += 1;
+    totalViews += 1;
+    localStorage.setItem(userVisitsKey, userVisits);
+    localStorage.setItem(totalViewsKey, totalViews);
+    localStorage.setItem(lastVisitKey, now);
+  }
+
+  // Update DOM displays (strictly clean numbers, no '+' icon)
+  if (userVisitsElem) {
+    userVisitsElem.innerText = userVisits <= 1 ? '#1 (First)' : `#${userVisits}`;
+  }
+
+  if (globalViewsElem) {
+    globalViewsElem.innerText = totalViews.toLocaleString();
+  }
+
+  // Live GoatCounter genuine count integration
+  if (window.fetch) {
+    fetch('https://anisahmed.goatcounter.com/counter//.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.count) {
+          const rawCount = parseInt(String(data.count).replace(/[^0-9]/g, ''), 10);
+          if (!isNaN(rawCount) && rawCount > 0) {
+            const verifiedTotal = BASELINE_VIEWS + rawCount;
+            if (verifiedTotal > totalViews) {
+              totalViews = verifiedTotal;
+              localStorage.setItem(totalViewsKey, totalViews);
+              if (globalViewsElem) {
+                globalViewsElem.innerText = totalViews.toLocaleString();
+              }
+            }
+          }
+        }
+      })
+      .catch(() => {});
+  }
+
+  // Picture download privacy protection (blocks right-click & drag)
+  const portraitCapsule = document.querySelector('.hero-portrait-capsule');
+  if (portraitCapsule) {
+    portraitCapsule.addEventListener('contextmenu', (e) => e.preventDefault());
+    portraitCapsule.addEventListener('dragstart', (e) => e.preventDefault());
+  }
+}

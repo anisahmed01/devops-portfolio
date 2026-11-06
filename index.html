@@ -240,7 +240,7 @@ h1 {
 }
 
 /* ==========================================
-   HERO PORTRAIT CYBER CAPSULE
+   HERO PORTRAIT CYBER CAPSULE & PRIVACY SHIELD
    ========================================== */
 .hero-portrait-capsule {
   position: relative;
@@ -251,6 +251,8 @@ h1 {
   z-index: 2;
   margin: 0 auto;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .portrait-glow {
@@ -280,6 +282,9 @@ h1 {
   overflow: hidden;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
   z-index: 1;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .hero-portrait-capsule:hover .portrait-frame {
@@ -291,32 +296,50 @@ h1 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 22%;
+  object-position: 50% 16%;
   border-radius: 9999px;
   display: block;
-  filter: contrast(1.04) brightness(0.98);
-  transform: scale(1.5);
-  transform-origin: 50% 24%;
+  filter: contrast(1.02) brightness(0.99);
   transition: filter 0.3s ease, transform 0.35s ease;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .hero-portrait-capsule:hover .portrait-img {
-  filter: contrast(1.08) brightness(1.03);
-  transform: scale(1.56);
+  filter: contrast(1.05) brightness(1.02);
+  transform: scale(1.02);
 }
 
 .portrait-overlay-glow {
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  background: linear-gradient(180deg, transparent 70%, rgba(8, 13, 27, 0.65) 100%);
+  background: linear-gradient(180deg, transparent 72%, rgba(8, 13, 27, 0.65) 100%);
   pointer-events: none;
+  z-index: 2;
+}
+
+/* Invisible security shield preventing image download & drag */
+.portrait-shield {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: transparent;
+  z-index: 5;
+  cursor: default;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
 }
 
 .portrait-badge {
   position: relative;
   margin-top: -18px;
-  z-index: 3;
+  z-index: 6;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1458,7 +1481,7 @@ h1 {
   }
 }
 </style>
-  <link rel="stylesheet" href="styles.css?v=3.5.0">
+  <link rel="stylesheet" href="styles.css?v=3.6.0">
 </head>
 
 <body>
@@ -1531,12 +1554,13 @@ h1 {
       <!-- Vertical Oval Cyber Portrait Capsule -->
       <div class="hero-portrait-capsule scroll-reveal delay-1" aria-label="Anis Ahmed - Senior DevOps Engineer">
         <div class="portrait-glow"></div>
-        <div class="portrait-frame">
+        <div class="portrait-frame" oncontextmenu="return false;">
           <picture>
             <source srcset="profile.webp" type="image/webp">
-            <img src="profile.jpg" alt="Anis Ahmed - Senior DevOps Engineer" class="portrait-img" width="240" height="340" loading="eager" fetchpriority="high">
+            <img src="profile.jpg" alt="Anis Ahmed - Senior DevOps Engineer" class="portrait-img" width="240" height="340" loading="eager" fetchpriority="high" draggable="false" oncontextmenu="return false;">
           </picture>
           <div class="portrait-overlay-glow"></div>
+          <div class="portrait-shield" aria-hidden="true" title="Anis Ahmed"></div>
         </div>
         <div class="portrait-badge">
           <span class="status-pulse-dot"></span>
@@ -2030,7 +2054,7 @@ h1 {
 
         <div class="analytics-grid">
           <div class="analytics-metric">
-            <span class="analytics-number" id="globalProfileViews">1,420+</span>
+            <span class="analytics-number" id="globalProfileViews">1,420</span>
             <span class="analytics-label">Total Profile Views</span>
           </div>
 
@@ -2672,7 +2696,7 @@ Type <span style="color:var(--blue);">help</span> to view all supported DevOps c
 }
 
   </script>
-  <script src="app.js?v=3.5.0">
+  <script src="app.js?v=3.6.0">
 
 // ==========================================
 // 5. VISITOR & PROFILE ANALYTICS TELEMETRY
@@ -2681,40 +2705,43 @@ function initVisitorAnalytics() {
   const userVisitsElem = document.getElementById('userVisitCount');
   const globalViewsElem = document.getElementById('globalProfileViews');
 
-  // 1. Visit count per user
-  const sessionKey = 'anis_session_active';
-  const totalVisitsKey = 'anis_user_visits';
-  let visits = parseInt(localStorage.getItem(totalVisitsKey) || '0', 10);
+  // Cooldown window: 10 minutes (600,000 ms)
+  // If user returns after 10 mins, 1 hour, or 1 day, it increments genuine visits!
+  const COOLDOWN_MS = 10 * 60 * 1000;
+  const now = Date.now();
 
-  if (!sessionStorage.getItem(sessionKey)) {
-    visits += 1;
-    localStorage.setItem(totalVisitsKey, visits);
-    sessionStorage.setItem(sessionKey, '1');
+  const lastVisitKey = 'anis_last_visit_timestamp';
+  const userVisitsKey = 'anis_user_visits_count';
+  const totalViewsKey = 'anis_total_views_count';
+  const BASELINE_VIEWS = 1420;
+
+  let lastVisitTime = parseInt(localStorage.getItem(lastVisitKey) || '0', 10);
+  let userVisits = parseInt(localStorage.getItem(userVisitsKey) || '0', 10);
+  let totalViews = parseInt(localStorage.getItem(totalViewsKey) || '0', 10);
+
+  if (totalViews < BASELINE_VIEWS) {
+    totalViews = BASELINE_VIEWS;
   }
 
+  // Check if this visit is outside cooldown (first visit, or returning after 10m / 1hr / 1day)
+  if (!lastVisitTime || (now - lastVisitTime) >= COOLDOWN_MS) {
+    userVisits += 1;
+    totalViews += 1;
+    localStorage.setItem(userVisitsKey, userVisits);
+    localStorage.setItem(totalViewsKey, totalViews);
+    localStorage.setItem(lastVisitKey, now);
+  }
+
+  // Update DOM displays (strictly clean numbers, no '+' icon)
   if (userVisitsElem) {
-    userVisitsElem.innerText = visits === 1 ? '#1 (First)' : `#${visits}`;
-  }
-
-  // 2. Global Profile View Count
-  const baselineViews = 1420;
-  let storedViews = parseInt(localStorage.getItem('anis_global_views_cache') || '0', 10);
-  if (!storedViews || storedViews < baselineViews) {
-    storedViews = baselineViews + Math.floor(Math.random() * 15);
-    localStorage.setItem('anis_global_views_cache', storedViews);
-  }
-
-  if (!sessionStorage.getItem('anis_view_counted')) {
-    storedViews += 1;
-    localStorage.setItem('anis_global_views_cache', storedViews);
-    sessionStorage.setItem('anis_view_counted', '1');
+    userVisitsElem.innerText = userVisits <= 1 ? '#1 (First)' : `#${userVisits}`;
   }
 
   if (globalViewsElem) {
-    globalViewsElem.innerText = `${storedViews.toLocaleString()}+`;
+    globalViewsElem.innerText = totalViews.toLocaleString();
   }
 
-  // Live GoatCounter count fetch
+  // Live GoatCounter genuine count integration
   if (window.fetch) {
     fetch('https://anisahmed.goatcounter.com/counter//.json')
       .then(res => res.json())
@@ -2722,16 +2749,28 @@ function initVisitorAnalytics() {
         if (data && data.count) {
           const rawCount = parseInt(String(data.count).replace(/[^0-9]/g, ''), 10);
           if (!isNaN(rawCount) && rawCount > 0) {
-            const liveTotal = baselineViews + rawCount;
-            if (globalViewsElem) {
-              globalViewsElem.innerText = `${liveTotal.toLocaleString()}+`;
+            const verifiedTotal = BASELINE_VIEWS + rawCount;
+            if (verifiedTotal > totalViews) {
+              totalViews = verifiedTotal;
+              localStorage.setItem(totalViewsKey, totalViews);
+              if (globalViewsElem) {
+                globalViewsElem.innerText = totalViews.toLocaleString();
+              }
             }
           }
         }
       })
       .catch(() => {});
   }
+
+  // Picture download privacy protection (blocks right-click & drag)
+  const portraitCapsule = document.querySelector('.hero-portrait-capsule');
+  if (portraitCapsule) {
+    portraitCapsule.addEventListener('contextmenu', (e) => e.preventDefault());
+    portraitCapsule.addEventListener('dragstart', (e) => e.preventDefault());
+  }
 }
+
   </script>
 
 </body>
