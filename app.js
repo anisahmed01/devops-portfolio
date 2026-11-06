@@ -213,6 +213,13 @@ function initPipelineConsole() {
   const steps = document.querySelectorAll('.pipeline-step');
   const title = document.getElementById('consoleTitle');
   const output = document.getElementById('consoleOutput');
+  const exitCode = document.getElementById('consoleExitCode');
+  const runBtn = document.getElementById('runPipelineBtn');
+  const rerunBtn = document.getElementById('retriggerConsoleBtn');
+  const progress = document.getElementById('pipelineProgress');
+
+  let simulationTimer = null;
+  let isSimulating = false;
 
   const logs = {
     1: {
@@ -265,18 +272,125 @@ function initPipelineConsole() {
     }
   };
 
-  steps.forEach((step) => {
-    step.addEventListener('click', () => {
-      steps.forEach((s) => s.classList.remove('active'));
-      step.classList.add('active');
-
-      const stepNum = step.getAttribute('data-step');
-      if (logs[stepNum] && title && output) {
-        title.innerText = logs[stepNum].title;
-        output.innerText = logs[stepNum].log;
+  function selectStage(stepNum, isRunning) {
+    steps.forEach((s) => {
+      s.classList.remove('active');
+      if (s.getAttribute('data-step') === String(stepNum)) {
+        s.classList.add('active');
       }
     });
+
+    if (logs[stepNum] && title && output) {
+      title.innerText = logs[stepNum].title;
+      output.innerText = logs[stepNum].log;
+    }
+
+    if (exitCode) {
+      if (isRunning) {
+        exitCode.style.color = 'var(--amber)';
+        exitCode.innerText = `[STAGE ${stepNum}/6: RUNNING...]`;
+      } else {
+        exitCode.style.color = 'var(--emerald)';
+        exitCode.innerText = '[EXIT CODE: 0]';
+      }
+    }
+
+    if (progress) {
+      progress.style.width = `${(stepNum / 6) * 100}%`;
+    }
+  }
+
+  function stopSimulation() {
+    if (simulationTimer) {
+      clearInterval(simulationTimer);
+      simulationTimer = null;
+    }
+    isSimulating = false;
+    if (runBtn) {
+      runBtn.classList.remove('running');
+      runBtn.classList.remove('completed');
+      const icon = runBtn.querySelector('.run-btn-icon');
+      const text = runBtn.querySelector('.run-btn-text');
+      if (icon) icon.innerText = '▶';
+      if (text) text.innerText = 'Simulate CI/CD Flow';
+    }
+  }
+
+  function startSimulation() {
+    stopSimulation();
+    isSimulating = true;
+
+    let currentStep = 1;
+    selectStage(currentStep, true);
+
+    if (runBtn) {
+      runBtn.classList.add('running');
+      const icon = runBtn.querySelector('.run-btn-icon');
+      const text = runBtn.querySelector('.run-btn-text');
+      if (icon) icon.innerText = '⟳';
+      if (text) text.innerText = 'Simulating... (1/6)';
+    }
+
+    simulationTimer = setInterval(() => {
+      currentStep++;
+      if (currentStep <= 6) {
+        selectStage(currentStep, true);
+        if (runBtn) {
+          const text = runBtn.querySelector('.run-btn-text');
+          if (text) text.innerText = `Simulating... (${currentStep}/6)`;
+        }
+      } else {
+        clearInterval(simulationTimer);
+        simulationTimer = null;
+        isSimulating = false;
+
+        selectStage(6, false);
+        if (exitCode) {
+          exitCode.style.color = 'var(--emerald)';
+          exitCode.innerText = '[DEPLOYED: ALL CHECKS PASSED]';
+        }
+
+        if (runBtn) {
+          runBtn.classList.remove('running');
+          runBtn.classList.add('completed');
+          const icon = runBtn.querySelector('.run-btn-icon');
+          const text = runBtn.querySelector('.run-btn-text');
+          if (icon) icon.innerText = '✔';
+          if (text) text.innerText = 'Pipeline Complete!';
+        }
+
+        setTimeout(() => {
+          if (!isSimulating && runBtn) {
+            runBtn.classList.remove('completed');
+            const icon = runBtn.querySelector('.run-btn-icon');
+            const text = runBtn.querySelector('.run-btn-text');
+            if (icon) icon.innerText = '▶';
+            if (text) text.innerText = 'Simulate CI/CD Flow';
+          }
+        }, 3000);
+      }
+    }, 1100);
+  }
+
+  steps.forEach((step) => {
+    step.addEventListener('click', () => {
+      stopSimulation();
+      const stepNum = step.getAttribute('data-step');
+      selectStage(stepNum, false);
+    });
   });
+
+  if (runBtn) {
+    runBtn.addEventListener('click', () => {
+      startSimulation();
+    });
+  }
+
+  if (rerunBtn) {
+    rerunBtn.addEventListener('click', () => {
+      startSimulation();
+    });
+  }
 }
 
 // ==========================================
