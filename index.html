@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -42,12 +42,1625 @@
   <!-- Google Fonts: Inter & Fira Code -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;850&display=swap" as="style">
-  <link rel="preload" href="styles.css?v=4.0.0" as="style">
-  <link rel="preload" href="profile.webp?v=4.0.0" as="image" type="image/webp">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;850&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=4.0.0">
+  <style>
+:root {
+  color-scheme: dark;
+  --bg: #080d1b;
+  --panel: #10182a;
+  --panel-hover: #141f35;
+  --text: #f2f5ff;
+  --muted: #98a5bd;
+  --blue: #54c8ff;
+  --purple: #a78bfa;
+  --emerald: #57e6a5;
+  --red: #ff7285;
+  --amber: #ffd166;
+  --border: rgba(155, 177, 221, 0.15);
+  --border-hover: rgba(84, 200, 255, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 85px;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse at 80% 5%, #152047 0, transparent 38%),
+    radial-gradient(ellipse at 20% 50%, rgba(114, 88, 220, 0.08) 0, transparent 40%),
+    radial-gradient(ellipse at 75% 85%, rgba(84, 200, 255, 0.06) 0, transparent 45%),
+    var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ==========================================
+   SCROLL REVEAL ANIMATIONS (SMOOTH & RELIABLE)
+   ========================================== */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger helper delays */
+.delay-1 { transition-delay: 100ms; }
+.delay-2 { transition-delay: 200ms; }
+.delay-3 { transition-delay: 300ms; }
+
+/* ==========================================
+   NAVBAR
+   ========================================== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px max(6%, calc((100% - 1180px) / 2));
+  background: rgba(8, 13, 27, 0.88);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 1.5rem;
+  font-weight: 850;
+  letter-spacing: -1px;
+}
+
+.brand-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 9px;
+  border: 1px solid rgba(84, 200, 255, 0.35);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(84, 200, 255, 0.12), rgba(16, 24, 42, 0.8));
+  color: var(--blue);
+  font-family: 'Inter', sans-serif;
+  font-weight: 850;
+  letter-spacing: -0.5px;
+  transition: all 0.25s ease-in-out;
+}
+
+.brand:hover .brand-box {
+  border-color: var(--blue);
+  box-shadow: 0 0 16px rgba(84, 200, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+.brand-dot {
+  color: var(--purple);
+  font-weight: 900;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+nav a:hover {
+  color: var(--blue);
+}
+
+nav a.active-link {
+  color: var(--blue);
+}
+
+.nav-contact {
+  padding: 8px 15px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  transition: all 0.2s;
+}
+
+.nav-contact:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+  transform: translateY(-1px);
+}
+
+/* ==========================================
+   SECTIONS & LAYOUT
+   ========================================== */
+.section {
+  width: min(1180px, 90%);
+  margin: 0 auto;
+  padding: 90px 0;
+}
+
+.eyebrow {
+  color: var(--blue);
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+h1 {
+  margin: 10px 0 20px;
+  font-size: clamp(2.6rem, 5.2vw, 4.4rem);
+  line-height: 1.08;
+  letter-spacing: -2.5px;
+  font-weight: 800;
+}
+
+.gradient-text {
+  color: var(--blue);
+  background: linear-gradient(100deg, var(--blue), var(--purple));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================
+   HERO
+   ========================================== */
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.15fr auto 1.1fr;
+  align-items: center;
+  gap: 36px;
+  min-height: 620px;
+  padding-top: 60px;
+  padding-bottom: 70px;
+}
+
+/* ==========================================
+   HERO PORTRAIT CYBER CAPSULE & PRIVACY SHIELD
+   ========================================== */
+.hero-portrait-capsule {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.portrait-glow {
+  position: absolute;
+  inset: -14px;
+  background: radial-gradient(ellipse at center, rgba(84, 200, 255, 0.4) 0%, rgba(167, 139, 250, 0.25) 45%, transparent 70%);
+  border-radius: 9999px;
+  filter: blur(22px);
+  pointer-events: none;
+  z-index: 0;
+  animation: pulsePortraitGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulsePortraitGlow {
+  0% { opacity: 0.55; transform: scale(0.96); }
+  100% { opacity: 0.95; transform: scale(1.04); }
+}
+
+.portrait-frame {
+  position: relative;
+  width: 240px;
+  height: 340px;
+  border-radius: 9999px;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--emerald) 100%);
+  box-shadow: 0 0 32px rgba(84, 200, 255, 0.35), 0 16px 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  z-index: 1;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.hero-portrait-capsule:hover .portrait-frame {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 0 45px rgba(84, 200, 255, 0.55), 0 20px 50px rgba(0, 0, 0, 0.7);
+}
+
+.portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 16%;
+  border-radius: 9999px;
+  display: block;
+  filter: contrast(1.02) brightness(0.99);
+  transition: filter 0.3s ease, transform 0.35s ease;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.hero-portrait-capsule:hover .portrait-img {
+  filter: contrast(1.05) brightness(1.02);
+  transform: scale(1.02);
+}
+
+.portrait-overlay-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, transparent 72%, rgba(8, 13, 27, 0.65) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Invisible security shield preventing image download & drag */
+.portrait-shield {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: transparent;
+  z-index: 5;
+  cursor: default;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+}
+
+.portrait-badge {
+  position: relative;
+  margin-top: -18px;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(8, 13, 27, 0.94);
+  border: 1px solid rgba(84, 200, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65), 0 0 14px rgba(84, 200, 255, 0.25);
+  color: var(--text);
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  white-space: nowrap;
+}
+
+.hero-copy,
+.terminal-card {
+  position: relative;
+  z-index: 1;
+}
+
+.availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 1.2px;
+  background: rgba(16, 24, 42, 0.4);
+}
+
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald);
+  box-shadow: 0 0 10px var(--emerald);
+  animation: pulseAnim 2s infinite;
+}
+
+@keyframes pulseAnim {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.hero-description {
+  max-width: 540px;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 9px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.primary {
+  color: #06101d;
+  background: linear-gradient(100deg, var(--blue), #a5a4ff);
+  box-shadow: 0 4px 20px rgba(84, 200, 255, 0.25);
+}
+
+.secondary {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+}
+
+.secondary:hover {
+  border-color: var(--blue);
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.hero-meta strong {
+  color: var(--text);
+}
+
+.meta-divider {
+  height: 16px;
+  border-left: 1px solid var(--border);
+}
+
+/* ==========================================
+   TERMINAL CARD (ANGLED & INTERACTIVE)
+   ========================================== */
+.terminal-card {
+  overflow: hidden;
+  border: 1px solid rgba(84, 200, 255, 0.25);
+  border-radius: 16px;
+  background: rgba(12, 19, 36, 0.96);
+  box-shadow: 0 20px 80px rgba(21, 32, 71, 0.4);
+  transform: rotate(1deg);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+}
+
+.terminal-card:hover {
+  transform: rotate(0deg) translateY(-4px);
+  border-color: rgba(84, 200, 255, 0.45);
+}
+
+.terminal-header,
+.terminal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 18px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.025);
+  font-size: 0.74rem;
+}
+
+.terminal-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.window-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.window-dots span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+.window-dots span:nth-child(2) {
+  background: var(--amber);
+}
+
+.window-dots span:nth-child(3) {
+  background: var(--emerald);
+}
+
+.terminal-status {
+  color: var(--emerald);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.terminal-body {
+  padding: 20px 22px;
+  font-family: 'Fira Code', ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  height: 290px;
+  overflow-y: auto;
+  cursor: text;
+}
+
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f2f5ff;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  caret-color: var(--blue);
+  padding: 0;
+}
+
+.terminal-quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.terminal-chip {
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-family: 'Fira Code', monospace;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.terminal-chip:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: rgba(84, 200, 255, 0.08);
+}
+
+.prompt {
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.terminal-output {
+  margin: 4px 0 16px 16px;
+  color: #d2dcf6;
+}
+
+.success-output {
+  color: var(--emerald);
+  margin: 4px 0 16px 16px;
+}
+
+.cursor {
+  color: var(--purple);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to { visibility: hidden; }
+}
+
+.terminal-footer {
+  justify-content: space-between;
+  border-top: 1px solid var(--border);
+  color: var(--blue);
+  letter-spacing: 0.5px;
+  font-size: 0.72rem;
+}
+
+/* ==========================================
+   SECTION HEADINGS
+   ========================================== */
+.section-heading {
+  max-width: 720px;
+  margin-bottom: 42px;
+}
+
+.section-heading h2 {
+  margin: 8px 0 12px;
+  font-size: clamp(2rem, 3.8vw, 3.1rem);
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+  font-weight: 800;
+}
+
+.section-description {
+  color: var(--muted);
+  font-size: 1.02rem;
+}
+
+/* ==========================================
+   GRIDS & CARDS (ABOUT & SKILLS)
+   ========================================== */
+.about-grid,
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.about-card,
+.skill-card {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: linear-gradient(145deg, var(--panel), rgba(16, 24, 42, 0.5));
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+
+.about-card:hover,
+.skill-card:hover,
+.project-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-hover);
+  box-shadow: 0 12px 30px rgba(8, 13, 27, 0.6);
+}
+
+.card-icon {
+  color: var(--blue);
+  font-size: 1.8rem;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.about-card h3,
+.skill-card h3 {
+  margin: 0 0 10px;
+  font-size: 1.15rem;
+  letter-spacing: -0.5px;
+}
+
+.about-card p,
+.skill-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.skill-index,
+.project-number {
+  color: var(--purple);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ==========================================
+   INTERACTIVE PIPELINE SECTION
+   ========================================== */
+/* ==========================================
+   PIPELINE SIMULATOR CONTROLS
+   ========================================== */
+.pipeline-heading-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 100%;
+}
+
+.pipeline-heading-copy {
+  max-width: 680px;
+}
+
+.pipeline-action-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pipeline-run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 18px;
+  border-radius: 9px;
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--blue);
+  background: rgba(84, 200, 255, 0.08);
+  border: 1px solid rgba(84, 200, 255, 0.35);
+  box-shadow: 0 0 16px rgba(84, 200, 255, 0.15);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.pipeline-run-btn:hover {
+  background: rgba(84, 200, 255, 0.16);
+  border-color: var(--blue);
+  box-shadow: 0 0 24px rgba(84, 200, 255, 0.3);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.pipeline-run-btn:active {
+  transform: translateY(0);
+}
+
+.pipeline-run-btn.running {
+  color: var(--amber);
+  border-color: var(--amber);
+  background: rgba(255, 209, 102, 0.1);
+  box-shadow: 0 0 20px rgba(255, 209, 102, 0.25);
+  cursor: wait;
+}
+
+.pipeline-run-btn.completed {
+  color: var(--emerald);
+  border-color: var(--emerald);
+  background: rgba(87, 230, 165, 0.12);
+  box-shadow: 0 0 20px rgba(87, 230, 165, 0.25);
+}
+
+.pipeline-progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.pipeline-progress-bar {
+  height: 100%;
+  width: 16.66%;
+  background: linear-gradient(90deg, var(--blue), var(--emerald));
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(84, 200, 255, 0.6);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.run-btn-icon {
+  display: inline-block;
+  font-size: 0.75rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.pipeline-run-btn.running .run-btn-icon {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .pipeline-heading-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .pipeline-run-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 18px;
+  }
+}
+
+.pipeline-box {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+}
+
+.pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.pipeline-step {
+  padding: 16px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(8, 13, 27, 0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pipeline-step:hover,
+.pipeline-step.active {
+  border-color: var(--blue);
+  background: rgba(84, 200, 255, 0.08);
+  transform: translateY(-3px);
+}
+
+.step-num {
+  font-size: 0.7rem;
+  color: var(--purple);
+  font-family: ui-monospace, monospace;
+  font-weight: 700;
+}
+
+.step-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 6px 0 2px;
+  color: var(--text);
+}
+
+.step-sub {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.step-badge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  background: rgba(87, 230, 165, 0.12);
+  color: var(--emerald);
+  font-family: ui-monospace, monospace;
+}
+
+.pipeline-console {
+  background: #060a14;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.78rem;
+  color: #cbd5e1;
+  line-height: 1.65;
+  overflow-x: auto;
+}
+
+/* ==========================================
+   DEVSECOPS MATRIX
+   ========================================== */
+.devsecops-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.devsecops-card {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: linear-gradient(145deg, var(--panel), rgba(16, 24, 42, 0.5));
+  transition: all 0.25s;
+}
+
+.devsecops-card:hover {
+  border-color: var(--blue);
+  transform: translateY(-4px);
+}
+
+.security-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 0.68rem;
+  font-family: ui-monospace, monospace;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+}
+
+.badge-red { background: rgba(255, 114, 133, 0.12); color: var(--red); border-color: rgba(255, 114, 133, 0.3); }
+.badge-blue { background: rgba(84, 200, 255, 0.12); color: var(--blue); border-color: rgba(84, 200, 255, 0.3); }
+.badge-purple { background: rgba(167, 139, 250, 0.12); color: var(--purple); border-color: rgba(167, 139, 250, 0.3); }
+.badge-emerald { background: rgba(87, 230, 165, 0.12); color: var(--emerald); border-color: rgba(87, 230, 165, 0.3); }
+
+/* ==========================================
+   PROJECTS (CLEAN HORIZONTAL CARDS)
+   ========================================== */
+.projects-list {
+  display: grid;
+  gap: 16px;
+}
+
+.project-card {
+  display: grid;
+  grid-template-columns: 50px 1fr 30px;
+  align-items: start;
+  gap: 24px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+  transition: transform 0.25s, border-color 0.25s;
+}
+
+.project-content h3 {
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+  letter-spacing: -0.5px;
+}
+
+.project-content p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.tags span {
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: #b8c6e1;
+  font-size: 0.74rem;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.project-arrow {
+  color: var(--blue);
+  font-size: 1.4rem;
+  transition: transform 0.2s;
+}
+
+.project-card:hover .project-arrow {
+  transform: translate(3px, -3px);
+}
+
+/* ==========================================
+   EXPERIENCE SECTION
+   ========================================== */
+.experience-card {
+  padding: 34px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--panel);
+}
+
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.exp-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.exp-date {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--blue);
+  font-family: ui-monospace, monospace;
+}
+
+.exp-list {
+  padding-left: 20px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.8;
+}
+
+.exp-list li strong {
+  color: var(--text);
+}
+
+/* ==========================================
+   CONTACT
+   ========================================== */
+.contact {
+  padding: 85px 30px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(114, 88, 220, 0.18), transparent 45%),
+    radial-gradient(ellipse at 20% 80%, rgba(84, 200, 255, 0.12), transparent 45%),
+    var(--panel);
+  text-align: center;
+}
+
+.contact h2 {
+  margin: 12px 0 16px;
+  font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+  letter-spacing: -2px;
+}
+
+.contact > p:not(.eyebrow) {
+  max-width: 580px;
+  margin: 0 auto 28px;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.contact-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* ==========================================
+   CINEMATIC INTRO SPLASH OVERLAY
+   ========================================== */
+#introOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: radial-gradient(ellipse at 50% 40%, #152047 0%, #080d1b 85%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.7s ease;
+}
+
+#introOverlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border: 1px solid rgba(84, 200, 255, 0.35);
+  border-radius: 30px;
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  color: var(--blue);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  margin-bottom: 22px;
+  background: rgba(16, 24, 42, 0.7);
+  box-shadow: 0 0 20px rgba(84, 200, 255, 0.2);
+}
+
+#introQuoteWrap {
+  text-align: center;
+  width: min(860px, 88vw);
+}
+
+.intro-quote {
+  /* hidden — JS clears and rebuilds this from scratch */
+  display: none;
+}
+
+.intro-author {
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 2.5px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  text-transform: uppercase;
+}
+
+
+.contact-meta {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-family: ui-monospace, monospace;
+}
+
+.quote-banner {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px dashed rgba(155, 177, 221, 0.2);
+  text-align: center;
+}
+
+.quote-text {
+  font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(100deg, var(--blue), var(--emerald));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.quote-sub {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+/* ==========================================
+   FOOTER
+   ========================================== */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: min(1180px, 90%);
+  margin: 0 auto;
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.footer a:hover {
+  color: var(--blue);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 45px;
+    padding-top: 50px;
+  }
+
+  .terminal-card {
+    max-width: 580px;
+  }
+
+  .about-grid,
+  .skills-grid,
+  .devsecops-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pipeline-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  nav {
+    display: none;
+  }
+
+  .about-grid,
+  .skills-grid,
+  .devsecops-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-card {
+    grid-template-columns: 35px 1fr 20px;
+    padding: 20px;
+    gap: 14px;
+  }
+
+  .footer {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* ==========================================
+   METRICS & KEY ACHIEVEMENTS SECTION
+   ========================================== */
+.metrics-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0 30px;
+  box-sizing: border-box;
+}
+
+.metrics-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: min(1180px, 90%);
+  margin: 0 auto;
+  padding: 24px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(16, 24, 42, 0.75);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-sizing: border-box;
+  align-items: center;
+  justify-items: center;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.metric-number {
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+  font-weight: 850;
+  letter-spacing: -0.5px;
+  background: linear-gradient(100deg, var(--blue), var(--emerald));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  text-align: center;
+  display: block;
+}
+
+.metric-label {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  font-weight: 500;
+  text-align: center;
+  display: block;
+  max-width: 250px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .metrics-section {
+    padding: 0 0 24px;
+  }
+
+  .metrics-bar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 16px;
+    padding: 22px 18px;
+  }
+}
+
+@media (max-width: 520px) {
+  .metrics-section {
+    padding: 0 0 20px;
+  }
+
+  .metrics-bar {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 16px;
+    width: 92%;
+  }
+
+  .metric-item {
+    padding: 6px 4px;
+  }
+
+  .metric-number {
+    font-size: 1.85rem;
+  }
+
+  .metric-label {
+    font-size: 0.82rem;
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 1180px) and (min-width: 901px) {
+  .hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .hero-copy {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .hero-portrait-capsule {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+  }
+  .terminal-card {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    max-width: 760px;
+    margin: 12px auto 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-top: 50px;
+    padding-bottom: 60px;
+    text-align: center;
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    order: 1;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-meta {
+    justify-content: center;
+  }
+
+  .hero-portrait-capsule {
+    order: 2;
+    margin: 10px auto 16px;
+  }
+
+  .portrait-frame {
+    width: 210px;
+    height: 295px;
+  }
+
+  .terminal-card {
+    order: 3;
+    max-width: 580px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+/* ==========================================
+   VISITOR & PROFILE ANALYTICS TELEMETRY
+   ========================================== */
+.visitor-analytics-card {
+  max-width: 680px;
+  margin: 36px auto 0;
+  padding: 20px 24px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(16, 24, 42, 0.75);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  text-align: center;
+}
+
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.analytics-live-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--emerald);
+  letter-spacing: 1px;
+}
+
+.analytics-network-label {
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.66rem;
+  color: var(--muted);
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.analytics-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.analytics-number {
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  font-weight: 850;
+  font-family: 'Fira Code', ui-monospace, monospace;
+  letter-spacing: -0.5px;
+  background: linear-gradient(100deg, var(--blue), var(--emerald));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+.analytics-label {
+  font-size: 0.74rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.analytics-divider {
+  width: 1px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.analytics-footer {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+@media (max-width: 580px) {
+  .analytics-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .analytics-divider {
+    display: none;
+  }
+  .analytics-header {
+    justify-content: center;
+  }
+}
+
+/* ==========================================
+   FLOATING RIGHT-SIDE HAMBURGER SECTION NAV (HOVER TRIGGERED)
+   ========================================== */
+.side-nav-wrapper {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.side-nav-trigger {
+  width: 44px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(16, 24, 42, 0.88);
+  border: 1px solid rgba(84, 200, 255, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(84, 200, 255, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  padding: 0;
+  user-select: none;
+}
+
+.side-nav-trigger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--blue);
+  border-radius: 2px;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 6px rgba(84, 200, 255, 0.5);
+}
+
+.side-nav-trigger span:nth-child(2) {
+  width: 14px;
+  background: var(--emerald);
+  box-shadow: 0 0 6px rgba(87, 230, 165, 0.5);
+}
+
+.side-nav-trigger span:nth-child(3) {
+  width: 18px;
+  background: var(--purple);
+  box-shadow: 0 0 6px rgba(167, 139, 250, 0.5);
+}
+
+.side-nav-wrapper:hover .side-nav-trigger,
+.side-nav-wrapper.is-open .side-nav-trigger {
+  border-color: var(--blue);
+  box-shadow: 0 0 24px rgba(84, 200, 255, 0.45);
+  transform: scale(1.05);
+}
+
+.side-nav-wrapper:hover .side-nav-trigger span:nth-child(2),
+.side-nav-wrapper.is-open .side-nav-trigger span:nth-child(2) {
+  width: 20px;
+}
+
+.side-nav-drawer {
+  position: absolute;
+  right: 54px;
+  top: 50%;
+  transform: translateY(-50%) translateX(16px);
+  width: 230px;
+  padding: 14px 12px;
+  border-radius: 16px;
+  background: rgba(10, 16, 32, 0.94);
+  border: 1px solid rgba(84, 200, 255, 0.35);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.65), 0 0 25px rgba(84, 200, 255, 0.18);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Hover activates the drawer seamlessly */
+.side-nav-wrapper:hover .side-nav-drawer,
+.side-nav-wrapper.is-open .side-nav-drawer {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(-50%) translateX(0);
+}
+
+.side-nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 7px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--blue);
+  letter-spacing: 1px;
+}
+
+.side-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 9px;
+  border-radius: 7px;
+  color: #cbd5e1;
+  font-size: 0.76rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.side-nav-item:hover {
+  background: rgba(84, 200, 255, 0.12);
+  color: #ffffff;
+  transform: translateX(-3px);
+}
+
+.side-nav-item.active-slide {
+  background: rgba(87, 230, 165, 0.12);
+  color: var(--emerald);
+  font-weight: 700;
+  border: 1px solid rgba(87, 230, 165, 0.3);
+}
+
+.side-nav-num {
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.68rem;
+  color: var(--purple);
+  font-weight: 700;
+}
+
+.side-nav-item.active-slide .side-nav-num {
+  color: var(--emerald);
+}
+
+.terminal-hint {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-family: 'Fira Code', ui-monospace, monospace;
+  margin: 6px 0 10px;
+  line-height: 1.45;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--blue);
+}
+
+@media (max-width: 768px) {
+  .side-nav-wrapper {
+    right: 10px;
+  }
+  .side-nav-trigger {
+    width: 38px;
+    height: 42px;
+  }
+  .side-nav-drawer {
+    right: 46px;
+    width: 195px;
+    padding: 10px 8px;
+  }
+}
+</style>
+  <link rel="stylesheet" href="styles.css?v=3.9.0">
   <!-- Structured Data: Schema.org (Google Knowledge Graph & Rich Snippets) -->
   <script type="application/ld+json">
   {
@@ -105,18 +1718,16 @@
 
 <body>
 
-  <!-- Cinematic Entry Splash Banner (Fast GPU Accelerated, Skip-on-Click) -->
-  <div id="introOverlay" aria-hidden="true" title="Click anywhere to skip">
-    <div class="intro-badge">
+  <!-- Cinematic Entry Splash Banner -->
+  <div id="introOverlay" aria-hidden="true">
+    <div class="intro-badge" style="opacity:0">
       <span class="pulse"></span>
       SYSTEM INITIALIZED
     </div>
-    <div class="intro-quote-wrap">
-      <span class="intro-quote-line">“Automate everything.</span>
-      <span class="intro-quote-line">Break nothing.”</span>
+    <div id="introQuoteWrap" style="opacity:0">
+      <div class="intro-quote">“Automate everything. Break nothing.”</div>
     </div>
-    <div class="intro-author">Anis Ahmed &bull; Senior DevOps Engineer</div>
-    <div class="intro-skip">Click anywhere to skip ↗</div>
+    <div class="intro-author" style="opacity:0">Anis Ahmed &bull; DevOps Platform</div>
   </div>
 
   <!-- Sticky Navbar -->
@@ -178,10 +1789,7 @@
         <div class="portrait-frame" oncontextmenu="return false;">
           <picture>
             <source srcset="profile.webp?v=3.9.0" type="image/webp">
-            <picture>
-            <source srcset="profile.webp?v=4.0.0" type="image/webp">
-            <img src="profile.jpg?v=4.0.0" alt="Anis Ahmed - Senior DevOps Engineer" class="portrait-img" width="240" height="340" loading="eager" fetchpriority="high" draggable="false" oncontextmenu="return false;">
-          </picture>
+            <img src="profile.jpg?v=3.9.0" alt="Anis Ahmed - Senior DevOps Engineer" class="portrait-img" width="240" height="340" loading="eager" fetchpriority="high" draggable="false" oncontextmenu="return false;">
           </picture>
           <div class="portrait-overlay-glow"></div>
           <div class="portrait-shield" aria-hidden="true" title="Anis Ahmed"></div>
@@ -740,7 +2348,996 @@
     <span>v3.5.0 &bull; <a href="https://www.linkedin.com/in/webanis" target="_blank">LinkedIn</a> &bull; <a href="https://github.com/anisahmed01" target="_blank">GitHub</a></span>
   </footer>
 
-  <!-- Interactive JavaScript Engine (Fast Defer, Single Execution) -->
-  <script defer src="app.js?v=4.0.0"></script>
+  <!-- Interactive JavaScript Engine -->
+  <script>
+// ==========================================
+// Anis Ahmed — DevOps Portfolio Interactive Engine
+// ==========================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  initIntroSplash();
+  initScrollObserver();
+  initNavScrollTracker();
+  initPipelineConsole();
+  initMacTerminal();
+  initVisitorAnalytics();
+  initSideNavNavigator();
+});
+
+// ==========================================
+// 0. CINEMATIC INTRO SPLASH — PIECE ASSEMBLY
+// ==========================================
+function initIntroSplash() {
+  /* Prevent running multiple times across script tags or re-entry */
+  if (window.__introSplashRan) return;
+  window.__introSplashRan = true;
+
+  var overlay = document.getElementById('introOverlay');
+  if (!overlay) return;
+
+  var badge  = overlay.querySelector('.intro-badge');
+  var wrap   = document.getElementById('introQuoteWrap');
+  var author = overlay.querySelector('.intro-author');
+
+  /* hide everything initially */
+  [badge, wrap, author].forEach(function(el) {
+    if (el) { el.style.opacity = '0'; el.style.transition = 'none'; }
+  });
+
+  if (wrap) wrap.innerHTML = '';
+
+  /* 2 Distinct Lines: Eliminates any chance of word-splitting like "brea" / "k" */
+  var lines = [
+    '\u201cAutomate everything.',
+    'Break nothing.\u201d'
+  ];
+
+  /* smooth gradient across both lines */
+  var totalChars = lines[0].length + lines[1].length;
+  function charColor(idx) {
+    var t = idx / Math.max(1, totalChars - 1);
+    var r, g, b;
+    if (t < 0.5) {
+      var s = t / 0.5;
+      r = Math.round(0x54 + (0xa7 - 0x54) * s);
+      g = Math.round(0xc8 + (0x8b - 0xc8) * s);
+      b = Math.round(0xff + (0xfa - 0xff) * s);
+    } else {
+      var s = (t - 0.5) / 0.5;
+      r = Math.round(0xa7 + (0x57 - 0xa7) * s);
+      g = Math.round(0x8b + (0xe6 - 0x8b) * s);
+      b = Math.round(0xfa + (0xa5 - 0xfa) * s);
+    }
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+
+  var box = document.createElement('div');
+  box.style.cssText = [
+    'display:flex',
+    'flex-direction:column',
+    'align-items:center',
+    'justify-content:center',
+    'padding:0 14px',
+    'font-size:clamp(1.4rem, 4.2vw, 3.2rem)',
+    'font-weight:850',
+    'letter-spacing:-1px',
+    'line-height:1.25',
+    'text-align:center'
+  ].join(';');
+
+  var letters = [];
+  var globalIdx = 0;
+
+  lines.forEach(function(lineText) {
+    var row = document.createElement('div');
+    row.style.cssText = 'display:block;white-space:nowrap;margin:2px 0;';
+
+    for (var ci = 0; ci < lineText.length; ci++) {
+      var ch = lineText[ci];
+      var col = charColor(globalIdx++);
+      var span = document.createElement('span');
+      span.textContent = ch === ' ' ? '\u00a0' : ch;
+
+      /* Scatter distance scaled safely for mobile & desktop */
+      var angle = Math.random() * Math.PI * 2;
+      var dist  = Math.min(window.innerWidth || 400, 500) * (0.6 + Math.random() * 0.6);
+      var dx    = (Math.cos(angle) * dist).toFixed(0);
+      var dy    = (Math.sin(angle) * dist).toFixed(0);
+
+      span.style.cssText = [
+        'display:inline-block',
+        'color:' + col,
+        'text-shadow:0 0 16px ' + col,
+        'opacity:0',
+        'transform:translate(' + dx + 'px,' + dy + 'px) scale(0.2)',
+        'transition:none',
+        'will-change:transform,opacity'
+      ].join(';');
+
+      row.appendChild(span);
+      letters.push(span);
+    }
+
+    box.appendChild(row);
+  });
+
+  if (wrap) {
+    wrap.style.opacity = '1';
+    wrap.appendChild(box);
+  }
+
+  /* Timing */
+  var BADGE_DELAY  = 50;
+  var FLY_START    = 150;
+  var STAGGER      = 22;
+  var FLY_DUR      = 600;
+  var ASSEMBLE_END = FLY_START + (letters.length - 1) * STAGGER + FLY_DUR;
+  var HOLD         = 1400;
+  var DISMISS      = ASSEMBLE_END + HOLD;
+
+  requestAnimationFrame(function() {
+    if (badge) {
+      setTimeout(function() {
+        badge.style.transition = 'opacity 0.5s ease';
+        badge.style.opacity    = '1';
+      }, BADGE_DELAY);
+    }
+
+    letters.forEach(function(span, i) {
+      setTimeout(function() {
+        span.style.transition =
+          'transform ' + FLY_DUR + 'ms cubic-bezier(0.16,1,0.3,1),' +
+          'opacity 380ms ease';
+        span.style.transform = 'translate(0,0) scale(1)';
+        span.style.opacity   = '1';
+      }, FLY_START + i * STAGGER);
+    });
+
+    if (author) {
+      setTimeout(function() {
+        author.style.transition = 'opacity 0.5s ease';
+        author.style.opacity    = '1';
+      }, ASSEMBLE_END - 200);
+    }
+
+    setTimeout(function() {
+      box.style.transition = 'filter 0.5s ease';
+      box.style.filter     = 'drop-shadow(0 0 24px rgba(84,200,255,0.5))';
+    }, ASSEMBLE_END);
+
+    setTimeout(function() {
+      try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch(e) { window.scrollTo(0, 0); }
+      overlay.classList.add('fade-out');
+      setTimeout(function() { overlay.remove(); }, 650);
+    }, DISMISS);
+  });
+}
+
+function initScrollObserver() {
+  const elements = document.querySelectorAll('.scroll-reveal');
+
+  const checkVisibility = () => {
+    const triggerBottom = window.innerHeight * 0.88;
+
+    elements.forEach((el) => {
+      const boxTop = el.getBoundingClientRect().top;
+      if (boxTop < triggerBottom) {
+        el.classList.add('is-visible');
+      }
+    });
+  };
+
+  window.addEventListener('scroll', checkVisibility, { passive: true });
+  window.addEventListener('resize', checkVisibility, { passive: true });
+  setTimeout(checkVisibility, 50);
+}
+
+// ==========================================
+// 2. ACTIVE NAVBAR SCROLL TRACKER
+// ==========================================
+function initNavScrollTracker() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.navbar nav a:not(.nav-contact)');
+
+  window.addEventListener('scroll', () => {
+    let currentSection = '';
+    const scrollPos = window.pageYOffset + 120;
+
+    sections.forEach((sec) => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentSection = sec.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach((link) => {
+      link.classList.remove('active-link');
+      if (link.getAttribute('href') === `#${currentSection}`) {
+        link.classList.add('active-link');
+      }
+    });
+  }, { passive: true });
+}
+
+// ==========================================
+// 3. INTERACTIVE CI/CD PIPELINE CONSOLE
+// ==========================================
+function initPipelineConsole() {
+  const steps = document.querySelectorAll('.pipeline-step');
+  const title = document.getElementById('consoleTitle');
+  const output = document.getElementById('consoleOutput');
+  const exitCode = document.getElementById('consoleExitCode');
+  const runBtn = document.getElementById('runPipelineBtn');
+  const rerunBtn = document.getElementById('retriggerConsoleBtn');
+  const progress = document.getElementById('pipelineProgress');
+
+  let simulationTimer = null;
+  let isSimulating = false;
+
+  const logs = {
+    1: {
+      title: 'Stage 1: Gitleaks Pre-Commit Secret Scanner',
+      log: `[INFO] gitleaks protect --verbose --redact --staged
+[INFO] Scanning staged commits against 140+ credential entropy patterns...
+[INFO] Checked 24 files & 3,210 lines of code.
+[INFO] Private RSA Keys: 0 DETECTED | Cloud API Tokens: 0 DETECTED
+[SUCCESS] Secret audit passed. Clean commit approved for CI pipeline.`
+    },
+    2: {
+      title: 'Stage 2: SonarQube SAST & Snyk Dependency Scan',
+      log: `[INFO] sonar-scanner -Dsonar.projectKey=devops-platform
+[INFO] SonarQube Quality Gate: PASSED (Bugs: 0, Vulns: 0, Code Smells: 0)
+[INFO] snyk test --severity-threshold=high
+[INFO] Tested 348 dependencies: 0 vulnerable paths found
+[SUCCESS] Static analysis and software composition analysis cleared.`
+    },
+    3: {
+      title: 'Stage 3: Docker Multi-Stage Build & Trivy Image Audit',
+      log: `[INFO] docker build -t ghcr.io/anisahmed/portfolio:v2.5.0 .
+[INFO] Multi-stage build completed: Unprivileged user (UID 101)
+[INFO] trivy image --severity HIGH,CRITICAL ghcr.io/anisahmed/portfolio:v2.5.0
+[INFO] Scanned OS packages & binaries: 0 Vulnerabilities Detected
+[SUCCESS] Pushed signed image digest sha256:8fa2b4 to container registry.`
+    },
+    4: {
+      title: 'Stage 4: Checkov & Open Policy Agent (OPA) IaC Validation',
+      log: `[INFO] checkov -d ./terraform --framework terraform
+[INFO] Passed checks: 42, Failed: 0, Skipped: 0
+[INFO] conftest test --policy ./policy/ terraform.tfplan.json
+[INFO] OPA Rego Evaluation: rule 'restrict_public_ssh' - ALLOWED
+[SUCCESS] Terraform configuration meets CIS Level 1 compliance.`
+    },
+    5: {
+      title: 'Stage 5: Production Deployment Approval Gate',
+      log: `[INFO] Change advisory request #CR-9481 generated for production promotion
+[INFO] Webhook sent to Slack #devops-change-advisory with plan summary
+[INFO] Digital authorization received from Lead DevOps Engineer (Anis Ahmed)
+[INFO] Target Clusters: AWS EKS (ap-south-1) & Azure AKS (Central India)
+[SUCCESS] Change approved. Promoting to production GitOps rollout.`
+    },
+    6: {
+      title: 'Stage 6: ArgoCD GitOps Reconciliation & Canary Rollout',
+      log: `[INFO] argocd app sync multi-cloud-portfolio --prune
+[INFO] Git revision 'main' synchronized across multi-cloud clusters
+[INFO] Shifted canary traffic: 10% -> 50% -> 100%
+[INFO] Prometheus health probe check: HTTP 200 OK (P99: 14ms)
+[SUCCESS] Zero-downtime release completed successfully on https://anisahmed.in`
+    }
+  };
+
+  function selectStage(stepNum, isRunning) {
+    steps.forEach((s) => {
+      s.classList.remove('active');
+      if (s.getAttribute('data-step') === String(stepNum)) {
+        s.classList.add('active');
+      }
+    });
+
+    if (logs[stepNum] && title && output) {
+      title.innerText = logs[stepNum].title;
+      output.innerText = logs[stepNum].log;
+    }
+
+    if (exitCode) {
+      if (isRunning) {
+        exitCode.style.color = 'var(--amber)';
+        exitCode.innerText = `[STAGE ${stepNum}/6: RUNNING...]`;
+      } else {
+        exitCode.style.color = 'var(--emerald)';
+        exitCode.innerText = '[EXIT CODE: 0]';
+      }
+    }
+
+    if (progress) {
+      progress.style.width = `${(stepNum / 6) * 100}%`;
+    }
+  }
+
+  function stopSimulation() {
+    if (simulationTimer) {
+      clearInterval(simulationTimer);
+      simulationTimer = null;
+    }
+    isSimulating = false;
+    if (runBtn) {
+      runBtn.classList.remove('running');
+      runBtn.classList.remove('completed');
+      const icon = runBtn.querySelector('.run-btn-icon');
+      const text = runBtn.querySelector('.run-btn-text');
+      if (icon) icon.innerText = '▶';
+      if (text) text.innerText = 'Simulate CI/CD Flow';
+    }
+  }
+
+  function startSimulation() {
+    stopSimulation();
+    isSimulating = true;
+
+    let currentStep = 1;
+    selectStage(currentStep, true);
+
+    if (runBtn) {
+      runBtn.classList.add('running');
+      const icon = runBtn.querySelector('.run-btn-icon');
+      const text = runBtn.querySelector('.run-btn-text');
+      if (icon) icon.innerText = '⟳';
+      if (text) text.innerText = 'Simulating... (1/6)';
+    }
+
+    simulationTimer = setInterval(() => {
+      currentStep++;
+      if (currentStep <= 6) {
+        selectStage(currentStep, true);
+        if (runBtn) {
+          const text = runBtn.querySelector('.run-btn-text');
+          if (text) text.innerText = `Simulating... (${currentStep}/6)`;
+        }
+      } else {
+        clearInterval(simulationTimer);
+        simulationTimer = null;
+        isSimulating = false;
+
+        selectStage(6, false);
+        if (exitCode) {
+          exitCode.style.color = 'var(--emerald)';
+          exitCode.innerText = '[DEPLOYED: ALL CHECKS PASSED]';
+        }
+
+        if (runBtn) {
+          runBtn.classList.remove('running');
+          runBtn.classList.add('completed');
+          const icon = runBtn.querySelector('.run-btn-icon');
+          const text = runBtn.querySelector('.run-btn-text');
+          if (icon) icon.innerText = '✔';
+          if (text) text.innerText = 'Pipeline Complete!';
+        }
+
+        setTimeout(() => {
+          if (!isSimulating && runBtn) {
+            runBtn.classList.remove('completed');
+            const icon = runBtn.querySelector('.run-btn-icon');
+            const text = runBtn.querySelector('.run-btn-text');
+            if (icon) icon.innerText = '▶';
+            if (text) text.innerText = 'Simulate CI/CD Flow';
+          }
+        }, 3000);
+      }
+    }, 1100);
+  }
+
+  steps.forEach((step) => {
+    step.addEventListener('click', () => {
+      stopSimulation();
+      const stepNum = step.getAttribute('data-step');
+      selectStage(stepNum, false);
+    });
+  });
+
+  if (runBtn) {
+    runBtn.addEventListener('click', () => {
+      startSimulation();
+    });
+  }
+
+  if (rerunBtn) {
+    rerunBtn.addEventListener('click', () => {
+      startSimulation();
+    });
+  }
+}
+
+// ==========================================
+// 4. LIVE INTERACTIVE MAC-STYLE LINUX TERMINAL & AI ASSISTANT
+// ==========================================
+function initMacTerminal() {
+  const terminal = document.querySelector('.terminal-card');
+  const terminalBody = document.getElementById('terminalOutputBody');
+  const input = document.getElementById('liveTerminalInput');
+  const chips = document.querySelectorAll('.terminal-chip');
+
+  if (!terminal || !input) return;
+
+  const cmdHistory = [];
+  let historyIdx = -1;
+  let currentDir = '/home/anisahmed';
+
+  // Virtual Filesystem for Linux commands (cat, ls, etc.)
+  const virtualFS = {
+    'mission.txt': `“Automate everything. Break nothing.”
+Enforce DevSecOps · Scale with resilience.`,
+
+    'experience.txt': `<span style="color:var(--blue); font-weight:700;">ANIS AHMED — SENIOR DEVOPS ENGINEER</span>
+• Tenure:          5.5 Years (July 2021 — Present)
+• Specialization:  Google Cloud Platform (GCP) & AWS, Platform Engineering
+• Location:        Gurugram, India (Open to Remote Global)
+• Core Focus:      Kubernetes, Terraform, CI/CD Automation (70% Effort Reduction),
+                   DevSecOps (SAST/DAST/SCA), AIOps & GenAI/RAG, Site Reliability Engineering (SRE)`,
+
+    'skills.txt': `<span style="color:var(--blue); font-weight:700;">TECHNICAL SKILLS INVENTORY:</span>
+• <span style="color:var(--emerald);">Cloud Platforms:</span>  Google Cloud Platform (GCP), AWS
+• <span style="color:var(--emerald);">GCP Services:</span>     Compute Engine, GKE, Cloud Storage, Cloud SQL, IAM, VPC, Cloud Monitoring, Cloud Logging
+• <span style="color:var(--emerald);">AWS Services:</span>     EC2, S3, IAM, VPC, RDS, CloudWatch, EKS
+• <span style="color:var(--emerald);">Containers:</span>       Docker, Kubernetes, Helm, GKE, EKS
+• <span style="color:var(--emerald);">IaC:</span>              Terraform, CloudFormation
+• <span style="color:var(--emerald);">CI/CD:</span>            Jenkins, GitLab CI/CD, GitHub Actions, Azure DevOps
+• <span style="color:var(--emerald);">DevSecOps:</span>        SAST, DAST, SCA, SonarQube, Snyk, Trivy, Gitleaks
+• <span style="color:var(--emerald);">AI & AIOps:</span>        GenAI, RAG, Prompt Engineering, GCP AIOps anomaly detection
+• <span style="color:var(--emerald);">Scripting:</span>         Python, Bash, Shell, Go
+• <span style="color:var(--emerald);">Monitoring:</span>        Prometheus, Grafana, ELK Stack, CloudWatch, GCP Cloud Monitoring
+• <span style="color:var(--emerald);">Networking:</span>        VPC, DNS, Load Balancing, Firewalls, VPN, TCP/IP`,
+
+    'achievements.txt': `<span style="color:var(--emerald); font-weight:700;">KEY PRODUCTION ACHIEVEMENTS — ANIS AHMED:</span>
+• <span style="color:var(--blue);">CI/CD Optimization:</span>  Reduced manual deployment efforts by <strong style="color:#ffffff;">70%</strong> across pipelines.
+• <span style="color:var(--blue);">Shift-Left Security:</span>  Integrated SAST, DAST, and SCA scanning into delivery gates.
+• <span style="color:var(--blue);">Generative AI & RAG:</span>  Explored RAG & LLM solutions for operational knowledge & troubleshooting.
+• <span style="color:var(--blue);">Cloud Scalability:</span>   Managed resilient, high-availability GCP & AWS infrastructure.
+• <span style="color:var(--blue);">IaC Reproducibility:</span>  Engineered reusable Terraform configurations and Ansible playbooks.`,
+
+    'devsecops.json': `{
+  "sast": "SonarQube (Static Application Security Testing — Code Quality Gate)",
+  "dast": "Dynamic Application Security Testing (Runtime API & Endpoint audit)",
+  "sca": "Snyk (Software Composition Analysis for vulnerable dependencies)",
+  "secrets": "Gitleaks (Entropy credential detection & pre-commit blocking)",
+  "container": "Trivy (Container Image CVE & SBOM auditor)",
+  "iac_policy": ["Checkov (CIS benchmarks)", "Open Policy Agent (Rego rules)"],
+  "aiops": "GCP Cloud Monitoring & Anomaly Detection"
+}`,
+
+    'contact.txt': `<span style="color:var(--blue); font-weight:700;">DIRECT CONTACT CHANNELS:</span>
+• Email:    <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a>
+• LinkedIn: <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline;">linkedin.com/in/webanis</a>
+• GitHub:   <a href="https://github.com/anisahmed01" target="_blank" style="color:var(--blue); text-decoration:underline;">github.com/anisahmed01</a>
+• Website:  https://anisahmed.in`,
+
+    'projects.txt': `<span style="color:var(--blue); font-weight:700;">FLAGSHIP MULTI-CLOUD PROJECTS:</span>
+01. Multi-Cloud Kubernetes Delivery Engine (GKE + EKS + ArgoCD)
+02. Automated Shift-Left DevSecOps Pipeline (SonarQube + Snyk + Trivy)
+03. Event-Driven Auto-Remediation & SRE Framework (Python + CloudWatch)
+04. Modular Multi-Cloud Terraform Framework with OPA Policy as Code
+05. Enterprise Observability & Centralized Logging Stack (Prometheus + Grafana + ELK)`
+  };
+
+  // Structured commands and simulated Linux CLI
+  const commands = {
+    help: () => `
+<span style="color:var(--blue); font-weight:700;">AVAILABLE TERMINAL COMMANDS & AI QUERIES:</span>
+
+<span style="color:var(--purple); font-weight:700;">[LINUX UTILITIES]</span>
+  <span style="color:var(--emerald);">ls</span> | <span style="color:var(--emerald);">ls -la</span>                   List files in current directory
+  <span style="color:var(--emerald);">pwd</span>                          Print current working directory
+  <span style="color:var(--emerald);">cd &lt;dir&gt;</span>                     Change working directory
+  <span style="color:var(--emerald);">cat &lt;file&gt;</span>                   Display file contents (e.g. <code>cat mission.txt</code>)
+  <span style="color:var(--emerald);">whoami</span>                       Print current authenticated user
+  <span style="color:var(--emerald);">uptime</span>                       Show system uptime and load average
+  <span style="color:var(--emerald);">date</span>                         Show current system time
+  <span style="color:var(--emerald);">echo &lt;text&gt;</span>                  Print text to console
+  <span style="color:var(--emerald);">ping &lt;host&gt;</span>                  Simulate ICMP network ping
+  <span style="color:var(--emerald);">curl &lt;url&gt;</span>                   Simulate HTTP GET request
+  <span style="color:var(--emerald);">clear</span>                        Clear terminal output
+
+<span style="color:var(--purple); font-weight:700;">[DEVOPS & CLOUD TOOLS]</span>
+  <span style="color:var(--emerald);">gcloud container clusters list</span> List GCP GKE clusters
+  <span style="color:var(--emerald);">kubectl get nodes</span>            List Kubernetes worker nodes
+  <span style="color:var(--emerald);">kubectl get pods</span>             List active container pods
+  <span style="color:var(--emerald);">helm list</span>                    List deployed Helm releases
+  <span style="color:var(--emerald);">terraform state list</span>          Show managed multi-cloud resources
+  <span style="color:var(--emerald);">deploy --env prod</span>            Simulate live zero-downtime canary rollout
+
+<span style="color:var(--purple); font-weight:700;">[AI CHATBOT QUERIES]</span>
+  Type keywords or natural questions like:
+  <code>experience</code>, <code>skills</code>, <code>projects</code>, <code>email</code>, <code>github</code>, <code>linkedin</code>, <code>certifications</code>, <code>about</code>
+`,
+
+    'gcloud container clusters list': () => `
+NAME                      LOCATION       MASTER_VERSION  STATUS   NUM_NODES
+gke-prod-cluster-asia-s1  asia-south1-a  1.30.2-gke.1    RUNNING  6
+gke-rag-aiops-cluster     asia-south1-b  1.30.2-gke.1    RUNNING  4
+`,
+
+    'kubectl get nodes': () => `
+NAME                             STATUS   ROLES           CLUSTER     VERSION
+gke-asia-south1-worker-01        Ready    node,worker     GCP-GKE     v1.30.2
+eks-ap-south-1a-worker-01        Ready    node,worker     AWS-EKS     v1.30.2
+eks-ap-south-1b-worker-02        Ready    node,worker     AWS-EKS     v1.30.2
+`,
+
+    'kubectl get nodes -o wide': () => `
+NAME                             STATUS   ROLES           CLUSTER     VERSION   OS-IMAGE
+gke-asia-south1-worker-01        Ready    node,worker     GCP-GKE     v1.30.2   Container-Optimized OS
+eks-ap-south-1a-worker-01        Ready    node,worker     AWS-EKS     v1.30.2   Amazon Linux 2023
+eks-ap-south-1b-worker-02        Ready    node,worker     AWS-EKS     v1.30.2   Amazon Linux 2023
+`,
+
+    'kubectl get pods': () => `
+NAMESPACE     NAME                                   READY   STATUS    RESTARTS   AGE
+production    portfolio-frontend-6b87d89bf5-2zpq7   1/1     Running   0          5d
+production    argocd-server-7965448f7f-k9p6q         1/1     Running   0          42d
+security      sast-dast-orchestrator-8bc9d-1vqp4     1/1     Running   0          12d
+monitoring    prometheus-k8s-0                       2/2     Running   0          42d
+`,
+
+    'helm list': () => `
+NAME              NAMESPACE     REVISION  STATUS    CHART                    APP VERSION
+argo-cd           argocd        3         deployed  argo-cd-6.7.18           v2.11.0
+cert-manager      cert-manager  1         deployed  cert-manager-v1.14.4     v1.14.4
+ingress-nginx     ingress-nginx 4         deployed  ingress-nginx-4.10.0     1.10.0
+kube-prometheus   monitoring    2         deployed  kube-prometheus-58.2.2   v0.73.2
+trivy-scanner     security      1         deployed  trivy-operator-0.18.2    0.50.0
+`,
+
+    'terraform state list': () => `
+google_compute_network.gcp_vpc
+google_container_cluster.primary_gke
+module.multi_cloud_vpc.aws_vpc.this[0]
+module.eks.aws_eks_cluster.this[0]
+aws_s3_bucket.terraform_remote_state
+aws_dynamodb_table.terraform_state_locks
+`,
+
+    whoami: () => `anis-ahmed &mdash; Senior DevOps Engineer (5.5 yrs exp)`,
+
+    pwd: () => `${currentDir}`,
+
+    uptime: () => ` ${new Date().toTimeString().split(' ')[0]} up 142 days, 2 users, load average: 0.08, 0.04, 0.01`,
+
+    date: () => `${new Date().toString()}`,
+
+    'uname -a': () => `Linux cloud-control 6.6.0-devops-platform #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux`,
+    uname: () => `Linux`,
+
+    deploy: () => commands['deploy --env prod'](),
+
+    'deploy --env prod': () => {
+      setTimeout(() => {
+        const lines = [
+          '⚡ [INIT] Connecting to multi-cloud GCP GKE & AWS EKS production clusters...',
+          '🔍 [DEVSECOPS] SAST, DAST, SCA (SonarQube, Snyk, Trivy): PASSED (0 CVEs)',
+          '📜 [OPA] Evaluated Terraform & K8s plan against CIS benchmark rules: APPROVED',
+          '👤 [SIGN-OFF] Production Approval Gate authorized by Senior DevOps Engineer (Anis Ahmed)',
+          '🔄 [GITOPS] ArgoCD syncing canary release across availability zones...',
+          '✅ [READY] Health probes 200 OK. Zero-downtime release active on anisahmed.in!',
+        ];
+
+        let i = 0;
+        const interval = setInterval(() => {
+          if (i < lines.length) {
+            appendTerminalOutput(`<span style="color:var(--emerald);">${lines[i]}</span>`);
+            i++;
+          } else {
+            clearInterval(interval);
+          }
+        }, 350);
+      }, 100);
+      return `<span style="color:var(--amber);">🚀 Initiating multi-cloud GCP & AWS DevSecOps production rollout...</span>`;
+    },
+
+    clear: () => {
+      const history = document.getElementById('terminalHistory');
+      if (history) history.innerHTML = '';
+      return '';
+    }
+  };
+
+  function appendTerminalOutput(htmlContent) {
+    const history = document.getElementById('terminalHistory');
+    if (!history) return;
+    const entry = document.createElement('div');
+    entry.style.margin = '4px 0 12px';
+    entry.style.color = '#d2dcf6';
+    entry.style.lineHeight = '1.6';
+    entry.style.whiteSpace = 'pre-wrap';
+    entry.innerHTML = htmlContent;
+    history.appendChild(entry);
+    terminalBody.scrollTop = terminalBody.scrollHeight;
+  }
+
+  // Conversational AI Intent Matcher
+  function matchAIQuery(query) {
+    const q = query.toLowerCase().trim();
+
+    // Experience queries
+    if (/\b(exp|experience|tenure|years|how long|background|work history)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis Ahmed brings <strong style="color:#ffffff;">5.5 years of experience</strong> as a Senior DevOps Engineer, specializing in Google Cloud Platform (GCP) and AWS. He is experienced in Kubernetes, Terraform, CI/CD automation (reducing deployment effort by 70%), DevSecOps (SAST/DAST/SCA), and AIOps operational intelligence.`;
+    }
+
+    // Skills queries
+    if (/\b(skill|skills|tech|technologies|stack|tools|what do you know|capabilities)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis's technical core includes:
+• <strong style="color:var(--blue);">Cloud:</strong> Google Cloud Platform (GCP) & AWS
+• <strong style="color:var(--blue);">Containers:</strong> Kubernetes, Docker, Helm, GKE, EKS
+• <strong style="color:var(--blue);">IaC:</strong> Terraform, CloudFormation, Ansible
+• <strong style="color:var(--blue);">CI/CD:</strong> Jenkins, GitLab CI/CD, GitHub Actions, Azure DevOps
+• <strong style="color:var(--blue);">DevSecOps:</strong> SonarQube (SAST), DAST, Snyk (SCA), Trivy, Gitleaks
+• <strong style="color:var(--blue);">AI & AIOps:</strong> Generative AI & RAG for DevOps, GCP AIOps anomaly detection
+• <strong style="color:var(--blue);">Scripting:</strong> Python, Bash, Shell, Go
+• <strong style="color:var(--blue);">Observability:</strong> Prometheus, Grafana, ELK Stack, CloudWatch`;
+    }
+
+    // Email queries
+    if (/\b(email|mail|inbox|send email)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> You can contact Anis directly at: <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline; font-weight:700;">contact@anisahmed.in</a>`;
+    }
+
+    // GitHub queries
+    if (/\b(github|git|repos|repositories|code)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Explore Anis's open-source repositories and code on GitHub: <a href="https://github.com/anisahmed01" target="_blank" style="color:var(--blue); text-decoration:underline; font-weight:700;">https://github.com/anisahmed01</a>`;
+    }
+
+    // LinkedIn queries
+    if (/\b(linkedin|profile|network|connect)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Connect with Anis on LinkedIn: <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline; font-weight:700;">https://www.linkedin.com/in/webanis</a>`;
+    }
+
+    // Contact / Hire queries
+    if (/\b(contact|hire|hiring|reach out|touch|message|talk)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis is open to Senior DevOps & Cloud Platform opportunities. Reach out via email at <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a> or on <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline;">LinkedIn</a>.`;
+    }
+
+    // Projects queries
+    if (/\b(project|projects|portfolio|work|architectures)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis has engineered 5 flagship production projects:
+1. <strong>Multi-Cloud K8s Delivery Engine</strong> (GKE, EKS, ArgoCD Canary)
+2. <strong>Automated Shift-Left DevSecOps Matrix</strong> (SonarQube, Snyk, Trivy)
+3. <strong>Event-Driven SRE Auto-Remediation</strong> (Python & CloudWatch)
+4. <strong>Modular Multi-Cloud Terraform Framework</strong> with OPA Rego
+5. <strong>Enterprise Observability Stack</strong> (Prometheus, Grafana, ELK)
+<em>(Run <code>cat projects.txt</code> to read detailed specifications)</em>`;
+    }
+
+    // Company / current workplace queries (strict privacy)
+    if (/\b(company|employer|where do you work|workplace|current company|organization)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis works as a Senior DevOps Engineer based in Gurugram, India, managing enterprise cloud infrastructure across GCP and AWS. (Specific employer details withheld for privacy).`;
+    }
+
+    // Location queries
+    if (/\b(location|where are you|city|country|based|relocate|remote)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis is based in <strong>Gurugram, India</strong>, and is open to remote global opportunities.`;
+    }
+
+    // Greetings
+    if (/^(hi|hello|hey|yo|greetings|hola|howdy)(\s.*)?$/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Hello! 👋 I am Anis Ahmed's interactive terminal assistant. You can ask me about his <em>experience</em>, <em>skills</em>, <em>projects</em>, or run Linux commands like <code>ls</code>, <code>pwd</code>, <code>cat mission.txt</code>, and <code>kubectl get nodes</code>.`;
+    }
+
+    // Certifications
+    if (/\b(cert|certs|certification|certifications)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis's core proficiencies include Google Cloud Platform (GCP), AWS Architecture, Kubernetes Container Orchestration, Terraform Infrastructure as Code, and Shift-Left DevSecOps.`;
+    }
+
+    // About / Bio
+    if (/\b(about|who are you|who is anis|bio|summary)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis Ahmed is a Senior DevOps Engineer with 5.5 years of experience specializing in GCP and AWS cloud environments, Kubernetes, Terraform, and automated DevSecOps pipelines.`;
+    }
+
+    return null;
+  }
+
+  function executeCommand(raw) {
+    const trimmed = raw.trim();
+    if (!trimmed) return;
+
+    cmdHistory.push(raw);
+    historyIdx = cmdHistory.length;
+
+    // Display user input prompt
+    appendTerminalOutput(`<span style="color:var(--blue); font-weight:600;">$</span> <span style="color:#ffffff;">${raw}</span>`);
+
+    const lower = trimmed.toLowerCase();
+    const parts = lower.split(/\s+/);
+    const primaryCmd = parts[0];
+    const args = parts.slice(1);
+
+    // 1. Direct command match in commands dictionary
+    if (commands[lower]) {
+      const res = commands[lower]();
+      if (res) appendTerminalOutput(res);
+      return;
+    }
+
+    // 2. Linux 'cat' command parser (e.g. 'cat mission.txt', 'cat experience.txt')
+    if (primaryCmd === 'cat') {
+      if (args.length === 0) {
+        appendTerminalOutput(`<span style="color:var(--amber);">usage: cat &lt;filename&gt;</span>\nTry: <code>cat mission.txt</code> or run <code>ls</code> to see available files.`);
+        return;
+      }
+      let filename = args[0];
+      // Normalize filename if .txt was omitted
+      if (!virtualFS[filename] && virtualFS[filename + '.txt']) {
+        filename = filename + '.txt';
+      }
+      if (virtualFS[filename]) {
+        appendTerminalOutput(virtualFS[filename]);
+      } else {
+        appendTerminalOutput(`<span style="color:var(--red);">cat: ${args[0]}: No such file or directory</span>\nType <code>ls</code> to view accessible files.`);
+      }
+      return;
+    }
+
+    // 3. Linux 'ls' or 'dir' command parser
+    if (primaryCmd === 'ls' || primaryCmd === 'dir') {
+      const isLong = args.includes('-l') || args.includes('-la') || args.includes('-al');
+      if (isLong) {
+        let output = `total 28\n`;
+        output += `drwxr-xr-x 2 anisahmed devops 4096 Nov 09 18:45 .\n`;
+        output += `drwxr-xr-x 3 root       root   4096 Nov 09 18:45 ..\n`;
+        for (const [name, content] of Object.entries(virtualFS)) {
+          const size = content.length;
+          output += `-rw-r--r-- 1 anisahmed devops ${String(size).padStart(4, ' ')} Nov 09 18:45 <span style="color:var(--emerald);">${name}</span>\n`;
+        }
+        appendTerminalOutput(output.trim());
+      } else {
+        const fileList = Object.keys(virtualFS).map(f => `<span style="color:var(--emerald);">${f}</span>`).join('   ');
+        appendTerminalOutput(fileList);
+      }
+      return;
+    }
+
+    // 4. Linux 'cd' command parser
+    if (primaryCmd === 'cd') {
+      const target = args[0] || '~';
+      if (target === '~' || target === '/home/anisahmed' || target === '') {
+        currentDir = '/home/anisahmed';
+        appendTerminalOutput(`<span style="color:var(--muted);">Switched to ${currentDir}</span>`);
+      } else if (target === '..' || target === '/') {
+        currentDir = '/';
+        appendTerminalOutput(`<span style="color:var(--muted);">Switched to /</span>`);
+      } else if (target === '/root') {
+        appendTerminalOutput(`<span style="color:var(--red);">bash: cd: /root: Permission denied</span>`);
+      } else {
+        appendTerminalOutput(`<span style="color:var(--muted);">Switched to /home/anisahmed/${target}</span>`);
+      }
+      return;
+    }
+
+    // 5. Linux 'echo' command parser
+    if (primaryCmd === 'echo') {
+      const msg = trimmed.substring(5).trim();
+      appendTerminalOutput(msg || '');
+      return;
+    }
+
+    // 6. Linux 'ping' command parser
+    if (primaryCmd === 'ping') {
+      const host = args[0] || 'anisahmed.in';
+      appendTerminalOutput(`PING ${host} (104.21.54.20): 56 data bytes
+64 bytes from ${host}: icmp_seq=1 ttl=58 time=14.2 ms
+64 bytes from ${host}: icmp_seq=2 ttl=58 time=13.9 ms
+64 bytes from ${host}: icmp_seq=3 ttl=58 time=14.1 ms
+--- ${host} ping statistics ---
+3 packets transmitted, 3 packets received, 0.0% packet loss`);
+      return;
+    }
+
+    // 7. Linux 'curl' command parser
+    if (primaryCmd === 'curl') {
+      const url = args[0] || 'https://anisahmed.in/api/status';
+      appendTerminalOutput(`HTTP/2 200 OK
+content-type: application/json; charset=utf-8
+server: cloudflare
+
+{
+  "status": "UP",
+  "author": "Anis Ahmed",
+  "role": "Senior DevOps Engineer",
+  "experience_years": 5.5,
+  "cluster_availability": "99.99%",
+  "cloud_providers": ["GCP", "AWS"],
+  "kubernetes": "Ready"
+}`);
+      return;
+    }
+
+    // 8. Linux 'sudo' command parser
+    if (primaryCmd === 'sudo') {
+      appendTerminalOutput(`<span style="color:var(--emerald);">[sudo] privilege granted:</span> User <code>anisahmed</code> already holds Cloud Platform Administrator credentials.`);
+      return;
+    }
+
+    // 9. AI Chatbot conversational intent handler
+    const aiAnswer = matchAIQuery(lower);
+    if (aiAnswer) {
+      appendTerminalOutput(aiAnswer);
+      return;
+    }
+
+    // 10. Fallback: command not found with helpful suggestion
+    appendTerminalOutput(`
+<span style="color:var(--red);">bash: command not found: ${raw}</span>
+Type <span style="color:var(--blue); font-weight:700;">help</span> to see all supported DevOps commands and AI queries, or try <code>cat mission.txt</code>.
+`);
+  }
+
+  // Click on terminal body focuses the input
+  terminal.addEventListener('click', () => {
+    input.focus();
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const val = input.value;
+      input.value = '';
+      executeCommand(val);
+    } else if (e.key === 'ArrowUp') {
+      if (historyIdx > 0) {
+        historyIdx--;
+        input.value = cmdHistory[historyIdx] || '';
+      }
+    } else if (e.key === 'ArrowDown') {
+      if (historyIdx < cmdHistory.length - 1) {
+        historyIdx++;
+        input.value = cmdHistory[historyIdx] || '';
+      } else {
+        historyIdx = cmdHistory.length;
+        input.value = '';
+      }
+    }
+  });
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const cmd = chip.getAttribute('data-cmd') || chip.innerText.trim();
+      executeCommand(cmd);
+    });
+  });
+}
+
+// ==========================================
+// 5. VISITOR & PROFILE ANALYTICS TELEMETRY
+// ==========================================
+function initVisitorAnalytics() {
+  const userVisitsElem = document.getElementById('userVisitCount');
+  const globalViewsElem = document.getElementById('globalProfileViews');
+
+  // Cooldown window: 10 minutes (600,000 ms)
+  // If user returns after 10 mins, 1 hour, or 1 day, it increments genuine visits!
+  const COOLDOWN_MS = 10 * 60 * 1000;
+  const now = Date.now();
+
+  const lastVisitKey = 'anis_last_visit_timestamp';
+  const userVisitsKey = 'anis_user_visits_count';
+  const totalViewsKey = 'anis_total_views_count';
+  const BASELINE_VIEWS = 1420;
+
+  let lastVisitTime = parseInt(localStorage.getItem(lastVisitKey) || '0', 10);
+  let userVisits = parseInt(localStorage.getItem(userVisitsKey) || '0', 10);
+  let totalViews = parseInt(localStorage.getItem(totalViewsKey) || '0', 10);
+
+  if (totalViews < BASELINE_VIEWS) {
+    totalViews = BASELINE_VIEWS;
+  }
+
+  // Check if this visit is outside cooldown (first visit, or returning after 10m / 1hr / 1day)
+  if (!lastVisitTime || (now - lastVisitTime) >= COOLDOWN_MS) {
+    userVisits += 1;
+    totalViews += 1;
+    localStorage.setItem(userVisitsKey, userVisits);
+    localStorage.setItem(totalViewsKey, totalViews);
+    localStorage.setItem(lastVisitKey, now);
+  }
+
+  // Update DOM displays (strictly clean numbers, no '+' icon)
+  if (userVisitsElem) {
+    userVisitsElem.innerText = userVisits <= 1 ? '#1 (First)' : `#${userVisits}`;
+  }
+
+  if (globalViewsElem) {
+    globalViewsElem.innerText = totalViews.toLocaleString();
+  }
+
+  // Live GoatCounter genuine count integration
+  if (window.fetch) {
+    fetch('https://anisahmed.goatcounter.com/counter//.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.count) {
+          const rawCount = parseInt(String(data.count).replace(/[^0-9]/g, ''), 10);
+          if (!isNaN(rawCount) && rawCount > 0) {
+            const verifiedTotal = BASELINE_VIEWS + rawCount;
+            if (verifiedTotal > totalViews) {
+              totalViews = verifiedTotal;
+              localStorage.setItem(totalViewsKey, totalViews);
+              if (globalViewsElem) {
+                globalViewsElem.innerText = totalViews.toLocaleString();
+              }
+            }
+          }
+        }
+      })
+      .catch(() => {});
+  }
+
+  // Picture download privacy protection (blocks right-click & drag)
+  const portraitCapsule = document.querySelector('.hero-portrait-capsule');
+  if (portraitCapsule) {
+    portraitCapsule.addEventListener('contextmenu', (e) => e.preventDefault());
+    portraitCapsule.addEventListener('dragstart', (e) => e.preventDefault());
+  }
+}
+  </script>
+  <script src="app.js?v=3.9.0">
+
+// ==========================================
+// 6. FLOATING RIGHT-SIDE HOVER SECTION JUMPER
+// ==========================================
+function initSideNavNavigator() {
+  const wrapper = document.querySelector('.side-nav-wrapper');
+  const trigger = document.querySelector('.side-nav-trigger');
+  const items = document.querySelectorAll('.side-nav-item');
+  const sections = document.querySelectorAll('section[id]');
+
+  if (!wrapper) return;
+
+  // Click on trigger (supports mobile touch)
+  if (trigger) {
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      wrapper.classList.toggle('is-open');
+    });
+  }
+
+  // Smooth scroll jump on item click
+  items.forEach((item) => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = item.getAttribute('href');
+      const targetSec = document.querySelector(targetId);
+      if (targetSec) {
+        targetSec.scrollIntoView({ behavior: 'smooth' });
+      }
+      wrapper.classList.remove('is-open');
+    });
+  });
+
+  // Close drawer if clicking outside
+  document.addEventListener('click', (e) => {
+    if (!wrapper.contains(e.target)) {
+      wrapper.classList.remove('is-open');
+    }
+  });
+
+  // Track active section and highlight corresponding side nav item
+  window.addEventListener('scroll', () => {
+    let currentId = '';
+    const scrollPos = window.pageYOffset + 140;
+
+    sections.forEach((sec) => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+
+    items.forEach((item) => {
+      item.classList.remove('active-slide');
+      if (item.getAttribute('href') === `#${currentId}`) {
+        item.classList.add('active-slide');
+      }
+    });
+  }, { passive: true });
+}
+  </script>
 </body>
 </html>

@@ -13,114 +13,204 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// 0. CINEMATIC INTRO SPLASH (HIGH-PERFORMANCE)
+// 0. CINEMATIC INTRO SPLASH DISSOLVE
 // ==========================================
 function initIntroSplash() {
-  const overlay = document.getElementById('introOverlay');
+  /* Prevent running multiple times across script tags or re-entry */
+  if (window.__introSplashRan) return;
+  window.__introSplashRan = true;
+
+  var overlay = document.getElementById('introOverlay');
   if (!overlay) return;
 
-  // Returning visitors in same session skip intro instantly
-  if (sessionStorage.getItem('anis_intro_viewed')) {
-    overlay.remove();
-    return;
-  }
-  sessionStorage.setItem('anis_intro_viewed', '1');
+  var badge  = overlay.querySelector('.intro-badge');
+  var wrap   = document.getElementById('introQuoteWrap');
+  var author = overlay.querySelector('.intro-author');
 
-  let dismissed = false;
-  function dismiss() {
-    if (dismissed) return;
-    dismissed = true;
-    overlay.classList.add('fade-out');
-    setTimeout(() => {
-      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-    }, 450);
-  }
-
-  // Auto-dismiss smoothly after 1.5 seconds
-  const autoTimer = setTimeout(dismiss, 1500);
-
-  // Click or keypress dismisses immediately
-  overlay.addEventListener('click', () => {
-    clearTimeout(autoTimer);
-    dismiss();
+  /* hide everything initially */
+  [badge, wrap, author].forEach(function(el) {
+    if (el) { el.style.opacity = '0'; el.style.transition = 'none'; }
   });
 
-  window.addEventListener('keydown', () => {
-    clearTimeout(autoTimer);
-    dismiss();
-  }, { once: true });
+  if (wrap) wrap.innerHTML = '';
+
+  /* 2 Distinct Lines: Eliminates any chance of word-splitting like "brea" / "k" */
+  var lines = [
+    '\u201cAutomate everything.',
+    'Break nothing.\u201d'
+  ];
+
+  /* smooth gradient across both lines */
+  var totalChars = lines[0].length + lines[1].length;
+  function charColor(idx) {
+    var t = idx / Math.max(1, totalChars - 1);
+    var r, g, b;
+    if (t < 0.5) {
+      var s = t / 0.5;
+      r = Math.round(0x54 + (0xa7 - 0x54) * s);
+      g = Math.round(0xc8 + (0x8b - 0xc8) * s);
+      b = Math.round(0xff + (0xfa - 0xff) * s);
+    } else {
+      var s = (t - 0.5) / 0.5;
+      r = Math.round(0xa7 + (0x57 - 0xa7) * s);
+      g = Math.round(0x8b + (0xe6 - 0x8b) * s);
+      b = Math.round(0xfa + (0xa5 - 0xfa) * s);
+    }
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+
+  var box = document.createElement('div');
+  box.style.cssText = [
+    'display:flex',
+    'flex-direction:column',
+    'align-items:center',
+    'justify-content:center',
+    'padding:0 14px',
+    'font-size:clamp(1.4rem, 4.2vw, 3.2rem)',
+    'font-weight:850',
+    'letter-spacing:-1px',
+    'line-height:1.25',
+    'text-align:center'
+  ].join(';');
+
+  var letters = [];
+  var globalIdx = 0;
+
+  lines.forEach(function(lineText) {
+    var row = document.createElement('div');
+    row.style.cssText = 'display:block;white-space:nowrap;margin:2px 0;';
+
+    for (var ci = 0; ci < lineText.length; ci++) {
+      var ch = lineText[ci];
+      var col = charColor(globalIdx++);
+      var span = document.createElement('span');
+      span.textContent = ch === ' ' ? '\u00a0' : ch;
+
+      /* Scatter distance scaled safely for mobile & desktop */
+      var angle = Math.random() * Math.PI * 2;
+      var dist  = Math.min(window.innerWidth || 400, 500) * (0.6 + Math.random() * 0.6);
+      var dx    = (Math.cos(angle) * dist).toFixed(0);
+      var dy    = (Math.sin(angle) * dist).toFixed(0);
+
+      span.style.cssText = [
+        'display:inline-block',
+        'color:' + col,
+        'text-shadow:0 0 16px ' + col,
+        'opacity:0',
+        'transform:translate(' + dx + 'px,' + dy + 'px) scale(0.2)',
+        'transition:none',
+        'will-change:transform,opacity'
+      ].join(';');
+
+      row.appendChild(span);
+      letters.push(span);
+    }
+
+    box.appendChild(row);
+  });
+
+  if (wrap) {
+    wrap.style.opacity = '1';
+    wrap.appendChild(box);
+  }
+
+  /* Timing */
+  var BADGE_DELAY  = 50;
+  var FLY_START    = 150;
+  var STAGGER      = 22;
+  var FLY_DUR      = 600;
+  var ASSEMBLE_END = FLY_START + (letters.length - 1) * STAGGER + FLY_DUR;
+  var HOLD         = 1400;
+  var DISMISS      = ASSEMBLE_END + HOLD;
+
+  requestAnimationFrame(function() {
+    if (badge) {
+      setTimeout(function() {
+        badge.style.transition = 'opacity 0.5s ease';
+        badge.style.opacity    = '1';
+      }, BADGE_DELAY);
+    }
+
+    letters.forEach(function(span, i) {
+      setTimeout(function() {
+        span.style.transition =
+          'transform ' + FLY_DUR + 'ms cubic-bezier(0.16,1,0.3,1),' +
+          'opacity 380ms ease';
+        span.style.transform = 'translate(0,0) scale(1)';
+        span.style.opacity   = '1';
+      }, FLY_START + i * STAGGER);
+    });
+
+    if (author) {
+      setTimeout(function() {
+        author.style.transition = 'opacity 0.5s ease';
+        author.style.opacity    = '1';
+      }, ASSEMBLE_END - 200);
+    }
+
+    setTimeout(function() {
+      box.style.transition = 'filter 0.5s ease';
+      box.style.filter     = 'drop-shadow(0 0 24px rgba(84,200,255,0.5))';
+    }, ASSEMBLE_END);
+
+    setTimeout(function() {
+      try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch(e) { window.scrollTo(0, 0); }
+      overlay.classList.add('fade-out');
+      setTimeout(function() { overlay.remove(); }, 650);
+    }, DISMISS);
+  });
 }
 
 function initScrollObserver() {
   const elements = document.querySelectorAll('.scroll-reveal');
-  if (!elements.length) return;
 
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -30px 0px'
+  const checkVisibility = () => {
+    const triggerBottom = window.innerHeight * 0.88;
+
+    elements.forEach((el) => {
+      const boxTop = el.getBoundingClientRect().top;
+      if (boxTop < triggerBottom) {
+        el.classList.add('is-visible');
+      }
     });
+  };
 
-    elements.forEach((el) => observer.observe(el));
-  } else {
-    elements.forEach((el) => el.classList.add('is-visible'));
-  }
+  window.addEventListener('scroll', checkVisibility, { passive: true });
+  window.addEventListener('resize', checkVisibility, { passive: true });
+  setTimeout(checkVisibility, 50);
 }
 
 // ==========================================
-// 2. UNIFIED HIGH-PERFORMANCE ACTIVE SECTION TRACKER
+// 2. ACTIVE NAVBAR SCROLL TRACKER
 // ==========================================
 function initNavScrollTracker() {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.navbar nav a:not(.nav-contact)');
-  const sideItems = document.querySelectorAll('.side-nav-item');
 
-  if (!sections.length) return;
+  window.addEventListener('scroll', () => {
+    let currentSection = '';
+    const scrollPos = window.pageYOffset + 120;
 
-  let ticking = false;
-
-  function updateActive() {
-    const scrollPos = window.pageYOffset + 140;
-    let currentId = '';
-
-    for (let i = 0; i < sections.length; i++) {
-      const sec = sections[i];
+    sections.forEach((sec) => {
       const top = sec.offsetTop;
       const height = sec.offsetHeight;
       if (scrollPos >= top && scrollPos < top + height) {
-        currentId = sec.getAttribute('id');
-        break;
+        currentSection = sec.getAttribute('id');
       }
-    }
+    });
 
-    if (currentId) {
-      navLinks.forEach((link) => {
-        link.classList.toggle('active-link', link.getAttribute('href') === `#${currentId}`);
-      });
-      sideItems.forEach((item) => {
-        item.classList.toggle('active-slide', item.getAttribute('href') === `#${currentId}`);
-      });
-    }
-    ticking = false;
-  }
-
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      window.requestAnimationFrame(updateActive);
-      ticking = true;
-    }
+    navLinks.forEach((link) => {
+      link.classList.remove('active-link');
+      if (link.getAttribute('href') === `#${currentSection}`) {
+        link.classList.add('active-link');
+      }
+    });
   }, { passive: true });
-
-  updateActive();
 }
 
+// ==========================================
+// 3. INTERACTIVE CI/CD PIPELINE CONSOLE
+// ==========================================
 function initPipelineConsole() {
   const steps = document.querySelectorAll('.pipeline-step');
   const title = document.getElementById('consoleTitle');
@@ -841,10 +931,11 @@ function initSideNavNavigator() {
   const wrapper = document.querySelector('.side-nav-wrapper');
   const trigger = document.querySelector('.side-nav-trigger');
   const items = document.querySelectorAll('.side-nav-item');
+  const sections = document.querySelectorAll('section[id]');
 
   if (!wrapper) return;
 
-  // Mobile tap toggle
+  // Click on trigger (supports mobile touch)
   if (trigger) {
     trigger.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -852,30 +943,44 @@ function initSideNavNavigator() {
     });
   }
 
-  // Fast, jitter-free smooth scroll jumping
+  // Smooth scroll jump on item click
   items.forEach((item) => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
       const targetId = item.getAttribute('href');
       const targetSec = document.querySelector(targetId);
       if (targetSec) {
-        const headerOffset = 70;
-        const elementPosition = targetSec.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
+        targetSec.scrollIntoView({ behavior: 'smooth' });
       }
       wrapper.classList.remove('is-open');
     });
   });
 
-  // Close drawer when clicking outside
+  // Close drawer if clicking outside
   document.addEventListener('click', (e) => {
     if (!wrapper.contains(e.target)) {
       wrapper.classList.remove('is-open');
     }
   });
+
+  // Track active section and highlight corresponding side nav item
+  window.addEventListener('scroll', () => {
+    let currentId = '';
+    const scrollPos = window.pageYOffset + 140;
+
+    sections.forEach((sec) => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+
+    items.forEach((item) => {
+      item.classList.remove('active-slide');
+      if (item.getAttribute('href') === `#${currentId}`) {
+        item.classList.add('active-slide');
+      }
+    });
+  }, { passive: true });
 }
