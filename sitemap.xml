@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://anisahmed.in/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://anisahmed.in/profile.jpg</image:loc>
+      <image:title>Anis Ahmed - Senior DevOps Engineer</image:title>
+      <image:caption>Anis Ahmed, Senior DevOps Engineer specializing in Google Cloud Platform (GCP), AWS, Kubernetes, Terraform, and DevSecOps.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://anisahmed.in/og-image.png</image:loc>
+      <image:title>Anis Ahmed Portfolio Social Preview</image:title>
+      <image:caption>Anis Ahmed - Cloud Platform &amp; DevOps Engineering Portfolio</image:caption>
+    </image:image>
+  </url>
+</urlset>
+
