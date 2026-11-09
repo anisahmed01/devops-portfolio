@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initPipelineConsole();
   initMacTerminal();
   initVisitorAnalytics();
+  initSideNavNavigator();
 });
 
 // ==========================================
@@ -921,4 +922,65 @@ function initVisitorAnalytics() {
     portraitCapsule.addEventListener('contextmenu', (e) => e.preventDefault());
     portraitCapsule.addEventListener('dragstart', (e) => e.preventDefault());
   }
+}
+
+// ==========================================
+// 6. FLOATING RIGHT-SIDE HOVER SECTION JUMPER
+// ==========================================
+function initSideNavNavigator() {
+  const wrapper = document.querySelector('.side-nav-wrapper');
+  const trigger = document.querySelector('.side-nav-trigger');
+  const items = document.querySelectorAll('.side-nav-item');
+  const sections = document.querySelectorAll('section[id]');
+
+  if (!wrapper) return;
+
+  // Click on trigger (supports mobile touch)
+  if (trigger) {
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      wrapper.classList.toggle('is-open');
+    });
+  }
+
+  // Smooth scroll jump on item click
+  items.forEach((item) => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = item.getAttribute('href');
+      const targetSec = document.querySelector(targetId);
+      if (targetSec) {
+        targetSec.scrollIntoView({ behavior: 'smooth' });
+      }
+      wrapper.classList.remove('is-open');
+    });
+  });
+
+  // Close drawer if clicking outside
+  document.addEventListener('click', (e) => {
+    if (!wrapper.contains(e.target)) {
+      wrapper.classList.remove('is-open');
+    }
+  });
+
+  // Track active section and highlight corresponding side nav item
+  window.addEventListener('scroll', () => {
+    let currentId = '';
+    const scrollPos = window.pageYOffset + 140;
+
+    sections.forEach((sec) => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+
+    items.forEach((item) => {
+      item.classList.remove('active-slide');
+      if (item.getAttribute('href') === `#${currentId}`) {
+        item.classList.add('active-slide');
+      }
+    });
+  }, { passive: true });
 }

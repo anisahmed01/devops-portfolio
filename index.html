@@ -1480,8 +1480,185 @@ h1 {
     justify-content: center;
   }
 }
+
+/* ==========================================
+   FLOATING RIGHT-SIDE HAMBURGER SECTION NAV (HOVER TRIGGERED)
+   ========================================== */
+.side-nav-wrapper {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.side-nav-trigger {
+  width: 44px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(16, 24, 42, 0.88);
+  border: 1px solid rgba(84, 200, 255, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(84, 200, 255, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  padding: 0;
+  user-select: none;
+}
+
+.side-nav-trigger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--blue);
+  border-radius: 2px;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 6px rgba(84, 200, 255, 0.5);
+}
+
+.side-nav-trigger span:nth-child(2) {
+  width: 14px;
+  background: var(--emerald);
+  box-shadow: 0 0 6px rgba(87, 230, 165, 0.5);
+}
+
+.side-nav-trigger span:nth-child(3) {
+  width: 18px;
+  background: var(--purple);
+  box-shadow: 0 0 6px rgba(167, 139, 250, 0.5);
+}
+
+.side-nav-wrapper:hover .side-nav-trigger,
+.side-nav-wrapper.is-open .side-nav-trigger {
+  border-color: var(--blue);
+  box-shadow: 0 0 24px rgba(84, 200, 255, 0.45);
+  transform: scale(1.05);
+}
+
+.side-nav-wrapper:hover .side-nav-trigger span:nth-child(2),
+.side-nav-wrapper.is-open .side-nav-trigger span:nth-child(2) {
+  width: 20px;
+}
+
+.side-nav-drawer {
+  position: absolute;
+  right: 54px;
+  top: 50%;
+  transform: translateY(-50%) translateX(16px);
+  width: 230px;
+  padding: 14px 12px;
+  border-radius: 16px;
+  background: rgba(10, 16, 32, 0.94);
+  border: 1px solid rgba(84, 200, 255, 0.35);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.65), 0 0 25px rgba(84, 200, 255, 0.18);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Hover activates the drawer seamlessly */
+.side-nav-wrapper:hover .side-nav-drawer,
+.side-nav-wrapper.is-open .side-nav-drawer {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(-50%) translateX(0);
+}
+
+.side-nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 7px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--blue);
+  letter-spacing: 1px;
+}
+
+.side-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 9px;
+  border-radius: 7px;
+  color: #cbd5e1;
+  font-size: 0.76rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.side-nav-item:hover {
+  background: rgba(84, 200, 255, 0.12);
+  color: #ffffff;
+  transform: translateX(-3px);
+}
+
+.side-nav-item.active-slide {
+  background: rgba(87, 230, 165, 0.12);
+  color: var(--emerald);
+  font-weight: 700;
+  border: 1px solid rgba(87, 230, 165, 0.3);
+}
+
+.side-nav-num {
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.68rem;
+  color: var(--purple);
+  font-weight: 700;
+}
+
+.side-nav-item.active-slide .side-nav-num {
+  color: var(--emerald);
+}
+
+.terminal-hint {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-family: 'Fira Code', ui-monospace, monospace;
+  margin: 6px 0 10px;
+  line-height: 1.45;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--blue);
+}
+
+@media (max-width: 768px) {
+  .side-nav-wrapper {
+    right: 10px;
+  }
+  .side-nav-trigger {
+    width: 38px;
+    height: 42px;
+  }
+  .side-nav-drawer {
+    right: 46px;
+    width: 195px;
+    padding: 10px 8px;
+  }
+}
 </style>
-  <link rel="stylesheet" href="styles.css?v=3.8.0">
+  <link rel="stylesheet" href="styles.css?v=3.9.0">
 </head>
 
 <body>
@@ -1556,8 +1733,8 @@ h1 {
         <div class="portrait-glow"></div>
         <div class="portrait-frame" oncontextmenu="return false;">
           <picture>
-            <source srcset="profile.webp?v=3.8.0" type="image/webp">
-            <img src="profile.jpg?v=3.8.0" alt="Anis Ahmed - Senior DevOps Engineer" class="portrait-img" width="240" height="340" loading="eager" fetchpriority="high" draggable="false" oncontextmenu="return false;">
+            <source srcset="profile.webp?v=3.9.0" type="image/webp">
+            <img src="profile.jpg?v=3.9.0" alt="Anis Ahmed - Senior DevOps Engineer" class="portrait-img" width="240" height="340" loading="eager" fetchpriority="high" draggable="false" oncontextmenu="return false;">
           </picture>
           <div class="portrait-overlay-glow"></div>
           <div class="portrait-shield" aria-hidden="true" title="Anis Ahmed"></div>
@@ -1575,7 +1752,7 @@ h1 {
             <span></span><span></span><span></span>
           </div>
           <span>anisahmed@cloud-control: ~ (bash)</span>
-          <span class="terminal-status">● live</span>
+          <span class="terminal-status">● bash 5.2 (linux-x86_64) &bull; AI online</span>
         </div>
 
         <div class="terminal-body" id="terminalOutputBody">
@@ -1592,7 +1769,7 @@ h1 {
 
           <div class="terminal-input-row">
             <span class="prompt">$</span>
-            <input type="text" id="liveTerminalInput" class="terminal-input" placeholder="type 'help' & press Enter..." autocomplete="off" spellcheck="false">
+            <input type="text" id="liveTerminalInput" class="terminal-input" placeholder="run 'ls', 'pwd', 'cat mission.txt', or ask AI..." autocomplete="off" spellcheck="false">
           </div>
         </div>
 
@@ -1600,6 +1777,8 @@ h1 {
           <div class="terminal-quick-chips">
             <span style="color:var(--muted); font-size:0.68rem; margin-right:4px;">Quick Run:</span>
             <button class="terminal-chip" data-cmd="help">help</button>
+            <button class="terminal-chip" data-cmd="ls -la">ls -la</button>
+            <button class="terminal-chip" data-cmd="pwd">pwd</button>
             <button class="terminal-chip" data-cmd="cat mission.txt">cat mission.txt</button>
             <button class="terminal-chip" data-cmd="gcloud container clusters list">gcloud clusters</button>
             <button class="terminal-chip" data-cmd="kubectl get nodes">kubectl get nodes</button>
@@ -2080,6 +2259,29 @@ h1 {
       </div>
     </section>
 
+    <!-- Floating Right-Side Hamburger Section Navigator (Hover Triggered) -->
+  <div class="side-nav-wrapper" aria-label="Quick Section Navigation">
+    <button class="side-nav-trigger" type="button" aria-label="Toggle Section Menu" title="Quick Slide Navigator (Hover)">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="side-nav-drawer">
+      <div class="side-nav-header">
+        <span>QUICK SLIDE JUMP</span>
+        <span style="color:var(--emerald);">● LIVE</span>
+      </div>
+      <a class="side-nav-item" href="#home"><span class="side-nav-num">00</span> Home</a>
+      <a class="side-nav-item" href="#about"><span class="side-nav-num">01</span> About Me</a>
+      <a class="side-nav-item" href="#pipeline"><span class="side-nav-num">02</span> CI/CD Automation</a>
+      <a class="side-nav-item" href="#devsecops"><span class="side-nav-num">03</span> Zero-Trust DevSecOps</a>
+      <a class="side-nav-item" href="#skills"><span class="side-nav-num">04</span> Technical Toolkit</a>
+      <a class="side-nav-item" href="#projects"><span class="side-nav-num">05</span> Flagship Projects</a>
+      <a class="side-nav-item" href="#experience"><span class="side-nav-num">06</span> Experience Track</a>
+      <a class="side-nav-item" href="#contact"><span class="side-nav-num">07</span> Contact &amp; Telemetry</a>
+    </div>
+  </div>
+
   </main>
 
   <!-- Footer -->
@@ -2104,6 +2306,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initPipelineConsole();
   initMacTerminal();
   initVisitorAnalytics();
+  initSideNavNavigator();
 });
 
 // ==========================================
@@ -3018,6 +3221,68 @@ function initVisitorAnalytics() {
   }
 }
   </script>
-  <script src="app.js?v=3.8.0"></script>
+  <script src="app.js?v=3.9.0">
+
+// ==========================================
+// 6. FLOATING RIGHT-SIDE HOVER SECTION JUMPER
+// ==========================================
+function initSideNavNavigator() {
+  const wrapper = document.querySelector('.side-nav-wrapper');
+  const trigger = document.querySelector('.side-nav-trigger');
+  const items = document.querySelectorAll('.side-nav-item');
+  const sections = document.querySelectorAll('section[id]');
+
+  if (!wrapper) return;
+
+  // Click on trigger (supports mobile touch)
+  if (trigger) {
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      wrapper.classList.toggle('is-open');
+    });
+  }
+
+  // Smooth scroll jump on item click
+  items.forEach((item) => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = item.getAttribute('href');
+      const targetSec = document.querySelector(targetId);
+      if (targetSec) {
+        targetSec.scrollIntoView({ behavior: 'smooth' });
+      }
+      wrapper.classList.remove('is-open');
+    });
+  });
+
+  // Close drawer if clicking outside
+  document.addEventListener('click', (e) => {
+    if (!wrapper.contains(e.target)) {
+      wrapper.classList.remove('is-open');
+    }
+  });
+
+  // Track active section and highlight corresponding side nav item
+  window.addEventListener('scroll', () => {
+    let currentId = '';
+    const scrollPos = window.pageYOffset + 140;
+
+    sections.forEach((sec) => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+
+    items.forEach((item) => {
+      item.classList.remove('active-slide');
+      if (item.getAttribute('href') === `#${currentId}`) {
+        item.classList.add('active-slide');
+      }
+    });
+  }, { passive: true });
+}
+  </script>
 </body>
 </html>
