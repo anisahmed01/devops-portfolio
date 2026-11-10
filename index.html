@@ -45,7 +45,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;850&display=swap" rel="stylesheet">
 
   <style>
-:root {
+﻿:root {
   color-scheme: dark;
   --bg: #080d1b;
   --panel: #10182a;
@@ -109,7 +109,20 @@ a {
 .delay-3 { transition-delay: 300ms; }
 
 /* ==========================================
-   NAVBAR
+   IPHONE LIQUID GLASS & FROSTED SYSTEM
+   ========================================== */
+:root {
+  --glass-bg: rgba(14, 22, 44, 0.65);
+  --glass-bg-hover: rgba(20, 32, 62, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-border-glow: rgba(84, 200, 255, 0.45);
+  --glass-highlight: inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
+  --glass-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.6), 0 0 24px rgba(84, 200, 255, 0.12);
+  --glass-blur: blur(24px) saturate(190%);
+}
+
+/* ==========================================
+   NAVBAR (FROSTED GLASS ISLAND)
    ========================================== */
 .navbar {
   position: sticky;
@@ -118,11 +131,13 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px max(6%, calc((100% - 1180px) / 2));
-  background: rgba(8, 13, 27, 0.88);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  padding: 14px max(6%, calc((100% - 1180px) / 2));
+  background: rgba(8, 13, 27, 0.72);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  transition: all 0.3s ease;
 }
 
 .brand {
@@ -138,21 +153,24 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 3px 9px;
-  border: 1px solid rgba(84, 200, 255, 0.35);
-  border-radius: 8px;
-  background: linear-gradient(135deg, rgba(84, 200, 255, 0.12), rgba(16, 24, 42, 0.8));
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(84, 200, 255, 0.18) 0%, rgba(14, 22, 44, 0.75) 100%);
   color: var(--blue);
   font-family: 'Inter', sans-serif;
   font-weight: 850;
   letter-spacing: -0.5px;
-  transition: all 0.25s ease-in-out;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 12px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .brand:hover .brand-box {
   border-color: var(--blue);
-  box-shadow: 0 0 16px rgba(84, 200, 255, 0.45);
-  transform: translateY(-1px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), 0 0 20px rgba(84, 200, 255, 0.5);
+  transform: translateY(-1px) scale(1.03);
 }
 
 .brand-dot {
@@ -162,35 +180,97 @@ a {
   line-height: 1;
 }
 
-nav {
+/* iOS Dynamic Island Capsule Navigation */
+nav.glass-nav-container {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 4px;
+  padding: 4px 6px;
+  background: rgba(14, 22, 44, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4), 0 8px 24px -4px rgba(0, 0, 0, 0.45);
+}
+
+/* Sliding Frosted Glass Pill */
+.nav-glass-slider {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  height: calc(100% - 8px);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(84, 200, 255, 0.22) 0%, rgba(167, 139, 250, 0.18) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.45), 0 4px 16px rgba(84, 200, 255, 0.28), 0 0 16px rgba(167, 139, 250, 0.18);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  pointer-events: none;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), width 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  opacity: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Glistening Specular Sheen Beam */
+.nav-glass-slider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.45) 50%, transparent 80%);
+  transform: translateX(-100%);
+  animation: navGlisten 3.5s infinite ease-in-out;
+}
+
+@keyframes navGlisten {
+  0%, 65% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.nav-glass-slider.glass-pulse {
+  animation: glassPulse 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes glassPulse {
+  0% { transform: scale(0.96); box-shadow: 0 0 0 rgba(84, 200, 255, 0); }
+  50% { transform: scale(1.04); box-shadow: 0 0 24px rgba(84, 200, 255, 0.55); }
+  100% { transform: scale(1); }
+}
+
+nav a {
+  position: relative;
+  z-index: 2;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 550;
   color: var(--muted);
-  font-size: 0.88rem;
-  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
 }
 
-nav a:hover {
-  color: var(--blue);
-}
-
+nav a:hover,
 nav a.active-link {
-  color: var(--blue);
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(84, 200, 255, 0.6);
 }
 
 .nav-contact {
-  padding: 8px 15px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  transition: all 0.2s;
+  background: linear-gradient(135deg, rgba(84, 200, 255, 0.16), rgba(167, 139, 250, 0.12));
+  border: 1px solid rgba(84, 200, 255, 0.35);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  color: var(--blue) !important;
+  font-weight: 650 !important;
+  transition: all 0.25s ease;
 }
 
 .nav-contact:hover {
+  background: linear-gradient(135deg, rgba(84, 200, 255, 0.28), rgba(167, 139, 250, 0.22));
   border-color: var(--blue);
-  color: var(--blue);
-  transform: translateY(-1px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), 0 0 20px rgba(84, 200, 255, 0.4);
 }
 
 /* ==========================================
@@ -1484,37 +1564,70 @@ h1 {
 }
 
 /* ==========================================
-   FLOATING RIGHT-SIDE HAMBURGER SECTION NAV (HOVER TRIGGERED)
+   FLOATING RIGHT-SIDE HAMBURGER (IPHONE FROSTED GLASS & BUTTERY JUMP)
    ========================================== */
 .side-nav-wrapper {
   position: fixed;
-  right: 18px;
+  right: 20px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  padding: 12px 0;
 }
 
 .side-nav-trigger {
-  width: 44px;
-  height: 48px;
-  border-radius: 14px;
-  background: rgba(16, 24, 42, 0.88);
-  border: 1px solid rgba(84, 200, 255, 0.35);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(84, 200, 255, 0.2);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  width: 46px;
+  height: 50px;
+  border-radius: 16px;
+  background: rgba(14, 22, 44, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(84, 200, 255, 0.2);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 5px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 0;
   user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Specular curved reflection */
+.side-nav-trigger::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.05) 45%, transparent 65%);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  opacity: 0.75;
+}
+
+/* Luminous gloss shimmer sweep */
+.side-nav-trigger::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: linear-gradient(60deg, transparent 40%, rgba(255, 255, 255, 0.45) 50%, transparent 60%);
+  transform: rotate(25deg) translateY(-100%);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.side-nav-wrapper:hover .side-nav-trigger::after,
+.side-nav-wrapper.is-open .side-nav-trigger::after {
+  transform: rotate(25deg) translateY(100%);
 }
 
 .side-nav-trigger span {
@@ -1524,26 +1637,28 @@ h1 {
   background: var(--blue);
   border-radius: 2px;
   transition: all 0.25s ease;
-  box-shadow: 0 0 6px rgba(84, 200, 255, 0.5);
+  box-shadow: 0 0 8px rgba(84, 200, 255, 0.6);
+  position: relative;
+  z-index: 2;
 }
 
 .side-nav-trigger span:nth-child(2) {
   width: 14px;
   background: var(--emerald);
-  box-shadow: 0 0 6px rgba(87, 230, 165, 0.5);
+  box-shadow: 0 0 8px rgba(87, 230, 165, 0.6);
 }
 
 .side-nav-trigger span:nth-child(3) {
   width: 18px;
   background: var(--purple);
-  box-shadow: 0 0 6px rgba(167, 139, 250, 0.5);
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.6);
 }
 
 .side-nav-wrapper:hover .side-nav-trigger,
 .side-nav-wrapper.is-open .side-nav-trigger {
-  border-color: var(--blue);
-  box-shadow: 0 0 24px rgba(84, 200, 255, 0.45);
-  transform: scale(1.05);
+  border-color: rgba(84, 200, 255, 0.6);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.55), 0 0 28px rgba(84, 200, 255, 0.45);
+  transform: scale(1.06);
 }
 
 .side-nav-wrapper:hover .side-nav-trigger span:nth-child(2),
@@ -1553,27 +1668,36 @@ h1 {
 
 .side-nav-drawer {
   position: absolute;
-  right: 54px;
+  right: 58px;
   top: 50%;
   transform: translateY(-50%) translateX(16px);
-  width: 230px;
-  padding: 14px 12px;
-  border-radius: 16px;
-  background: rgba(10, 16, 32, 0.94);
-  border: 1px solid rgba(84, 200, 255, 0.35);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.65), 0 0 25px rgba(84, 200, 255, 0.18);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  width: 236px;
+  padding: 16px 14px;
+  border-radius: 20px;
+  background: rgba(10, 16, 36, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.38), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.45), 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 32px rgba(84, 200, 255, 0.18);
+  backdrop-filter: blur(28px) saturate(210%);
+  -webkit-backdrop-filter: blur(28px) saturate(210%);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
-/* Hover activates the drawer seamlessly */
+/* Hover bridge to prevent losing hover when moving mouse */
+.side-nav-drawer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -24px;
+  width: 28px;
+  height: 100%;
+}
+
 .side-nav-wrapper:hover .side-nav-drawer,
 .side-nav-wrapper.is-open .side-nav-drawer {
   opacity: 1;
@@ -1586,9 +1710,9 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 7px;
-  margin-bottom: 5px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 8px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   font-family: 'Fira Code', ui-monospace, monospace;
   font-size: 0.65rem;
   font-weight: 700;
@@ -1599,27 +1723,38 @@ h1 {
 .side-nav-item {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 6px 9px;
-  border-radius: 7px;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 12px;
   color: #cbd5e1;
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   font-weight: 500;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+  position: relative;
 }
 
 .side-nav-item:hover {
-  background: rgba(84, 200, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 12px rgba(0, 0, 0, 0.3);
   transform: translateX(-3px);
 }
 
 .side-nav-item.active-slide {
-  background: rgba(87, 230, 165, 0.12);
-  color: var(--emerald);
-  font-weight: 700;
-  border: 1px solid rgba(87, 230, 165, 0.3);
+  background: linear-gradient(135deg, rgba(84, 200, 255, 0.2) 0%, rgba(167, 139, 250, 0.16) 100%);
+  color: var(--blue);
+  font-weight: 650;
+  border-color: rgba(84, 200, 255, 0.45);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.38), 0 0 18px rgba(84, 200, 255, 0.28);
+}
+
+.side-nav-item.glass-press {
+  transform: scale(0.96) translateX(-4px);
+  background: linear-gradient(135deg, rgba(84, 200, 255, 0.32), rgba(167, 139, 250, 0.28));
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6), 0 0 24px rgba(84, 200, 255, 0.55);
 }
 
 .side-nav-num {
@@ -1630,7 +1765,7 @@ h1 {
 }
 
 .side-nav-item.active-slide .side-nav-num {
-  color: var(--emerald);
+  color: var(--blue);
 }
 
 .terminal-hint {
@@ -1736,13 +1871,14 @@ h1 {
       <span class="brand-box">AA</span><span class="brand-dot">.</span>
     </a>
 
-    <nav aria-label="Main navigation">
-      <a href="#about">About</a>
-      <a href="#pipeline">Pipeline</a>
-      <a href="#devsecops">DevSecOps</a>
-      <a href="#skills">Skills</a>
-      <a href="#projects">Projects</a>
-      <a href="#experience">Experience</a>
+    <nav aria-label="Main navigation" class="glass-nav-container">
+      <div class="nav-glass-slider" aria-hidden="true"></div>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#pipeline" class="nav-link">Pipeline</a>
+      <a href="#devsecops" class="nav-link">DevSecOps</a>
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#experience" class="nav-link">Experience</a>
       <a class="nav-contact" href="#contact">Contact ↗</a>
     </nav>
   </header>
@@ -2350,14 +2486,15 @@ h1 {
 
   <!-- Interactive JavaScript Engine -->
   <script>
-// ==========================================
-// Anis Ahmed — DevOps Portfolio Interactive Engine
+﻿// ==========================================
+// Anis Ahmed ΓÇö DevOps Portfolio Interactive Engine
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
   initIntroSplash();
   initScrollObserver();
   initNavScrollTracker();
+  initNavGlassSlider();
   initPipelineConsole();
   initMacTerminal();
   initVisitorAnalytics();
@@ -2365,7 +2502,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// 0. CINEMATIC INTRO SPLASH — PIECE ASSEMBLY
+// 0. CINEMATIC INTRO SPLASH DISSOLVE
 // ==========================================
 function initIntroSplash() {
   /* Prevent running multiple times across script tags or re-entry */
@@ -3275,6 +3412,167 @@ function initVisitorAnalytics() {
     portraitCapsule.addEventListener('dragstart', (e) => e.preventDefault());
   }
 }
+
+// ==========================================
+// 6. FLOATING RIGHT-SIDE HOVER SECTION JUMPER
+// ==========================================
+// ==========================================
+// 6. IPHONE LIQUID GLASS SLIDING PILL (TOP NAVBAR)
+// ==========================================
+function initNavGlassSlider() {
+  const navContainer = document.querySelector('.glass-nav-container');
+  const slider = document.querySelector('.nav-glass-slider');
+  const links = document.querySelectorAll('.glass-nav-container a');
+  const sections = document.querySelectorAll('section[id]');
+
+  if (!navContainer || !slider || links.length === 0) return;
+
+  function moveSliderTo(targetLink, isClick = false) {
+    if (!targetLink) {
+      slider.style.opacity = '0';
+      return;
+    }
+    const left = targetLink.offsetLeft;
+    const width = targetLink.offsetWidth;
+    slider.style.transform = `translateX(${left}px)`;
+    slider.style.width = `${width}px`;
+    slider.style.opacity = '1';
+
+    if (isClick) {
+      slider.classList.add('glass-pulse');
+      setTimeout(() => slider.classList.remove('glass-pulse'), 400);
+    }
+  }
+
+  function updateInitialSlider() {
+    const currentActive = document.querySelector('.glass-nav-container a.active-link') || links[0];
+    if (currentActive) moveSliderTo(currentActive);
+  }
+  setTimeout(updateInitialSlider, 150);
+
+  // Hover preview: glossy slider glides to hovered item
+  links.forEach((link) => {
+    link.addEventListener('mouseenter', () => moveSliderTo(link));
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href');
+      const targetSec = document.querySelector(targetId);
+      links.forEach(l => l.classList.remove('active-link'));
+      link.classList.add('active-link');
+      moveSliderTo(link, true);
+
+      if (targetSec) {
+        const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
+        const targetOffset = targetSec.getBoundingClientRect().top + window.pageYOffset - navHeight + 8;
+        window.scrollTo({ top: targetOffset, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // When mouse leaves navbar, slider smoothly returns to current active section
+  navContainer.addEventListener('mouseleave', () => {
+    const currentActive = document.querySelector('.glass-nav-container a.active-link') || links[0];
+    moveSliderTo(currentActive);
+  });
+
+  // Scroll listener smoothly glides slider to currently viewed section
+  window.addEventListener('scroll', () => {
+    let currentId = '';
+    const scrollPos = window.pageYOffset + 140;
+
+    sections.forEach((sec) => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+
+    if (currentId) {
+      links.forEach((link) => {
+        if (link.getAttribute('href') === `#${currentId}`) {
+          if (!link.classList.contains('active-link')) {
+            links.forEach(l => l.classList.remove('active-link'));
+            link.classList.add('active-link');
+            moveSliderTo(link);
+          }
+        }
+      });
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', updateInitialSlider);
+}
+
+// ==========================================
+// 7. FLOATING RIGHT-SIDE HAMBURGER (BUTTERY JUMP & TACTILE GLASS)
+// ==========================================
+function initSideNavNavigator() {
+  const wrapper = document.querySelector('.side-nav-wrapper');
+  const trigger = document.querySelector('.side-nav-trigger');
+  const items = document.querySelectorAll('.side-nav-item');
+  const sections = document.querySelectorAll('section[id]');
+
+  if (!wrapper) return;
+
+  // Click on trigger (supports mobile touch)
+  if (trigger) {
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      wrapper.classList.toggle('is-open');
+    });
+  }
+
+  // Smooth buttery scroll jump on item click
+  items.forEach((item) => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = item.getAttribute('href');
+      const targetSec = document.querySelector(targetId);
+
+      // Tactile glass press feedback
+      item.classList.add('glass-press');
+      setTimeout(() => item.classList.remove('glass-press'), 300);
+
+      if (targetSec) {
+        const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
+        const targetOffset = targetSec.getBoundingClientRect().top + window.pageYOffset - navHeight + 8;
+        window.scrollTo({ top: targetOffset, behavior: 'smooth' });
+      }
+
+      setTimeout(() => wrapper.classList.remove('is-open'), 200);
+    });
+  });
+
+  // Close drawer if clicking outside
+  document.addEventListener('click', (e) => {
+    if (!wrapper.contains(e.target)) {
+      wrapper.classList.remove('is-open');
+    }
+  });
+
+  // Track active section and highlight corresponding side nav item
+  window.addEventListener('scroll', () => {
+    let currentId = '';
+    const scrollPos = window.pageYOffset + 140;
+
+    sections.forEach((sec) => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+
+    items.forEach((item) => {
+      item.classList.remove('active-slide');
+      if (item.getAttribute('href') === `#${currentId}`) {
+        item.classList.add('active-slide');
+      }
+    });
+  }, { passive: true });
+}
+
   </script>
   <script src="app.js?v=3.9.0">
 

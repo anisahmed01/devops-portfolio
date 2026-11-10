@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initIntroSplash();
   initScrollObserver();
   initNavScrollTracker();
+  initNavGlassSlider();
   initPipelineConsole();
   initMacTerminal();
   initVisitorAnalytics();
@@ -927,6 +928,97 @@ function initVisitorAnalytics() {
 // ==========================================
 // 6. FLOATING RIGHT-SIDE HOVER SECTION JUMPER
 // ==========================================
+// ==========================================
+// 6. IPHONE LIQUID GLASS SLIDING PILL (TOP NAVBAR)
+// ==========================================
+function initNavGlassSlider() {
+  const navContainer = document.querySelector('.glass-nav-container');
+  const slider = document.querySelector('.nav-glass-slider');
+  const links = document.querySelectorAll('.glass-nav-container a');
+  const sections = document.querySelectorAll('section[id]');
+
+  if (!navContainer || !slider || links.length === 0) return;
+
+  function moveSliderTo(targetLink, isClick = false) {
+    if (!targetLink) {
+      slider.style.opacity = '0';
+      return;
+    }
+    const left = targetLink.offsetLeft;
+    const width = targetLink.offsetWidth;
+    slider.style.transform = `translateX(${left}px)`;
+    slider.style.width = `${width}px`;
+    slider.style.opacity = '1';
+
+    if (isClick) {
+      slider.classList.add('glass-pulse');
+      setTimeout(() => slider.classList.remove('glass-pulse'), 400);
+    }
+  }
+
+  function updateInitialSlider() {
+    const currentActive = document.querySelector('.glass-nav-container a.active-link') || links[0];
+    if (currentActive) moveSliderTo(currentActive);
+  }
+  setTimeout(updateInitialSlider, 150);
+
+  // Hover preview: glossy slider glides to hovered item
+  links.forEach((link) => {
+    link.addEventListener('mouseenter', () => moveSliderTo(link));
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href');
+      const targetSec = document.querySelector(targetId);
+      links.forEach(l => l.classList.remove('active-link'));
+      link.classList.add('active-link');
+      moveSliderTo(link, true);
+
+      if (targetSec) {
+        const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
+        const targetOffset = targetSec.getBoundingClientRect().top + window.pageYOffset - navHeight + 8;
+        window.scrollTo({ top: targetOffset, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // When mouse leaves navbar, slider smoothly returns to current active section
+  navContainer.addEventListener('mouseleave', () => {
+    const currentActive = document.querySelector('.glass-nav-container a.active-link') || links[0];
+    moveSliderTo(currentActive);
+  });
+
+  // Scroll listener smoothly glides slider to currently viewed section
+  window.addEventListener('scroll', () => {
+    let currentId = '';
+    const scrollPos = window.pageYOffset + 140;
+
+    sections.forEach((sec) => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+
+    if (currentId) {
+      links.forEach((link) => {
+        if (link.getAttribute('href') === `#${currentId}`) {
+          if (!link.classList.contains('active-link')) {
+            links.forEach(l => l.classList.remove('active-link'));
+            link.classList.add('active-link');
+            moveSliderTo(link);
+          }
+        }
+      });
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', updateInitialSlider);
+}
+
+// ==========================================
+// 7. FLOATING RIGHT-SIDE HAMBURGER (BUTTERY JUMP & TACTILE GLASS)
+// ==========================================
 function initSideNavNavigator() {
   const wrapper = document.querySelector('.side-nav-wrapper');
   const trigger = document.querySelector('.side-nav-trigger');
@@ -943,16 +1035,24 @@ function initSideNavNavigator() {
     });
   }
 
-  // Smooth scroll jump on item click
+  // Smooth buttery scroll jump on item click
   items.forEach((item) => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
       const targetId = item.getAttribute('href');
       const targetSec = document.querySelector(targetId);
+
+      // Tactile glass press feedback
+      item.classList.add('glass-press');
+      setTimeout(() => item.classList.remove('glass-press'), 300);
+
       if (targetSec) {
-        targetSec.scrollIntoView({ behavior: 'smooth' });
+        const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
+        const targetOffset = targetSec.getBoundingClientRect().top + window.pageYOffset - navHeight + 8;
+        window.scrollTo({ top: targetOffset, behavior: 'smooth' });
       }
-      wrapper.classList.remove('is-open');
+
+      setTimeout(() => wrapper.classList.remove('is-open'), 200);
     });
   });
 
