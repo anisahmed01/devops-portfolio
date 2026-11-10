@@ -5,12 +5,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   initIntroSplash();
   initScrollObserver();
-  initNavScrollTracker();
-  initNavGlassSlider();
+  initMasterUnifiedNavigator();
   initPipelineConsole();
   initMacTerminal();
   initVisitorAnalytics();
-  initSideNavNavigator();
 });
 
 // ==========================================
@@ -184,31 +182,6 @@ function initScrollObserver() {
 // ==========================================
 // 2. ACTIVE NAVBAR SCROLL TRACKER
 // ==========================================
-function initNavScrollTracker() {
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.navbar nav a:not(.nav-contact)');
-
-  window.addEventListener('scroll', () => {
-    let currentSection = '';
-    const scrollPos = window.pageYOffset + 120;
-
-    sections.forEach((sec) => {
-      const top = sec.offsetTop;
-      const height = sec.offsetHeight;
-      if (scrollPos >= top && scrollPos < top + height) {
-        currentSection = sec.getAttribute('id');
-      }
-    });
-
-    navLinks.forEach((link) => {
-      link.classList.remove('active-link');
-      if (link.getAttribute('href') === `#${currentSection}`) {
-        link.classList.add('active-link');
-      }
-    });
-  }, { passive: true });
-}
-
 // ==========================================
 // 3. INTERACTIVE CI/CD PIPELINE CONSOLE
 // ==========================================
@@ -929,215 +902,229 @@ function initVisitorAnalytics() {
 // 6. FLOATING RIGHT-SIDE HOVER SECTION JUMPER
 // ==========================================
 // ==========================================
-// 6. IPHONE LIQUID GLASS SLIDING PILL (TOP NAVBAR)
+// 6. MASTER UNIFIED NAVIGATION ENGINE (PERFECT SYNCHRONIZATION)
 // ==========================================
-function initNavGlassSlider() {
+function initMasterUnifiedNavigator() {
   const navContainer = document.querySelector('.glass-nav-container');
   const slider = document.querySelector('.nav-glass-slider');
-  const links = document.querySelectorAll('.glass-nav-container a');
-  const sections = document.querySelectorAll('section[id]');
+  const headerLinks = document.querySelectorAll('.glass-nav-container a');
   const homeBrand = document.querySelector('.brand.brand-home');
+  const sideWrapper = document.querySelector('.side-nav-wrapper');
+  const sideTrigger = document.querySelector('.side-nav-trigger');
+  const sideItems = document.querySelectorAll('.side-nav-item');
 
-  if (!navContainer || !slider || links.length === 0) return;
+  const SECTIONS = ['home', 'about', 'pipeline', 'devsecops', 'skills', 'projects', 'experience', 'contact'];
 
+  let currentActiveSection = 'home';
   let isNavClicking = false;
-  let clickTimeout = null;
+  let clickLockTimer = null;
 
-  function moveSliderTo(targetLink, isClick = false) {
-    if (!targetLink) {
-      slider.style.opacity = '0';
-      return;
-    }
+  // 1. Smooth Slider Mover (Never resets to 'About')
+  function moveSliderToLink(targetLink, isPulse = false) {
+    if (!slider || !targetLink) return;
     const left = targetLink.offsetLeft;
     const width = targetLink.offsetWidth;
     slider.style.transform = `translateX(${left}px)`;
     slider.style.width = `${width}px`;
     slider.style.opacity = '1';
 
-    if (isClick) {
+    if (isPulse) {
       slider.classList.add('glass-pulse');
-      setTimeout(() => slider.classList.remove('glass-pulse'), 400);
+      setTimeout(() => slider.classList.remove('glass-pulse'), 380);
     }
   }
 
-  // Handle Home Brand Click
+  // 2. Master Sync Function: Updates Header, Home Hut, and Hamburger together
+  function syncAllNavigators(sectionId, isUserClick = false) {
+    currentActiveSection = sectionId;
+
+    // A. Handle Home section
+    if (sectionId === 'home') {
+      if (homeBrand) homeBrand.classList.add('active-home');
+      headerLinks.forEach(link => link.classList.remove('active-link'));
+      if (slider) slider.style.opacity = '0';
+
+      sideItems.forEach(item => {
+        item.classList.toggle('active-slide', item.getAttribute('href') === '#home');
+      });
+      return;
+    }
+
+    // B. Handle Other Sections (about, pipeline, devsecops, etc.)
+    if (homeBrand) homeBrand.classList.remove('active-home');
+
+    // Sync Header Nav Link & Sliding Pill
+    let matchedLink = null;
+    headerLinks.forEach(link => {
+      const isMatch = (link.getAttribute('href') === `#${sectionId}`);
+      link.classList.toggle('active-link', isMatch);
+      if (isMatch) matchedLink = link;
+    });
+
+    if (matchedLink) {
+      moveSliderToLink(matchedLink, isUserClick);
+    }
+
+    // Sync Right Hamburger Drawer Items
+    sideItems.forEach(item => {
+      item.classList.toggle('active-slide', item.getAttribute('href') === `#${sectionId}`);
+    });
+  }
+
+  // 3. Smooth Buttery Section Jump Helper
+  function jumpToSection(targetId) {
+    const targetSec = document.getElementById(targetId.replace('#', ''));
+    if (!targetSec) return;
+
+    isNavClicking = true;
+    clearTimeout(clickLockTimer);
+    clickLockTimer = setTimeout(() => { isNavClicking = false; }, 850);
+
+    const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
+    const targetOffset = targetSec.getBoundingClientRect().top + window.pageYOffset - navHeight + 8;
+    window.scrollTo({ top: targetOffset, behavior: 'smooth' });
+  }
+
+  // 4. Header Links: Click & Hover Handlers
+  headerLinks.forEach((link) => {
+    // Hover Preview: slider glides smoothly to hovered item from wherever it currently is
+    link.addEventListener('mouseenter', () => {
+      if (!isNavClicking) moveSliderToLink(link, false);
+    });
+
+    // Click: smoothly glides slider to target link and scrolls
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const secId = link.getAttribute('href').replace('#', '');
+      syncAllNavigators(secId, true);
+      jumpToSection(secId);
+    });
+  });
+
+  // When mouse leaves top navbar container, return slider to actual active section
+  if (navContainer) {
+    navContainer.addEventListener('mouseleave', () => {
+      if (isNavClicking) return;
+      if (currentActiveSection === 'home') {
+        if (slider) slider.style.opacity = '0';
+      } else {
+        const activeLink = document.querySelector(`.glass-nav-container a[href="#${currentActiveSection}"]`);
+        if (activeLink) moveSliderToLink(activeLink, false);
+      }
+    });
+  }
+
+  // 5. Home Hut Logo: Click Handler
   if (homeBrand) {
     homeBrand.addEventListener('click', (e) => {
       e.preventDefault();
       isNavClicking = true;
-      clearTimeout(clickTimeout);
-      clickTimeout = setTimeout(() => { isNavClicking = false; }, 850);
+      clearTimeout(clickLockTimer);
+      clickLockTimer = setTimeout(() => { isNavClicking = false; }, 850);
 
-      homeBrand.classList.add('active-home');
-      links.forEach(l => l.classList.remove('active-link'));
-      slider.style.opacity = '0';
-
+      syncAllNavigators('home', true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
-  // Hover preview: glossy slider glides to hovered item
-  links.forEach((link) => {
-    link.addEventListener('mouseenter', () => {
-      if (!isNavClicking) moveSliderTo(link);
-    });
-
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      isNavClicking = true;
-      clearTimeout(clickTimeout);
-      clickTimeout = setTimeout(() => { isNavClicking = false; }, 850);
-
-      const targetId = link.getAttribute('href');
-      const targetSec = document.querySelector(targetId);
-
-      if (homeBrand) homeBrand.classList.remove('active-home');
-      links.forEach(l => l.classList.remove('active-link'));
-      link.classList.add('active-link');
-      moveSliderTo(link, true);
-
-      if (targetSec) {
-        const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
-        const targetOffset = targetSec.getBoundingClientRect().top + window.pageYOffset - navHeight + 8;
-        window.scrollTo({ top: targetOffset, behavior: 'smooth' });
-      }
-    });
-  });
-
-  // When mouse leaves navbar, slider smoothly returns to current active section
-  navContainer.addEventListener('mouseleave', () => {
-    if (isNavClicking) return;
-    const currentActive = document.querySelector('.glass-nav-container a.active-link');
-    if (currentActive) {
-      moveSliderTo(currentActive);
-    } else {
-      slider.style.opacity = '0';
-    }
-  });
-
-  // Scroll listener smoothly glides slider to currently viewed section and activates home hut
-  window.addEventListener('scroll', () => {
-    if (isNavClicking) return;
-
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-
-    // At top of page (Home section active)
-    if (scrollY < 260) {
-      if (homeBrand) homeBrand.classList.add('active-home');
-      links.forEach(l => l.classList.remove('active-link'));
-      slider.style.opacity = '0';
-      return;
-    }
-
-    if (homeBrand) homeBrand.classList.remove('active-home');
-
-    let currentId = '';
-    const scrollPos = scrollY + 140;
-
-    sections.forEach((sec) => {
-      const top = sec.offsetTop;
-      const height = sec.offsetHeight;
-      if (scrollPos >= top && scrollPos < top + height) {
-        currentId = sec.getAttribute('id');
-      }
-    });
-
-    if (currentId && currentId !== 'home') {
-      links.forEach((link) => {
-        if (link.getAttribute('href') === `#${currentId}`) {
-          if (!link.classList.contains('active-link')) {
-            links.forEach(l => l.classList.remove('active-link'));
-            link.classList.add('active-link');
-            moveSliderTo(link);
-          }
-        }
+  // 6. Right Hamburger Navigation: Trigger & Items
+  if (sideWrapper) {
+    // Mobile Touch / Click to toggle drawer
+    if (sideTrigger) {
+      sideTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sideWrapper.classList.toggle('is-open');
       });
     }
-  }, { passive: true });
 
-  // Initial check on load
-  setTimeout(() => {
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-    if (scrollY < 260) {
-      if (homeBrand) homeBrand.classList.add('active-home');
-      slider.style.opacity = '0';
-    } else {
-      const currentActive = document.querySelector('.glass-nav-container a.active-link');
-      if (currentActive) moveSliderTo(currentActive);
-    }
-  }, 160);
+    // Click on Hamburger Drawer Item
+    sideItems.forEach((item) => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const secId = item.getAttribute('href').replace('#', '');
 
-  window.addEventListener('resize', () => {
-    const currentActive = document.querySelector('.glass-nav-container a.active-link');
-    if (currentActive) moveSliderTo(currentActive);
-  });
-}
+        // Tactile glass press feedback
+        item.classList.add('glass-press');
+        setTimeout(() => item.classList.remove('glass-press'), 300);
 
-// ==========================================
-// 7. FLOATING RIGHT-SIDE HAMBURGER (BUTTERY JUMP & TACTILE GLASS)
-// ==========================================
-function initSideNavNavigator() {
-  const wrapper = document.querySelector('.side-nav-wrapper');
-  const trigger = document.querySelector('.side-nav-trigger');
-  const items = document.querySelectorAll('.side-nav-item');
-  const sections = document.querySelectorAll('section[id]');
+        // Immediately synchronize header + hamburger
+        syncAllNavigators(secId, true);
 
-  if (!wrapper) return;
+        // Buttery smooth jump
+        if (secId === 'home') {
+          isNavClicking = true;
+          clearTimeout(clickLockTimer);
+          clickLockTimer = setTimeout(() => { isNavClicking = false; }, 850);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          jumpToSection(secId);
+        }
 
-  // Click on trigger (supports mobile touch)
-  if (trigger) {
-    trigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      wrapper.classList.toggle('is-open');
+        setTimeout(() => sideWrapper.classList.remove('is-open'), 200);
+      });
+    });
+
+    // Close drawer when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!sideWrapper.contains(e.target)) {
+        sideWrapper.classList.remove('is-open');
+      }
     });
   }
 
-  // Smooth buttery scroll jump on item click
-  items.forEach((item) => {
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetId = item.getAttribute('href');
-      const targetSec = document.querySelector(targetId);
+  // 7. Robust Scroll Position Detection (Zero Gaps, Handles Dynamic Heights)
+  function detectActiveSection() {
+    if (isNavClicking) return;
 
-      // Tactile glass press feedback
-      item.classList.add('glass-press');
-      setTimeout(() => item.classList.remove('glass-press'), 300);
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
 
-      if (targetSec) {
-        const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
-        const targetOffset = targetSec.getBoundingClientRect().top + window.pageYOffset - navHeight + 8;
-        window.scrollTo({ top: targetOffset, behavior: 'smooth' });
+    // Top of page is Home
+    if (scrollY < 220) {
+      if (currentActiveSection !== 'home') syncAllNavigators('home');
+      return;
+    }
+
+    // Bottom of document is Contact
+    if ((window.innerHeight + scrollY) >= (document.documentElement.scrollHeight - 60)) {
+      if (currentActiveSection !== 'contact') syncAllNavigators('contact');
+      return;
+    }
+
+    const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
+    let foundSection = 'home';
+
+    // Check all sections using getBoundingClientRect
+    for (const id of SECTIONS) {
+      if (id === 'home') continue;
+      const el = document.getElementById(id);
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      // If top has passed under navbar and bottom is still visible
+      if (rect.top <= (navHeight + 110) && rect.bottom > (navHeight + 40)) {
+        foundSection = id;
       }
+    }
 
-      setTimeout(() => wrapper.classList.remove('is-open'), 200);
-    });
-  });
+    if (foundSection !== currentActiveSection) {
+      syncAllNavigators(foundSection, false);
+    }
+  }
 
-  // Close drawer if clicking outside
-  document.addEventListener('click', (e) => {
-    if (!wrapper.contains(e.target)) {
-      wrapper.classList.remove('is-open');
+  window.addEventListener('scroll', detectActiveSection, { passive: true });
+
+  // Initial Sync on Page Load
+  setTimeout(() => {
+    detectActiveSection();
+    if (currentActiveSection !== 'home') {
+      const activeLink = document.querySelector(`.glass-nav-container a[href="#${currentActiveSection}"]`);
+      if (activeLink) moveSliderToLink(activeLink, false);
+    }
+  }, 180);
+
+  window.addEventListener('resize', () => {
+    if (currentActiveSection !== 'home') {
+      const activeLink = document.querySelector(`.glass-nav-container a[href="#${currentActiveSection}"]`);
+      if (activeLink) moveSliderToLink(activeLink, false);
     }
   });
-
-  // Track active section and highlight corresponding side nav item
-  window.addEventListener('scroll', () => {
-    let currentId = '';
-    const scrollPos = window.pageYOffset + 140;
-
-    sections.forEach((sec) => {
-      const top = sec.offsetTop;
-      const height = sec.offsetHeight;
-      if (scrollPos >= top && scrollPos < top + height) {
-        currentId = sec.getAttribute('id');
-      }
-    });
-
-    items.forEach((item) => {
-      item.classList.remove('active-slide');
-      if (item.getAttribute('href') === `#${currentId}`) {
-        item.classList.add('active-slide');
-      }
-    });
-  }, { passive: true });
 }
