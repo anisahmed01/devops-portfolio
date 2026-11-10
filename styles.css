@@ -1337,6 +1337,19 @@ h1 {
    MOBILE & TABLET RESPONSIVE DESIGN (PERFECTED)
    ========================================== */
 @media (max-width: 900px) {
+  /* Disable simulated hover opening on touchscreens */
+  .side-nav-wrapper:hover .side-nav-drawer {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-50%) translateX(16px);
+  }
+  .side-nav-wrapper.is-open .side-nav-drawer {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateY(-50%) translateX(0) !important;
+  }
   /* 1. Header & Navigation: Hide desktop top buttons completely on mobile */
   nav,
   nav.glass-nav-container,
@@ -1923,12 +1936,22 @@ h1 {
   height: 100%;
 }
 
-.side-nav-wrapper:hover .side-nav-drawer,
+/* On desktop with real mouse pointer, hover opens drawer */
+@media (hover: hover) and (pointer: fine) {
+  .side-nav-wrapper:hover .side-nav-drawer {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+/* Explicit toggle for click / touch */
 .side-nav-wrapper.is-open .side-nav-drawer {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translateY(-50%) translateX(0);
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translateY(-50%) translateX(0) !important;
 }
 
 .side-nav-header {

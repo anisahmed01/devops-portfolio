@@ -902,7 +902,7 @@ function initVisitorAnalytics() {
 // 6. FLOATING RIGHT-SIDE HOVER SECTION JUMPER
 // ==========================================
 // ==========================================
-// 6. MASTER UNIFIED NAVIGATION ENGINE (PERFECT SYNCHRONIZATION)
+// 6. MASTER UNIFIED NAVIGATION ENGINE (PERFECT TRAJECTORY & TOUCH)
 // ==========================================
 function initMasterUnifiedNavigator() {
   const navContainer = document.querySelector('.glass-nav-container');
@@ -919,7 +919,7 @@ function initMasterUnifiedNavigator() {
   let isNavClicking = false;
   let clickLockTimer = null;
 
-  // 1. Smooth Slider Mover (Never resets to 'About')
+  // 1. Smooth Slider Mover (Moves directly from CURRENT position to TARGET)
   function moveSliderToLink(targetLink, isPulse = false) {
     if (!slider || !targetLink) return;
     const left = targetLink.offsetLeft;
@@ -934,11 +934,11 @@ function initMasterUnifiedNavigator() {
     }
   }
 
-  // 2. Master Sync Function: Updates Header, Home Hut, and Hamburger together
+  // 2. Master Sync Function: Synchronizes Header, Home Hut, and Hamburger together
   function syncAllNavigators(sectionId, isUserClick = false) {
     currentActiveSection = sectionId;
 
-    // A. Handle Home section
+    // A. Home section active
     if (sectionId === 'home') {
       if (homeBrand) homeBrand.classList.add('active-home');
       headerLinks.forEach(link => link.classList.remove('active-link'));
@@ -950,10 +950,9 @@ function initMasterUnifiedNavigator() {
       return;
     }
 
-    // B. Handle Other Sections (about, pipeline, devsecops, etc.)
+    // B. Internal sections active (about, pipeline, devsecops, skills, projects, experience, contact)
     if (homeBrand) homeBrand.classList.remove('active-home');
 
-    // Sync Header Nav Link & Sliding Pill
     let matchedLink = null;
     headerLinks.forEach(link => {
       const isMatch = (link.getAttribute('href') === `#${sectionId}`);
@@ -965,7 +964,6 @@ function initMasterUnifiedNavigator() {
       moveSliderToLink(matchedLink, isUserClick);
     }
 
-    // Sync Right Hamburger Drawer Items
     sideItems.forEach(item => {
       item.classList.toggle('active-slide', item.getAttribute('href') === `#${sectionId}`);
     });
@@ -978,41 +976,23 @@ function initMasterUnifiedNavigator() {
 
     isNavClicking = true;
     clearTimeout(clickLockTimer);
-    clickLockTimer = setTimeout(() => { isNavClicking = false; }, 850);
+    clickLockTimer = setTimeout(() => { isNavClicking = false; }, 950);
 
     const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
     const targetOffset = targetSec.getBoundingClientRect().top + window.pageYOffset - navHeight + 8;
     window.scrollTo({ top: targetOffset, behavior: 'smooth' });
   }
 
-  // 4. Header Links: Click & Hover Handlers
+  // 4. Header Links: Click Handlers (Slider glides from current section to clicked section)
   headerLinks.forEach((link) => {
-    // Hover Preview: slider glides smoothly to hovered item from wherever it currently is
-    link.addEventListener('mouseenter', () => {
-      if (!isNavClicking) moveSliderToLink(link, false);
-    });
-
-    // Click: smoothly glides slider to target link and scrolls
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const secId = link.getAttribute('href').replace('#', '');
+      // Move slider from wherever it currently is directly to the clicked link
       syncAllNavigators(secId, true);
       jumpToSection(secId);
     });
   });
-
-  // When mouse leaves top navbar container, return slider to actual active section
-  if (navContainer) {
-    navContainer.addEventListener('mouseleave', () => {
-      if (isNavClicking) return;
-      if (currentActiveSection === 'home') {
-        if (slider) slider.style.opacity = '0';
-      } else {
-        const activeLink = document.querySelector(`.glass-nav-container a[href="#${currentActiveSection}"]`);
-        if (activeLink) moveSliderToLink(activeLink, false);
-      }
-    });
-  }
 
   // 5. Home Hut Logo: Click Handler
   if (homeBrand) {
@@ -1020,7 +1000,7 @@ function initMasterUnifiedNavigator() {
       e.preventDefault();
       isNavClicking = true;
       clearTimeout(clickLockTimer);
-      clickLockTimer = setTimeout(() => { isNavClicking = false; }, 850);
+      clickLockTimer = setTimeout(() => { isNavClicking = false; }, 950);
 
       syncAllNavigators('home', true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1029,10 +1009,11 @@ function initMasterUnifiedNavigator() {
 
   // 6. Right Hamburger Navigation: Trigger & Items
   if (sideWrapper) {
-    // Mobile Touch / Click to toggle drawer
+    // Mobile Touch / Click: clean toggle
     if (sideTrigger) {
       sideTrigger.addEventListener('click', (e) => {
         e.stopPropagation();
+        e.preventDefault();
         sideWrapper.classList.toggle('is-open');
       });
     }
@@ -1054,7 +1035,7 @@ function initMasterUnifiedNavigator() {
         if (secId === 'home') {
           isNavClicking = true;
           clearTimeout(clickLockTimer);
-          clickLockTimer = setTimeout(() => { isNavClicking = false; }, 850);
+          clickLockTimer = setTimeout(() => { isNavClicking = false; }, 950);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
           jumpToSection(secId);
@@ -1064,7 +1045,7 @@ function initMasterUnifiedNavigator() {
       });
     });
 
-    // Close drawer when clicking outside
+    // Close drawer when clicking anywhere outside
     document.addEventListener('click', (e) => {
       if (!sideWrapper.contains(e.target)) {
         sideWrapper.classList.remove('is-open');
@@ -1072,41 +1053,40 @@ function initMasterUnifiedNavigator() {
     });
   }
 
-  // 7. Robust Scroll Position Detection (Zero Gaps, Handles Dynamic Heights)
+  // 7. Checkpoint Scroll Position Detection (Zero Gaps, Viewport Center Sampling)
   function detectActiveSection() {
     if (isNavClicking) return;
 
     const scrollY = window.pageYOffset || document.documentElement.scrollTop;
 
-    // Top of page is Home
+    // Top 220px is Home
     if (scrollY < 220) {
       if (currentActiveSection !== 'home') syncAllNavigators('home');
       return;
     }
 
-    // Bottom of document is Contact
+    // If near bottom of document, lock to Contact
     if ((window.innerHeight + scrollY) >= (document.documentElement.scrollHeight - 60)) {
       if (currentActiveSection !== 'contact') syncAllNavigators('contact');
       return;
     }
 
-    const navHeight = document.querySelector('.navbar')?.offsetHeight || 70;
-    let foundSection = 'home';
+    // Viewport checkpoint (35% from top of window)
+    const checkpoint = window.innerHeight * 0.35;
+    let activeId = 'about';
 
-    // Check all sections using getBoundingClientRect
     for (const id of SECTIONS) {
       if (id === 'home') continue;
       const el = document.getElementById(id);
       if (!el) continue;
       const rect = el.getBoundingClientRect();
-      // If top has passed under navbar and bottom is still visible
-      if (rect.top <= (navHeight + 110) && rect.bottom > (navHeight + 40)) {
-        foundSection = id;
+      if (rect.top <= checkpoint) {
+        activeId = id;
       }
     }
 
-    if (foundSection !== currentActiveSection) {
-      syncAllNavigators(foundSection, false);
+    if (activeId !== currentActiveSection) {
+      syncAllNavigators(activeId, false);
     }
   }
 
