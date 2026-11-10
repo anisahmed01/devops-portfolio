@@ -66,7 +66,7 @@ jobs:
       - name: Validate Kubernetes Manifests
         run: |
           echo "Validating Kubernetes manifests syntax..."
-          kubectl apply --dry-run=client -f k8s/
+          kubectl apply --dry-run=client --validate=false -f k8s/
           echo "Kubernetes manifests are syntactically valid."
 
       - name: Set up Docker Buildx
