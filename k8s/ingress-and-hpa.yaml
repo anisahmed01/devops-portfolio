@@ -9,7 +9,10 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "8m"
     nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Clacks-Overhead: GNU Terry Pratchett";
 spec:
+  ingressClassName: nginx
   tls:
     - hosts:
         - anisahmed.in
@@ -25,7 +28,7 @@ spec:
               service:
                 name: portfolio-web-svc
                 port:
-                  name: http
+                  number: 80
     - host: www.anisahmed.in
       http:
         paths:
@@ -35,7 +38,7 @@ spec:
               service:
                 name: portfolio-web-svc
                 port:
-                  name: http
+                  number: 80
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler

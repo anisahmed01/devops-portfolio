@@ -1,3 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+  labels:
+    name: production
+    app.kubernetes.io/managed-by: terraform
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,7 +33,8 @@ spec:
         app: portfolio-web
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "80"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
     spec:
       affinity:
         podAntiAffinity:
@@ -41,11 +50,11 @@ spec:
                 topologyKey: topology.kubernetes.io/zone
       containers:
         - name: web
-          image: ghcr.io/anisahmed/portfolio:v2.4.0
+          image: ghcr.io/anisahmed01/portfolio:v4.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
               protocol: TCP
           resources:
             requests:
@@ -56,7 +65,7 @@ spec:
               memory: 128Mi
           livenessProbe:
             httpGet:
-              path: /index.html
+              path: /healthz
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10
@@ -64,7 +73,7 @@ spec:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /index.html
+              path: /healthz
               port: http
             initialDelaySeconds: 3
             periodSeconds: 5
@@ -74,7 +83,7 @@ spec:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: false
             runAsNonRoot: true
-            runAsUser: 101 # nginx user
+            runAsUser: 101 # nginx unprivileged user
             capabilities:
               drop:
                 - ALL
@@ -91,7 +100,7 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: http
+      targetPort: 8080
       protocol: TCP
   selector:
     app: portfolio-web
