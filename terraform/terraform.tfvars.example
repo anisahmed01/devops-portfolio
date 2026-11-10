@@ -1,0 +1,8 @@
+# ==============================================================================
+# Example Terraform Variables for Production EKS Cluster
+# Copy to terraform.tfvars and customize
+# ==============================================================================
+
+aws_region  = "ap-south-1" # AWS Asia Pacific (Mumbai)
+environment = "prod"
+
