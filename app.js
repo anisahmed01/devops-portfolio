@@ -22,9 +22,12 @@ function initIntroSplash() {
   var overlay = document.getElementById('introOverlay');
   if (!overlay) return;
 
-  var badge  = overlay.querySelector('.intro-badge');
-  var wrap   = document.getElementById('introQuoteWrap');
-  var author = overlay.querySelector('.intro-author');
+  var badge        = overlay.querySelector('.intro-badge');
+  var infinityWrap = overlay.querySelector('.intro-infinity-wrap');
+  var orangePath   = document.getElementById('infinityOrangePath');
+  var glossPath    = document.getElementById('infinityGlossPath');
+  var wrap         = document.getElementById('introQuoteWrap');
+  var author       = overlay.querySelector('.intro-author');
 
   /* hide everything initially */
   [badge, wrap, author].forEach(function(el) {
@@ -33,7 +36,24 @@ function initIntroSplash() {
 
   if (wrap) wrap.innerHTML = '';
 
-  /* 2 Distinct Lines: Eliminates any chance of word-splitting like "brea" / "k" */
+  /* Measure & arm the synchronized SVG infinity paths */
+  var infLength = 520;
+  [orangePath, glossPath].forEach(function(p) {
+    if (p && typeof p.getTotalLength === 'function') {
+      try {
+        infLength = p.getTotalLength();
+      } catch (e) {}
+      p.style.transition = 'none';
+      p.style.strokeDasharray = infLength + ' ' + infLength;
+      p.style.strokeDashoffset = String(infLength);
+    }
+  });
+  if (infinityWrap) {
+    infinityWrap.style.opacity = '0';
+    infinityWrap.classList.remove('infinity-glow');
+  }
+
+  /* 2 Distinct Lines: Eliminates any chance of word-splitting */
   var lines = [
     '\u201cAutomate everything.',
     'Break nothing.\u201d'
@@ -113,12 +133,13 @@ function initIntroSplash() {
     wrap.appendChild(box);
   }
 
-  /* Timing */
+  /* Synchronized Timing: Infinity completes building at exact ASSEMBLE_END */
   var BADGE_DELAY  = 50;
   var FLY_START    = 150;
   var STAGGER      = 22;
   var FLY_DUR      = 600;
   var ASSEMBLE_END = FLY_START + (letters.length - 1) * STAGGER + FLY_DUR;
+  var DRAW_DUR     = ASSEMBLE_END - FLY_START;
   var HOLD         = 1400;
   var DISMISS      = ASSEMBLE_END + HOLD;
 
@@ -129,6 +150,20 @@ function initIntroSplash() {
         badge.style.opacity    = '1';
       }, BADGE_DELAY);
     }
+
+    /* Begin drawing Glowing Orange Glossy Infinity right when the words begin assembling */
+    setTimeout(function() {
+      if (infinityWrap) {
+        infinityWrap.style.opacity = '1';
+      }
+      [orangePath, glossPath].forEach(function(p) {
+        if (p) {
+          p.getBoundingClientRect(); /* flush initial dashoffset cleanly */
+          p.style.transition = 'stroke-dashoffset ' + DRAW_DUR + 'ms cubic-bezier(0.22, 1, 0.36, 1)';
+          p.style.strokeDashoffset = '0';
+        }
+      });
+    }, FLY_START);
 
     letters.forEach(function(span, i) {
       setTimeout(function() {
@@ -147,9 +182,13 @@ function initIntroSplash() {
       }, ASSEMBLE_END - 200);
     }
 
+    /* Synchronized Finale Glow when both Infinity and Quote finish building together */
     setTimeout(function() {
       box.style.transition = 'filter 0.5s ease';
       box.style.filter     = 'drop-shadow(0 0 24px rgba(84,200,255,0.5))';
+      if (infinityWrap) {
+        infinityWrap.classList.add('infinity-glow');
+      }
     }, ASSEMBLE_END);
 
     setTimeout(function() {
@@ -161,22 +200,39 @@ function initIntroSplash() {
 }
 
 function initScrollObserver() {
-  const elements = document.querySelectorAll('.scroll-reveal');
+  const revealEls = document.querySelectorAll('.section-reveal, .card-reveal, .scroll-reveal');
+  if (!revealEls.length) return;
 
-  const checkVisibility = () => {
-    const triggerBottom = window.innerHeight * 0.88;
-
-    elements.forEach((el) => {
-      const boxTop = el.getBoundingClientRect().top;
-      if (boxTop < triggerBottom) {
-        el.classList.add('is-visible');
-      }
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const el = entry.target;
+        if (entry.isIntersecting) {
+          el.classList.add('is-visible');
+          if (el.classList.contains('card-reveal')) {
+            clearTimeout(el._revealTimer);
+            const delayStyle = parseFloat(getComputedStyle(el).transitionDelay) || 0;
+            el._revealTimer = setTimeout(() => {
+              if (el.classList.contains('is-visible')) {
+                el.classList.add('reveal-done');
+              }
+            }, Math.round(delayStyle * 1000) + 820);
+          }
+        } else {
+          /* Re-arm animation cleanly when scrolling completely past/away so re-entry animates crisply */
+          clearTimeout(el._revealTimer);
+          el.classList.remove('is-visible', 'reveal-done');
+        }
+      });
+    }, {
+      threshold: 0.06,
+      rootMargin: '20px 0px -30px 0px'
     });
-  };
 
-  window.addEventListener('scroll', checkVisibility, { passive: true });
-  window.addEventListener('resize', checkVisibility, { passive: true });
-  setTimeout(checkVisibility, 50);
+    revealEls.forEach((el) => observer.observe(el));
+  } else {
+    revealEls.forEach((el) => el.classList.add('is-visible', 'reveal-done'));
+  }
 }
 
 // ==========================================

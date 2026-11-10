@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   color-scheme: dark;
   --bg: #080d1b;
   --panel: #10182a;
@@ -42,24 +42,74 @@ a {
 }
 
 /* ==========================================
-   SCROLL REVEAL ANIMATIONS (SMOOTH & RELIABLE)
+   DUAL SCROLL ANIMATION SYSTEM
+   A) Section-Level: Lateral Cinematic Glide
+   B) Subsection Cards/Boxes: 3D Perspective Glass Cascade
    ========================================== */
-.scroll-reveal {
+
+/* A) Section-Level Animation */
+.section-reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: translateX(-42px) scale(0.985);
+  filter: blur(6px);
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
 }
 
-.scroll-reveal.is-visible {
+.section-reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(0) scale(1);
+  filter: blur(0);
 }
 
-/* Stagger helper delays */
-.delay-1 { transition-delay: 100ms; }
-.delay-2 { transition-delay: 200ms; }
-.delay-3 { transition-delay: 300ms; }
+.section-reveal .eyebrow {
+  letter-spacing: 5px;
+  transition: letter-spacing 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.section-reveal.is-visible .eyebrow {
+  letter-spacing: 2px;
+}
+
+/* B) Subsection Card / Box Animation (3D Spring Pop-Up) */
+.card-reveal {
+  opacity: 0;
+  transform: perspective(950px) translateY(46px) rotateX(12deg) scale(0.9);
+  filter: blur(4px);
+  transition:
+    opacity 0.78s cubic-bezier(0.22, 1.15, 0.36, 1),
+    transform 0.78s cubic-bezier(0.22, 1.15, 0.36, 1),
+    filter 0.78s cubic-bezier(0.22, 1.15, 0.36, 1);
+  will-change: opacity, transform, filter;
+}
+
+.card-reveal.is-visible {
+  opacity: 1;
+  transform: perspective(950px) translateY(0) rotateX(0deg) scale(1);
+  filter: blur(0);
+}
+
+/* After entrance completes, restore instant hover physics */
+.card-reveal.is-visible.reveal-done {
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.28s ease,
+    box-shadow 0.28s ease,
+    background 0.28s ease;
+  transition-delay: 0ms !important;
+  will-change: auto;
+}
+
+/* Stagger delays for subsection cascade */
+.stagger-1, .delay-1 { transition-delay: 60ms; }
+.stagger-2, .delay-2 { transition-delay: 160ms; }
+.stagger-3, .delay-3 { transition-delay: 260ms; }
+.stagger-4 { transition-delay: 360ms; }
+.stagger-5 { transition-delay: 460ms; }
+.stagger-6 { transition-delay: 560ms; }
 
 /* ==========================================
    IPHONE LIQUID GLASS & FROSTED SYSTEM
@@ -334,10 +384,10 @@ nav a.active-link {
 }
 
 h1 {
-  margin: 10px 0 20px;
-  font-size: clamp(2.6rem, 5.2vw, 4.4rem);
-  line-height: 1.08;
-  letter-spacing: -2.5px;
+  margin: 6px 0 14px;
+  font-size: clamp(2.4rem, 4.6vw, 4rem);
+  line-height: 1.07;
+  letter-spacing: -2.2px;
   font-weight: 800;
 }
 
@@ -357,10 +407,23 @@ h1 {
   display: grid;
   grid-template-columns: 1.15fr auto 1.1fr;
   align-items: center;
-  gap: 36px;
-  min-height: 620px;
-  padding-top: 60px;
-  padding-bottom: 70px;
+  column-gap: 32px;
+  row-gap: 18px;
+  width: min(1240px, 92%);
+  min-height: auto;
+  padding-top: 20px;
+  padding-bottom: 36px;
+}
+
+.hero-top-pill {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin-bottom: 4px !important;
+  backdrop-filter: blur(18px) saturate(190%);
+  -webkit-backdrop-filter: blur(18px) saturate(190%);
+  background: rgba(16, 24, 46, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
 /* ==========================================
@@ -492,14 +555,15 @@ h1 {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 24px;
-  padding: 7px 14px;
+  margin-bottom: 14px;
+  padding: 6px 16px;
   border: 1px solid var(--border);
   border-radius: 30px;
   color: var(--muted);
   font-size: 0.72rem;
-  letter-spacing: 1.2px;
-  background: rgba(16, 24, 42, 0.4);
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  background: rgba(16, 24, 42, 0.5);
 }
 
 .pulse {
@@ -527,7 +591,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 28px;
+  margin-top: 22px;
 }
 
 /* ==========================================
@@ -629,10 +693,11 @@ h1 {
 .hero-meta {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-top: 32px;
+  flex-wrap: wrap;
+  gap: 12px 14px;
+  margin-top: 22px;
   color: var(--muted);
-  font-size: 0.84rem;
+  font-size: 0.82rem;
 }
 
 .hero-meta strong {
@@ -823,18 +888,21 @@ h1 {
 .about-card,
 .skill-card {
   padding: 28px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: linear-gradient(145deg, var(--panel), rgba(16, 24, 42, 0.5));
-  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(16, 24, 46, 0.72), rgba(12, 18, 36, 0.52));
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.18), 0 8px 26px rgba(0, 0, 0, 0.35);
 }
 
-.about-card:hover,
-.skill-card:hover,
-.project-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--border-hover);
-  box-shadow: 0 12px 30px rgba(8, 13, 27, 0.6);
+.about-card.is-visible:hover,
+.skill-card.is-visible:hover,
+.project-card.is-visible:hover,
+.devsecops-card.is-visible:hover {
+  transform: perspective(950px) translateY(-6px) scale(1.015);
+  border-color: rgba(84, 200, 255, 0.45);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.32), 0 14px 36px rgba(8, 13, 27, 0.7), 0 0 22px rgba(84, 200, 255, 0.16);
 }
 
 .card-icon {
@@ -1003,18 +1071,19 @@ h1 {
 
 .pipeline-step {
   padding: 16px 14px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: rgba(8, 13, 27, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(8, 13, 27, 0.65);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.14);
   cursor: pointer;
-  transition: all 0.2s;
 }
 
-.pipeline-step:hover,
-.pipeline-step.active {
+.pipeline-step.is-visible:hover,
+.pipeline-step.is-visible.active {
   border-color: var(--blue);
-  background: rgba(84, 200, 255, 0.08);
-  transform: translateY(-3px);
+  background: rgba(84, 200, 255, 0.1);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.24), 0 6px 20px rgba(84, 200, 255, 0.2);
+  transform: perspective(950px) translateY(-3px);
 }
 
 .step-num {
@@ -1070,15 +1139,12 @@ h1 {
 
 .devsecops-card {
   padding: 24px;
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  background: linear-gradient(145deg, var(--panel), rgba(16, 24, 42, 0.5));
-  transition: all 0.25s;
-}
-
-.devsecops-card:hover {
-  border-color: var(--blue);
-  transform: translateY(-4px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(16, 24, 46, 0.72), rgba(12, 18, 36, 0.52));
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.18), 0 8px 26px rgba(0, 0, 0, 0.35);
 }
 
 .security-badge {
@@ -1110,10 +1176,12 @@ h1 {
   align-items: start;
   gap: 24px;
   padding: 28px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--panel);
-  transition: transform 0.25s, border-color 0.25s;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(16, 24, 46, 0.72), rgba(12, 18, 36, 0.55));
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.18), 0 8px 26px rgba(0, 0, 0, 0.35);
 }
 
 .project-content h3 {
@@ -1267,9 +1335,35 @@ h1 {
   letter-spacing: 1.5px;
   color: var(--blue);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
   background: rgba(16, 24, 42, 0.7);
   box-shadow: 0 0 20px rgba(84, 200, 255, 0.2);
+}
+
+.intro-infinity-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  transition: filter 0.6s ease, opacity 0.4s ease;
+  will-change: filter, opacity;
+}
+
+.intro-infinity-svg {
+  width: clamp(136px, 24vw, 196px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 12px rgba(255, 136, 0, 0.5));
+  transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.intro-infinity-wrap.infinity-glow .intro-infinity-svg {
+  filter: drop-shadow(0 0 22px rgba(255, 145, 0, 0.95)) drop-shadow(0 0 46px rgba(255, 95, 0, 0.55));
+}
+
+.infinity-stroke,
+.infinity-gloss {
+  will-change: stroke-dashoffset;
 }
 
 #introQuoteWrap {
@@ -1366,6 +1460,11 @@ h1 {
     padding-top: 36px;
     padding-bottom: 50px;
     text-align: center;
+  }
+
+  .hero-top-pill {
+    order: 0;
+    margin-bottom: 4px !important;
   }
 
   .hero-copy {
@@ -1631,7 +1730,8 @@ h1 {
 @media (max-width: 1180px) and (min-width: 901px) {
   .hero {
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    column-gap: 32px;
+    row-gap: 20px;
   }
   .hero-copy {
     grid-column: 1;

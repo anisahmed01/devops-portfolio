@@ -89,24 +89,74 @@ a {
 }
 
 /* ==========================================
-   SCROLL REVEAL ANIMATIONS (SMOOTH & RELIABLE)
+   DUAL SCROLL ANIMATION SYSTEM
+   A) Section-Level: Lateral Cinematic Glide
+   B) Subsection Cards/Boxes: 3D Perspective Glass Cascade
    ========================================== */
-.scroll-reveal {
+
+/* A) Section-Level Animation */
+.section-reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: translateX(-42px) scale(0.985);
+  filter: blur(6px);
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
 }
 
-.scroll-reveal.is-visible {
+.section-reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(0) scale(1);
+  filter: blur(0);
 }
 
-/* Stagger helper delays */
-.delay-1 { transition-delay: 100ms; }
-.delay-2 { transition-delay: 200ms; }
-.delay-3 { transition-delay: 300ms; }
+.section-reveal .eyebrow {
+  letter-spacing: 5px;
+  transition: letter-spacing 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.section-reveal.is-visible .eyebrow {
+  letter-spacing: 2px;
+}
+
+/* B) Subsection Card / Box Animation (3D Spring Pop-Up) */
+.card-reveal {
+  opacity: 0;
+  transform: perspective(950px) translateY(46px) rotateX(12deg) scale(0.9);
+  filter: blur(4px);
+  transition:
+    opacity 0.78s cubic-bezier(0.22, 1.15, 0.36, 1),
+    transform 0.78s cubic-bezier(0.22, 1.15, 0.36, 1),
+    filter 0.78s cubic-bezier(0.22, 1.15, 0.36, 1);
+  will-change: opacity, transform, filter;
+}
+
+.card-reveal.is-visible {
+  opacity: 1;
+  transform: perspective(950px) translateY(0) rotateX(0deg) scale(1);
+  filter: blur(0);
+}
+
+/* After entrance completes, restore instant hover physics */
+.card-reveal.is-visible.reveal-done {
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.28s ease,
+    box-shadow 0.28s ease,
+    background 0.28s ease;
+  transition-delay: 0ms !important;
+  will-change: auto;
+}
+
+/* Stagger delays for subsection cascade */
+.stagger-1, .delay-1 { transition-delay: 60ms; }
+.stagger-2, .delay-2 { transition-delay: 160ms; }
+.stagger-3, .delay-3 { transition-delay: 260ms; }
+.stagger-4 { transition-delay: 360ms; }
+.stagger-5 { transition-delay: 460ms; }
+.stagger-6 { transition-delay: 560ms; }
 
 /* ==========================================
    IPHONE LIQUID GLASS & FROSTED SYSTEM
@@ -381,10 +431,10 @@ nav a.active-link {
 }
 
 h1 {
-  margin: 10px 0 20px;
-  font-size: clamp(2.6rem, 5.2vw, 4.4rem);
-  line-height: 1.08;
-  letter-spacing: -2.5px;
+  margin: 6px 0 14px;
+  font-size: clamp(2.4rem, 4.6vw, 4rem);
+  line-height: 1.07;
+  letter-spacing: -2.2px;
   font-weight: 800;
 }
 
@@ -404,10 +454,23 @@ h1 {
   display: grid;
   grid-template-columns: 1.15fr auto 1.1fr;
   align-items: center;
-  gap: 36px;
-  min-height: 620px;
-  padding-top: 60px;
-  padding-bottom: 70px;
+  column-gap: 32px;
+  row-gap: 18px;
+  width: min(1240px, 92%);
+  min-height: auto;
+  padding-top: 20px;
+  padding-bottom: 36px;
+}
+
+.hero-top-pill {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin-bottom: 4px !important;
+  backdrop-filter: blur(18px) saturate(190%);
+  -webkit-backdrop-filter: blur(18px) saturate(190%);
+  background: rgba(16, 24, 46, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
 /* ==========================================
@@ -539,14 +602,15 @@ h1 {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 24px;
-  padding: 7px 14px;
+  margin-bottom: 14px;
+  padding: 6px 16px;
   border: 1px solid var(--border);
   border-radius: 30px;
   color: var(--muted);
   font-size: 0.72rem;
-  letter-spacing: 1.2px;
-  background: rgba(16, 24, 42, 0.4);
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  background: rgba(16, 24, 42, 0.5);
 }
 
 .pulse {
@@ -574,7 +638,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 28px;
+  margin-top: 22px;
 }
 
 /* ==========================================
@@ -676,10 +740,11 @@ h1 {
 .hero-meta {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-top: 32px;
+  flex-wrap: wrap;
+  gap: 12px 14px;
+  margin-top: 22px;
   color: var(--muted);
-  font-size: 0.84rem;
+  font-size: 0.82rem;
 }
 
 .hero-meta strong {
@@ -870,18 +935,21 @@ h1 {
 .about-card,
 .skill-card {
   padding: 28px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: linear-gradient(145deg, var(--panel), rgba(16, 24, 42, 0.5));
-  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(16, 24, 46, 0.72), rgba(12, 18, 36, 0.52));
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.18), 0 8px 26px rgba(0, 0, 0, 0.35);
 }
 
-.about-card:hover,
-.skill-card:hover,
-.project-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--border-hover);
-  box-shadow: 0 12px 30px rgba(8, 13, 27, 0.6);
+.about-card.is-visible:hover,
+.skill-card.is-visible:hover,
+.project-card.is-visible:hover,
+.devsecops-card.is-visible:hover {
+  transform: perspective(950px) translateY(-6px) scale(1.015);
+  border-color: rgba(84, 200, 255, 0.45);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.32), 0 14px 36px rgba(8, 13, 27, 0.7), 0 0 22px rgba(84, 200, 255, 0.16);
 }
 
 .card-icon {
@@ -1050,18 +1118,19 @@ h1 {
 
 .pipeline-step {
   padding: 16px 14px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: rgba(8, 13, 27, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(8, 13, 27, 0.65);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.14);
   cursor: pointer;
-  transition: all 0.2s;
 }
 
-.pipeline-step:hover,
-.pipeline-step.active {
+.pipeline-step.is-visible:hover,
+.pipeline-step.is-visible.active {
   border-color: var(--blue);
-  background: rgba(84, 200, 255, 0.08);
-  transform: translateY(-3px);
+  background: rgba(84, 200, 255, 0.1);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.24), 0 6px 20px rgba(84, 200, 255, 0.2);
+  transform: perspective(950px) translateY(-3px);
 }
 
 .step-num {
@@ -1117,15 +1186,12 @@ h1 {
 
 .devsecops-card {
   padding: 24px;
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  background: linear-gradient(145deg, var(--panel), rgba(16, 24, 42, 0.5));
-  transition: all 0.25s;
-}
-
-.devsecops-card:hover {
-  border-color: var(--blue);
-  transform: translateY(-4px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(16, 24, 46, 0.72), rgba(12, 18, 36, 0.52));
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.18), 0 8px 26px rgba(0, 0, 0, 0.35);
 }
 
 .security-badge {
@@ -1157,10 +1223,12 @@ h1 {
   align-items: start;
   gap: 24px;
   padding: 28px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--panel);
-  transition: transform 0.25s, border-color 0.25s;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(16, 24, 46, 0.72), rgba(12, 18, 36, 0.55));
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.18), 0 8px 26px rgba(0, 0, 0, 0.35);
 }
 
 .project-content h3 {
@@ -1314,9 +1382,35 @@ h1 {
   letter-spacing: 1.5px;
   color: var(--blue);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
   background: rgba(16, 24, 42, 0.7);
   box-shadow: 0 0 20px rgba(84, 200, 255, 0.2);
+}
+
+.intro-infinity-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  transition: filter 0.6s ease, opacity 0.4s ease;
+  will-change: filter, opacity;
+}
+
+.intro-infinity-svg {
+  width: clamp(136px, 24vw, 196px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 12px rgba(255, 136, 0, 0.5));
+  transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.intro-infinity-wrap.infinity-glow .intro-infinity-svg {
+  filter: drop-shadow(0 0 22px rgba(255, 145, 0, 0.95)) drop-shadow(0 0 46px rgba(255, 95, 0, 0.55));
+}
+
+.infinity-stroke,
+.infinity-gloss {
+  will-change: stroke-dashoffset;
 }
 
 #introQuoteWrap {
@@ -1413,6 +1507,11 @@ h1 {
     padding-top: 36px;
     padding-bottom: 50px;
     text-align: center;
+  }
+
+  .hero-top-pill {
+    order: 0;
+    margin-bottom: 4px !important;
   }
 
   .hero-copy {
@@ -1678,7 +1777,8 @@ h1 {
 @media (max-width: 1180px) and (min-width: 901px) {
   .hero {
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    column-gap: 32px;
+    row-gap: 20px;
   }
   .hero-copy {
     grid-column: 1;
@@ -2127,7 +2227,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
 
 </style>
-  <link rel="stylesheet" href="styles.css?v=4.3.0">
+  <link rel="stylesheet" href="styles.css?v=4.4.0">
   <!-- Structured Data: Schema.org (Google Knowledge Graph & Rich Snippets) -->
   <script type="application/ld+json">
   {
@@ -2191,6 +2291,26 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
       <span class="pulse"></span>
       SYSTEM INITIALIZED
     </div>
+    <div class="intro-infinity-wrap" aria-hidden="true" style="opacity:0">
+      <svg class="intro-infinity-svg" viewBox="0 0 220 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="infinityOrangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff6b00"/>
+            <stop offset="45%" stop-color="#ff9f0a"/>
+            <stop offset="75%" stop-color="#ffd166"/>
+            <stop offset="100%" stop-color="#ff5e00"/>
+          </linearGradient>
+          <linearGradient id="infinityGlossGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.85)"/>
+            <stop offset="50%" stop-color="rgba(255,235,200,0.98)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0.85)"/>
+          </linearGradient>
+        </defs>
+        <path class="infinity-track" d="M 110 50 C 145 12, 200 12, 200 50 C 200 88, 145 88, 110 50 C 75 12, 20 12, 20 50 C 20 88, 75 88, 110 50" stroke="rgba(255, 149, 0, 0.14)" stroke-width="8" stroke-linecap="round"/>
+        <path id="infinityOrangePath" class="infinity-stroke" d="M 110 50 C 145 12, 200 12, 200 50 C 200 88, 145 88, 110 50 C 75 12, 20 12, 20 50 C 20 88, 75 88, 110 50" stroke="url(#infinityOrangeGrad)" stroke-width="6.5" stroke-linecap="round"/>
+        <path id="infinityGlossPath" class="infinity-gloss" d="M 110 50 C 145 12, 200 12, 200 50 C 200 88, 145 88, 110 50 C 75 12, 20 12, 20 50 C 20 88, 75 88, 110 50" stroke="url(#infinityGlossGrad)" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
     <div id="introQuoteWrap" style="opacity:0">
       <div class="intro-quote">“Automate everything. Break nothing.”</div>
     </div>
@@ -2227,12 +2347,12 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
     <!-- ==================== HERO SECTION ==================== -->
     <section class="hero section" id="home">
-      <div class="hero-copy scroll-reveal">
-        <div class="availability">
-          <span class="pulse"></span>
-          CLOUD · AUTOMATION · DEVSECOPS
-        </div>
+      <div class="availability hero-top-pill">
+        <span class="pulse"></span>
+        CLOUD · AUTOMATION · DEVSECOPS
+      </div>
 
+      <div class="hero-copy">
         <p class="eyebrow">HELLO, WORLD. I'M</p>
         <h1>Anis Ahmed<br>
           <span class="gradient-text">Senior DevOps Engineer.</span>
@@ -2260,7 +2380,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
       </div>
 
       <!-- Vertical Oval Cyber Portrait Capsule -->
-      <div class="hero-portrait-capsule scroll-reveal delay-1" aria-label="Anis Ahmed - Senior DevOps Engineer">
+      <div class="hero-portrait-capsule" aria-label="Anis Ahmed - Senior DevOps Engineer">
         <div class="portrait-glow"></div>
         <div class="portrait-frame" oncontextmenu="return false;">
           <picture>
@@ -2277,7 +2397,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
       </div>
 
       <!-- Live Interactive Mac Terminal Window -->
-      <div class="terminal-card scroll-reveal delay-2" aria-label="Interactive DevOps Linux terminal">
+      <div class="terminal-card" aria-label="Interactive DevOps Linux terminal">
         <div class="terminal-header">
           <div class="window-dots">
             <span></span><span></span><span></span>
@@ -2324,20 +2444,20 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
     <!-- Key Achievements & Production Metrics Bar -->
     <section class="metrics-section" aria-label="Key Achievements and Performance Metrics">
-      <div class="metrics-bar scroll-reveal">
-        <div class="metric-item">
+      <div class="metrics-bar section-reveal">
+        <div class="metric-item card-reveal stagger-1">
           <span class="metric-number">70%</span>
           <span class="metric-label">Deployment Effort Reduced via CI/CD Automation</span>
         </div>
-        <div class="metric-item">
+        <div class="metric-item card-reveal stagger-2">
           <span class="metric-number">5.5 Yrs</span>
           <span class="metric-label">Senior DevOps & Platform Engineering</span>
         </div>
-        <div class="metric-item">
+        <div class="metric-item card-reveal stagger-3">
           <span class="metric-number">SAST · DAST · SCA</span>
           <span class="metric-label">Automated DevSecOps Quality & Security Gates</span>
         </div>
-        <div class="metric-item">
+        <div class="metric-item card-reveal stagger-4">
           <span class="metric-number">GenAI & RAG</span>
           <span class="metric-label">AI-Driven Operational Intelligence & Troubleshooting</span>
         </div>
@@ -2346,7 +2466,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
     <!-- ==================== 01 / ABOUT ==================== -->
     <section class="section about" id="about">
-      <div class="section-heading scroll-reveal">
+      <div class="section-heading section-reveal">
         <p class="eyebrow">01 / ABOUT</p>
         <h2>Bridging code, security, and <span class="gradient-text">cloud.</span></h2>
         <p class="section-description">
@@ -2355,7 +2475,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
       </div>
 
       <div class="about-grid">
-        <article class="about-card scroll-reveal delay-1">
+        <article class="about-card card-reveal stagger-1">
           <span class="card-icon">⌘</span>
           <h3>Automation first</h3>
           <p>
@@ -2363,7 +2483,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
           </p>
         </article>
 
-        <article class="about-card scroll-reveal delay-2">
+        <article class="about-card card-reveal stagger-2">
           <span class="card-icon">☁</span>
           <h3>GCP & AWS engineering</h3>
           <p>
@@ -2371,7 +2491,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
           </p>
         </article>
 
-        <article class="about-card scroll-reveal delay-3">
+        <article class="about-card card-reveal stagger-3">
           <span class="card-icon">⚡</span>
           <h3>GenAI, AIOps & DevSecOps</h3>
           <p>
@@ -2383,7 +2503,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
     <!-- ==================== 02 / PIPELINE ==================== -->
     <section class="section pipeline-section" id="pipeline">
-      <div class="section-heading scroll-reveal pipeline-heading-wrap">
+      <div class="section-heading section-reveal pipeline-heading-wrap">
         <div class="pipeline-heading-copy">
           <p class="eyebrow">02 / CI/CD AUTOMATION</p>
           <h2>Interactive delivery <span class="gradient-text">engine.</span></h2>
@@ -2399,48 +2519,48 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
         </div>
       </div>
 
-      <div class="pipeline-box scroll-reveal">
+      <div class="pipeline-box section-reveal">
         <div class="pipeline-progress-track" aria-hidden="true">
           <div id="pipelineProgress" class="pipeline-progress-bar" style="width: 16.66%;"></div>
         </div>
 
         <div class="pipeline-grid">
-          <div class="pipeline-step active" data-step="1">
+          <div class="pipeline-step active card-reveal stagger-1" data-step="1">
             <span class="step-num">01</span>
             <div class="step-title">Gitleaks</div>
             <div class="step-sub">Secret Scan</div>
             <span class="step-badge">PASSED</span>
           </div>
 
-          <div class="pipeline-step" data-step="2">
+          <div class="pipeline-step card-reveal stagger-2" data-step="2">
             <span class="step-num">02</span>
             <div class="step-title">Sonar & Snyk</div>
             <div class="step-sub">SAST & SCA</div>
             <span class="step-badge">GRADE A</span>
           </div>
 
-          <div class="pipeline-step" data-step="3">
+          <div class="pipeline-step card-reveal stagger-3" data-step="3">
             <span class="step-num">03</span>
             <div class="step-title">Docker Build</div>
             <div class="step-sub">Trivy Image Scan</div>
             <span class="step-badge">0 CVEs</span>
           </div>
 
-          <div class="pipeline-step" data-step="4">
+          <div class="pipeline-step card-reveal stagger-4" data-step="4">
             <span class="step-num">04</span>
             <div class="step-title">Checkov & OPA</div>
             <div class="step-sub">Policy as Code</div>
             <span class="step-badge">COMPLIANT</span>
           </div>
 
-          <div class="pipeline-step" data-step="5">
+          <div class="pipeline-step card-reveal stagger-5" data-step="5">
             <span class="step-num">05</span>
             <div class="step-title">Approval Gate</div>
             <div class="step-sub">Production Sign-off</div>
             <span class="step-badge">APPROVED</span>
           </div>
 
-          <div class="pipeline-step" data-step="6">
+          <div class="pipeline-step card-reveal stagger-6" data-step="6">
             <span class="step-num">06</span>
             <div class="step-title">ArgoCD</div>
             <div class="step-sub">GitOps Canary</div>
@@ -2469,7 +2589,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
     <!-- ==================== 03 / DEVSECOPS ==================== -->
     <section class="section devsecops" id="devsecops">
-      <div class="section-heading scroll-reveal">
+      <div class="section-heading section-reveal">
         <p class="eyebrow">03 / ZERO-TRUST SECURITY</p>
         <h2>Shift-left security <span class="gradient-text">matrix.</span></h2>
         <p class="section-description">
@@ -2478,7 +2598,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
       </div>
 
       <div class="devsecops-grid">
-        <article class="devsecops-card scroll-reveal delay-1">
+        <article class="devsecops-card card-reveal stagger-1">
           <span class="security-badge badge-red">PRE-COMMIT</span>
           <h3>Gitleaks & Git-Secrets</h3>
           <p>
@@ -2486,7 +2606,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
           </p>
         </article>
 
-        <article class="devsecops-card scroll-reveal delay-2">
+        <article class="devsecops-card card-reveal stagger-2">
           <span class="security-badge badge-blue">SAST GATE</span>
           <h3>SonarQube Code Quality</h3>
           <p>
@@ -2494,7 +2614,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
           </p>
         </article>
 
-        <article class="devsecops-card scroll-reveal delay-3">
+        <article class="devsecops-card card-reveal stagger-3">
           <span class="security-badge badge-purple">SCA SCAN</span>
           <h3>Snyk Dependency Scanner</h3>
           <p>
@@ -2502,7 +2622,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
           </p>
         </article>
 
-        <article class="devsecops-card scroll-reveal delay-1">
+        <article class="devsecops-card card-reveal stagger-4">
           <span class="security-badge badge-blue">IMAGE AUDIT</span>
           <h3>Trivy Container Scanner</h3>
           <p>
@@ -2510,7 +2630,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
           </p>
         </article>
 
-        <article class="devsecops-card scroll-reveal delay-2">
+        <article class="devsecops-card card-reveal stagger-5">
           <span class="security-badge badge-emerald">POLICY AS CODE</span>
           <h3>Checkov & Open Policy Agent</h3>
           <p>
@@ -2518,7 +2638,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
           </p>
         </article>
 
-        <article class="devsecops-card scroll-reveal delay-3">
+        <article class="devsecops-card card-reveal stagger-6">
           <span class="security-badge badge-purple">RUNTIME MONITOR</span>
           <h3>Falco eBPF Threat Detection</h3>
           <p>
@@ -2530,7 +2650,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
     <!-- ==================== 04 / TOOLKIT ==================== -->
     <section class="section skills" id="skills">
-      <div class="section-heading scroll-reveal">
+      <div class="section-heading section-reveal">
         <p class="eyebrow">04 / TOOLKIT</p>
         <h2>Tools of the <span class="gradient-text">trade.</span></h2>
         <p class="section-description">
@@ -2539,37 +2659,37 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
       </div>
 
       <div class="skills-grid">
-        <article class="skill-card scroll-reveal delay-1">
+        <article class="skill-card card-reveal stagger-1">
           <span class="skill-index">01</span>
           <h3>GCP & AWS Cloud Platforms</h3>
           <p>Google Cloud Platform (Compute Engine, GKE, Cloud Storage, Cloud SQL, IAM, VPC, Cloud Monitoring, Cloud Logging) · AWS (EC2, S3, IAM, VPC, RDS, CloudWatch, EKS)</p>
         </article>
 
-        <article class="skill-card scroll-reveal delay-2">
+        <article class="skill-card card-reveal stagger-2">
           <span class="skill-index">02</span>
           <h3>Generative AI & AIOps</h3>
           <p>Retrieval-Augmented Generation (RAG) · LLM Integration · Prompt Engineering · AI-assisted Troubleshooting · GCP AIOps & Anomaly Detection</p>
         </article>
 
-        <article class="skill-card scroll-reveal delay-3">
+        <article class="skill-card card-reveal stagger-3">
           <span class="skill-index">03</span>
           <h3>Containers & Kubernetes</h3>
           <p>Kubernetes (GKE, EKS, K3s) · Docker · Helm 3 Charts · Ingress-Nginx · Cert-Manager · Kustomize · Container-Optimized OS</p>
         </article>
 
-        <article class="skill-card scroll-reveal delay-1">
+        <article class="skill-card card-reveal stagger-4">
           <span class="skill-index">04</span>
           <h3>CI/CD & Deployment Automation</h3>
           <p>Jenkins · GitLab CI/CD · GitHub Actions · Azure DevOps · ArgoCD GitOps · Release Automation (70% Manual Effort Reduction)</p>
         </article>
 
-        <article class="skill-card scroll-reveal delay-2">
+        <article class="skill-card card-reveal stagger-5">
           <span class="skill-index">05</span>
           <h3>Infrastructure as Code & Scripting</h3>
           <p>Terraform (Modular Reusable Modules) · CloudFormation · Ansible · Python Automation · Bash & Shell Scripting · Go · OPA Rego</p>
         </article>
 
-        <article class="skill-card scroll-reveal delay-3">
+        <article class="skill-card card-reveal stagger-6">
           <span class="skill-index">06</span>
           <h3>AppSec & Observability</h3>
           <p>SAST (SonarQube) · DAST · SCA (Snyk) · Trivy Container Audit · GCP Cloud Monitoring & Logging · Prometheus · Grafana · ELK Stack</p>
@@ -2579,7 +2699,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
     <!-- ==================== 05 / PROJECTS ==================== -->
     <section class="section projects" id="projects">
-      <div class="section-heading scroll-reveal">
+      <div class="section-heading section-reveal">
         <p class="eyebrow">05 / SELECTED WORK</p>
         <h2>Built with purpose<span class="gradient-text">.</span></h2>
         <p class="section-description">
@@ -2590,7 +2710,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
       <div class="projects-list">
         
         <!-- Project 1 -->
-        <article class="project-card scroll-reveal delay-1">
+        <article class="project-card card-reveal stagger-1">
           <div class="project-number">01</div>
           <div class="project-content">
             <h3>Zero-Trust Multi-Cloud CI/CD with 7-Stage Automated Security Gates</h3>
@@ -2611,7 +2731,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
         </article>
 
         <!-- Project 2 -->
-        <article class="project-card scroll-reveal delay-2">
+        <article class="project-card card-reveal stagger-2">
           <div class="project-number">02</div>
           <div class="project-content">
             <h3>Multi-Cluster Kubernetes GitOps Synchronization via ArgoCD & Helm</h3>
@@ -2631,7 +2751,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
         </article>
 
         <!-- Project 3 -->
-        <article class="project-card scroll-reveal delay-1">
+        <article class="project-card card-reveal stagger-3">
           <div class="project-number">03</div>
           <div class="project-content">
             <h3>AI-Driven Automated Incident Root-Cause Triaging & Harness Verification</h3>
@@ -2650,7 +2770,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
         </article>
 
         <!-- Project 4 -->
-        <article class="project-card scroll-reveal delay-2">
+        <article class="project-card card-reveal stagger-4">
           <div class="project-number">04</div>
           <div class="project-content">
             <h3>Modular Multi-Cloud Terraform Framework with OPA Policy as Code</h3>
@@ -2670,7 +2790,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
         </article>
 
         <!-- Project 5 -->
-        <article class="project-card scroll-reveal delay-1">
+        <article class="project-card card-reveal stagger-5">
           <div class="project-number">05</div>
           <div class="project-content">
             <h3>Enterprise Observability & Centralized Logging Stack</h3>
@@ -2693,7 +2813,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
     <!-- ==================== 06 / EXPERIENCE ==================== -->
     <section class="section experience" id="experience">
-      <div class="section-heading scroll-reveal">
+      <div class="section-heading section-reveal">
         <p class="eyebrow">06 / CAREER</p>
         <h2>5+ years of engineering <span class="gradient-text">excellence.</span></h2>
         <p class="section-description">
@@ -2701,7 +2821,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
         </p>
       </div>
 
-      <div class="experience-card scroll-reveal">
+      <div class="experience-card section-reveal">
         <div class="exp-header">
           <div>
             <h3 class="exp-title">Senior DevOps Engineer</h3>
@@ -2724,7 +2844,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
     </section>
 
     <!-- ==================== 07 / CONTACT ==================== -->
-    <section class="section contact scroll-reveal" id="contact">
+    <section class="section contact section-reveal" id="contact">
       <p class="eyebrow">07 / WHAT'S NEXT?</p>
       <h2>Let's build something<br>
         <span class="gradient-text">reliable.</span>
@@ -2748,7 +2868,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
 
             <!-- Telemetry & Visitor Analytics Counter -->
-      <div class="visitor-analytics-card scroll-reveal">
+      <div class="visitor-analytics-card section-reveal">
         <div class="analytics-header">
           <div class="analytics-live-tag">
             <span class="status-pulse-dot"></span>
@@ -2861,9 +2981,12 @@ function initIntroSplash() {
   var overlay = document.getElementById('introOverlay');
   if (!overlay) return;
 
-  var badge  = overlay.querySelector('.intro-badge');
-  var wrap   = document.getElementById('introQuoteWrap');
-  var author = overlay.querySelector('.intro-author');
+  var badge        = overlay.querySelector('.intro-badge');
+  var infinityWrap = overlay.querySelector('.intro-infinity-wrap');
+  var orangePath   = document.getElementById('infinityOrangePath');
+  var glossPath    = document.getElementById('infinityGlossPath');
+  var wrap         = document.getElementById('introQuoteWrap');
+  var author       = overlay.querySelector('.intro-author');
 
   /* hide everything initially */
   [badge, wrap, author].forEach(function(el) {
@@ -2872,7 +2995,24 @@ function initIntroSplash() {
 
   if (wrap) wrap.innerHTML = '';
 
-  /* 2 Distinct Lines: Eliminates any chance of word-splitting like "brea" / "k" */
+  /* Measure & arm the synchronized SVG infinity paths */
+  var infLength = 520;
+  [orangePath, glossPath].forEach(function(p) {
+    if (p && typeof p.getTotalLength === 'function') {
+      try {
+        infLength = p.getTotalLength();
+      } catch (e) {}
+      p.style.transition = 'none';
+      p.style.strokeDasharray = infLength + ' ' + infLength;
+      p.style.strokeDashoffset = String(infLength);
+    }
+  });
+  if (infinityWrap) {
+    infinityWrap.style.opacity = '0';
+    infinityWrap.classList.remove('infinity-glow');
+  }
+
+  /* 2 Distinct Lines: Eliminates any chance of word-splitting */
   var lines = [
     '\u201cAutomate everything.',
     'Break nothing.\u201d'
@@ -2952,12 +3092,13 @@ function initIntroSplash() {
     wrap.appendChild(box);
   }
 
-  /* Timing */
+  /* Synchronized Timing: Infinity completes building at exact ASSEMBLE_END */
   var BADGE_DELAY  = 50;
   var FLY_START    = 150;
   var STAGGER      = 22;
   var FLY_DUR      = 600;
   var ASSEMBLE_END = FLY_START + (letters.length - 1) * STAGGER + FLY_DUR;
+  var DRAW_DUR     = ASSEMBLE_END - FLY_START;
   var HOLD         = 1400;
   var DISMISS      = ASSEMBLE_END + HOLD;
 
@@ -2968,6 +3109,20 @@ function initIntroSplash() {
         badge.style.opacity    = '1';
       }, BADGE_DELAY);
     }
+
+    /* Begin drawing Glowing Orange Glossy Infinity right when the words begin assembling */
+    setTimeout(function() {
+      if (infinityWrap) {
+        infinityWrap.style.opacity = '1';
+      }
+      [orangePath, glossPath].forEach(function(p) {
+        if (p) {
+          p.getBoundingClientRect(); /* flush initial dashoffset cleanly */
+          p.style.transition = 'stroke-dashoffset ' + DRAW_DUR + 'ms cubic-bezier(0.22, 1, 0.36, 1)';
+          p.style.strokeDashoffset = '0';
+        }
+      });
+    }, FLY_START);
 
     letters.forEach(function(span, i) {
       setTimeout(function() {
@@ -2986,9 +3141,13 @@ function initIntroSplash() {
       }, ASSEMBLE_END - 200);
     }
 
+    /* Synchronized Finale Glow when both Infinity and Quote finish building together */
     setTimeout(function() {
       box.style.transition = 'filter 0.5s ease';
       box.style.filter     = 'drop-shadow(0 0 24px rgba(84,200,255,0.5))';
+      if (infinityWrap) {
+        infinityWrap.classList.add('infinity-glow');
+      }
     }, ASSEMBLE_END);
 
     setTimeout(function() {
@@ -3000,22 +3159,39 @@ function initIntroSplash() {
 }
 
 function initScrollObserver() {
-  const elements = document.querySelectorAll('.scroll-reveal');
+  const revealEls = document.querySelectorAll('.section-reveal, .card-reveal, .scroll-reveal');
+  if (!revealEls.length) return;
 
-  const checkVisibility = () => {
-    const triggerBottom = window.innerHeight * 0.88;
-
-    elements.forEach((el) => {
-      const boxTop = el.getBoundingClientRect().top;
-      if (boxTop < triggerBottom) {
-        el.classList.add('is-visible');
-      }
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const el = entry.target;
+        if (entry.isIntersecting) {
+          el.classList.add('is-visible');
+          if (el.classList.contains('card-reveal')) {
+            clearTimeout(el._revealTimer);
+            const delayStyle = parseFloat(getComputedStyle(el).transitionDelay) || 0;
+            el._revealTimer = setTimeout(() => {
+              if (el.classList.contains('is-visible')) {
+                el.classList.add('reveal-done');
+              }
+            }, Math.round(delayStyle * 1000) + 820);
+          }
+        } else {
+          /* Re-arm animation cleanly when scrolling completely past/away so re-entry animates crisply */
+          clearTimeout(el._revealTimer);
+          el.classList.remove('is-visible', 'reveal-done');
+        }
+      });
+    }, {
+      threshold: 0.06,
+      rootMargin: '20px 0px -30px 0px'
     });
-  };
 
-  window.addEventListener('scroll', checkVisibility, { passive: true });
-  window.addEventListener('resize', checkVisibility, { passive: true });
-  setTimeout(checkVisibility, 50);
+    revealEls.forEach((el) => observer.observe(el));
+  } else {
+    revealEls.forEach((el) => el.classList.add('is-visible', 'reveal-done'));
+  }
 }
 
 // ==========================================
