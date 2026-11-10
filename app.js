@@ -936,8 +936,12 @@ function initNavGlassSlider() {
   const slider = document.querySelector('.nav-glass-slider');
   const links = document.querySelectorAll('.glass-nav-container a');
   const sections = document.querySelectorAll('section[id]');
+  const homeBrand = document.querySelector('.brand.brand-home');
 
   if (!navContainer || !slider || links.length === 0) return;
+
+  let isNavClicking = false;
+  let clickTimeout = null;
 
   function moveSliderTo(targetLink, isClick = false) {
     if (!targetLink) {
@@ -956,19 +960,38 @@ function initNavGlassSlider() {
     }
   }
 
-  function updateInitialSlider() {
-    const currentActive = document.querySelector('.glass-nav-container a.active-link') || links[0];
-    if (currentActive) moveSliderTo(currentActive);
+  // Handle Home Brand Click
+  if (homeBrand) {
+    homeBrand.addEventListener('click', (e) => {
+      e.preventDefault();
+      isNavClicking = true;
+      clearTimeout(clickTimeout);
+      clickTimeout = setTimeout(() => { isNavClicking = false; }, 850);
+
+      homeBrand.classList.add('active-home');
+      links.forEach(l => l.classList.remove('active-link'));
+      slider.style.opacity = '0';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
-  setTimeout(updateInitialSlider, 150);
 
   // Hover preview: glossy slider glides to hovered item
   links.forEach((link) => {
-    link.addEventListener('mouseenter', () => moveSliderTo(link));
+    link.addEventListener('mouseenter', () => {
+      if (!isNavClicking) moveSliderTo(link);
+    });
+
     link.addEventListener('click', (e) => {
       e.preventDefault();
+      isNavClicking = true;
+      clearTimeout(clickTimeout);
+      clickTimeout = setTimeout(() => { isNavClicking = false; }, 850);
+
       const targetId = link.getAttribute('href');
       const targetSec = document.querySelector(targetId);
+
+      if (homeBrand) homeBrand.classList.remove('active-home');
       links.forEach(l => l.classList.remove('active-link'));
       link.classList.add('active-link');
       moveSliderTo(link, true);
@@ -983,14 +1006,33 @@ function initNavGlassSlider() {
 
   // When mouse leaves navbar, slider smoothly returns to current active section
   navContainer.addEventListener('mouseleave', () => {
-    const currentActive = document.querySelector('.glass-nav-container a.active-link') || links[0];
-    moveSliderTo(currentActive);
+    if (isNavClicking) return;
+    const currentActive = document.querySelector('.glass-nav-container a.active-link');
+    if (currentActive) {
+      moveSliderTo(currentActive);
+    } else {
+      slider.style.opacity = '0';
+    }
   });
 
-  // Scroll listener smoothly glides slider to currently viewed section
+  // Scroll listener smoothly glides slider to currently viewed section and activates home hut
   window.addEventListener('scroll', () => {
+    if (isNavClicking) return;
+
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+    // At top of page (Home section active)
+    if (scrollY < 260) {
+      if (homeBrand) homeBrand.classList.add('active-home');
+      links.forEach(l => l.classList.remove('active-link'));
+      slider.style.opacity = '0';
+      return;
+    }
+
+    if (homeBrand) homeBrand.classList.remove('active-home');
+
     let currentId = '';
-    const scrollPos = window.pageYOffset + 140;
+    const scrollPos = scrollY + 140;
 
     sections.forEach((sec) => {
       const top = sec.offsetTop;
@@ -1000,7 +1042,7 @@ function initNavGlassSlider() {
       }
     });
 
-    if (currentId) {
+    if (currentId && currentId !== 'home') {
       links.forEach((link) => {
         if (link.getAttribute('href') === `#${currentId}`) {
           if (!link.classList.contains('active-link')) {
@@ -1013,7 +1055,22 @@ function initNavGlassSlider() {
     }
   }, { passive: true });
 
-  window.addEventListener('resize', updateInitialSlider);
+  // Initial check on load
+  setTimeout(() => {
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollY < 260) {
+      if (homeBrand) homeBrand.classList.add('active-home');
+      slider.style.opacity = '0';
+    } else {
+      const currentActive = document.querySelector('.glass-nav-container a.active-link');
+      if (currentActive) moveSliderTo(currentActive);
+    }
+  }, 160);
+
+  window.addEventListener('resize', () => {
+    const currentActive = document.querySelector('.glass-nav-container a.active-link');
+    if (currentActive) moveSliderTo(currentActive);
+  });
 }
 
 // ==========================================

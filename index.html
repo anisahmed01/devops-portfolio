@@ -149,28 +149,111 @@ a {
   letter-spacing: -1px;
 }
 
-.brand-box {
+/* Home Hut Brand Icon (iPhone Frosted Glass & Dynamic Glow) */
+.brand.brand-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.brand-home-hut {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 10px;
-  background: linear-gradient(135deg, rgba(84, 200, 255, 0.18) 0%, rgba(14, 22, 44, 0.75) 100%);
-  color: var(--blue);
-  font-family: 'Inter', sans-serif;
-  font-weight: 850;
-  letter-spacing: -0.5px;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 12px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 48px;
+  height: 42px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.brand:hover .brand-box {
-  border-color: var(--blue);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), 0 0 20px rgba(84, 200, 255, 0.5);
+.hut-roof-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hut-body {
+  fill: rgba(14, 22, 44, 0.65);
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 1.5;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hut-roof {
+  stroke: rgba(84, 200, 255, 0.5);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.brand-hut-text {
+  position: relative;
+  z-index: 2;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 850;
+  letter-spacing: -0.5px;
+  color: var(--blue);
+  margin-top: 5px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hut-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, transparent 60%);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Hover state on Home Hut */
+.brand.brand-home:hover .hut-body {
+  fill: rgba(20, 32, 64, 0.85);
+  stroke: var(--blue);
+}
+
+.brand.brand-home:hover .hut-roof {
+  stroke: #ffffff;
+  filter: drop-shadow(0 0 8px rgba(84, 200, 255, 0.9));
+}
+
+.brand.brand-home:hover .brand-hut-text {
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(84, 200, 255, 0.8);
+}
+
+.brand.brand-home:hover .brand-home-hut {
+  transform: translateY(-2px) scale(1.05);
+  filter: drop-shadow(0 0 16px rgba(84, 200, 255, 0.45));
+}
+
+/* Active State: When visitor is at #home */
+.brand.brand-home.active-home .hut-body {
+  fill: rgba(20, 32, 68, 0.9);
+  stroke: rgba(84, 200, 255, 0.85);
+}
+
+.brand.brand-home.active-home .hut-roof {
+  stroke: var(--blue);
+  filter: drop-shadow(0 0 10px rgba(84, 200, 255, 1));
+}
+
+.brand.brand-home.active-home .brand-hut-text {
+  color: #ffffff;
+  text-shadow: 0 0 14px rgba(84, 200, 255, 0.9);
+}
+
+.brand.brand-home.active-home .brand-home-hut {
   transform: translateY(-1px) scale(1.03);
+  filter: drop-shadow(0 0 20px rgba(84, 200, 255, 0.6));
 }
 
 .brand-dot {
@@ -259,18 +342,14 @@ nav a.active-link {
 }
 
 .nav-contact {
-  background: linear-gradient(135deg, rgba(84, 200, 255, 0.16), rgba(167, 139, 250, 0.12));
-  border: 1px solid rgba(84, 200, 255, 0.35);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
   color: var(--blue) !important;
-  font-weight: 650 !important;
+  font-weight: 600;
   transition: all 0.25s ease;
 }
 
 .nav-contact:hover {
-  background: linear-gradient(135deg, rgba(84, 200, 255, 0.28), rgba(167, 139, 250, 0.22));
-  border-color: var(--blue);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), 0 0 20px rgba(84, 200, 255, 0.4);
+  color: #ffffff !important;
+  text-shadow: 0 0 12px rgba(84, 200, 255, 0.6);
 }
 
 /* ==========================================
@@ -488,36 +567,100 @@ h1 {
   margin-top: 28px;
 }
 
+/* ==========================================
+   IPHONE LIQUID GLASS BUTTONS & FOOTER BADGES
+   ========================================== */
 .button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 12px 20px;
-  border-radius: 9px;
+  padding: 12px 24px;
+  border-radius: 999px;
   font-weight: 700;
   font-size: 0.9rem;
-  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: -0.2px;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  backdrop-filter: blur(18px) saturate(190%);
+  -webkit-backdrop-filter: blur(18px) saturate(190%);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
 }
 
-.button:hover {
-  transform: translateY(-2px);
+/* Luminous specular glisten on hover */
+.button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-22deg);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.button:hover::before {
+  transform: skewX(-22deg) translateX(320%);
 }
 
 .primary {
-  color: #06101d;
-  background: linear-gradient(100deg, var(--blue), #a5a4ff);
-  box-shadow: 0 4px 20px rgba(84, 200, 255, 0.25);
+  color: #06101d !important;
+  background: linear-gradient(135deg, rgba(84, 200, 255, 0.95) 0%, rgba(165, 164, 255, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25), 0 8px 26px rgba(84, 200, 255, 0.4);
+}
+
+.primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.95), 0 12px 36px rgba(84, 200, 255, 0.65);
 }
 
 .secondary {
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--text);
+  color: #f2f5ff !important;
+  background: rgba(16, 24, 46, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.35), 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 .secondary:hover {
+  background: rgba(24, 36, 68, 0.82);
+  border-color: rgba(84, 200, 255, 0.55);
+  color: var(--blue) !important;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), 0 0 24px rgba(84, 200, 255, 0.35);
+}
+
+/* Footer Glass Pill Buttons */
+.footer-glass-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #cbd5e1 !important;
+  background: rgba(16, 24, 46, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  text-decoration: none;
+  transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+  margin: 0 3px;
+}
+
+.footer-glass-btn:hover {
+  background: rgba(28, 42, 80, 0.85);
   border-color: var(--blue);
+  color: #ffffff !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), 0 0 16px rgba(84, 200, 255, 0.4);
+  transform: translateY(-1px);
 }
 
 .hero-meta {
@@ -1867,8 +2010,16 @@ h1 {
 
   <!-- Sticky Navbar -->
   <header class="navbar">
-    <a class="brand" href="#home" aria-label="Anis Ahmed Home">
-      <span class="brand-box">AA</span><span class="brand-dot">.</span>
+    <a class="brand brand-home active-home" href="#home" aria-label="Home - Anis Ahmed">
+      <span class="brand-home-hut" title="Home (Click to jump to top)">
+        <svg class="hut-roof-svg" viewBox="0 0 52 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M26 3.5 L48.5 18 L48.5 41 C48.5 43 47 44.5 45 44.5 L7 44.5 C5 44.5 3.5 43 3.5 41 L3.5 18 Z" class="hut-body" />
+          <path d="M2 19 L26 2.5 L50 19" class="hut-roof" />
+        </svg>
+        <span class="brand-hut-text">AA</span>
+        <span class="hut-shine" aria-hidden="true"></span>
+      </span>
+      <span class="brand-dot">.</span>
     </a>
 
     <nav aria-label="Main navigation" class="glass-nav-container">
@@ -2477,11 +2628,19 @@ h1 {
 
   <!-- Footer -->
   <footer class="footer">
-    <a class="brand" href="#home" aria-label="Anis Ahmed Home">
-      <span class="brand-box">AA</span><span class="brand-dot">.</span>
+    <a class="brand brand-home" href="#home" aria-label="Home - Anis Ahmed">
+      <span class="brand-home-hut" title="Home">
+        <svg class="hut-roof-svg" viewBox="0 0 52 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M26 3.5 L48.5 18 L48.5 41 C48.5 43 47 44.5 45 44.5 L7 44.5 C5 44.5 3.5 43 3.5 41 L3.5 18 Z" class="hut-body" />
+          <path d="M2 19 L26 2.5 L50 19" class="hut-roof" />
+        </svg>
+        <span class="brand-hut-text">AA</span>
+        <span class="hut-shine" aria-hidden="true"></span>
+      </span>
+      <span class="brand-dot">.</span>
     </a>
     <p>&copy; 2026 Anis Ahmed &bull; Engineered for cloud resilience & automated delivery.</p>
-    <span>v3.5.0 &bull; <a href="https://www.linkedin.com/in/webanis" target="_blank">LinkedIn</a> &bull; <a href="https://github.com/anisahmed01" target="_blank">GitHub</a></span>
+    <span>v3.5.0 &bull; <a class="footer-glass-btn" href="https://www.linkedin.com/in/webanis" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a> <a class="footer-glass-btn" href="https://github.com/anisahmed01" target="_blank" rel="noopener noreferrer">GitHub ↗</a></span>
   </footer>
 
   <!-- Interactive JavaScript Engine -->
@@ -3424,8 +3583,12 @@ function initNavGlassSlider() {
   const slider = document.querySelector('.nav-glass-slider');
   const links = document.querySelectorAll('.glass-nav-container a');
   const sections = document.querySelectorAll('section[id]');
+  const homeBrand = document.querySelector('.brand.brand-home');
 
   if (!navContainer || !slider || links.length === 0) return;
+
+  let isNavClicking = false;
+  let clickTimeout = null;
 
   function moveSliderTo(targetLink, isClick = false) {
     if (!targetLink) {
@@ -3444,19 +3607,38 @@ function initNavGlassSlider() {
     }
   }
 
-  function updateInitialSlider() {
-    const currentActive = document.querySelector('.glass-nav-container a.active-link') || links[0];
-    if (currentActive) moveSliderTo(currentActive);
+  // Handle Home Brand Click
+  if (homeBrand) {
+    homeBrand.addEventListener('click', (e) => {
+      e.preventDefault();
+      isNavClicking = true;
+      clearTimeout(clickTimeout);
+      clickTimeout = setTimeout(() => { isNavClicking = false; }, 850);
+
+      homeBrand.classList.add('active-home');
+      links.forEach(l => l.classList.remove('active-link'));
+      slider.style.opacity = '0';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
-  setTimeout(updateInitialSlider, 150);
 
   // Hover preview: glossy slider glides to hovered item
   links.forEach((link) => {
-    link.addEventListener('mouseenter', () => moveSliderTo(link));
+    link.addEventListener('mouseenter', () => {
+      if (!isNavClicking) moveSliderTo(link);
+    });
+
     link.addEventListener('click', (e) => {
       e.preventDefault();
+      isNavClicking = true;
+      clearTimeout(clickTimeout);
+      clickTimeout = setTimeout(() => { isNavClicking = false; }, 850);
+
       const targetId = link.getAttribute('href');
       const targetSec = document.querySelector(targetId);
+
+      if (homeBrand) homeBrand.classList.remove('active-home');
       links.forEach(l => l.classList.remove('active-link'));
       link.classList.add('active-link');
       moveSliderTo(link, true);
@@ -3471,14 +3653,33 @@ function initNavGlassSlider() {
 
   // When mouse leaves navbar, slider smoothly returns to current active section
   navContainer.addEventListener('mouseleave', () => {
-    const currentActive = document.querySelector('.glass-nav-container a.active-link') || links[0];
-    moveSliderTo(currentActive);
+    if (isNavClicking) return;
+    const currentActive = document.querySelector('.glass-nav-container a.active-link');
+    if (currentActive) {
+      moveSliderTo(currentActive);
+    } else {
+      slider.style.opacity = '0';
+    }
   });
 
-  // Scroll listener smoothly glides slider to currently viewed section
+  // Scroll listener smoothly glides slider to currently viewed section and activates home hut
   window.addEventListener('scroll', () => {
+    if (isNavClicking) return;
+
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+    // At top of page (Home section active)
+    if (scrollY < 260) {
+      if (homeBrand) homeBrand.classList.add('active-home');
+      links.forEach(l => l.classList.remove('active-link'));
+      slider.style.opacity = '0';
+      return;
+    }
+
+    if (homeBrand) homeBrand.classList.remove('active-home');
+
     let currentId = '';
-    const scrollPos = window.pageYOffset + 140;
+    const scrollPos = scrollY + 140;
 
     sections.forEach((sec) => {
       const top = sec.offsetTop;
@@ -3488,7 +3689,7 @@ function initNavGlassSlider() {
       }
     });
 
-    if (currentId) {
+    if (currentId && currentId !== 'home') {
       links.forEach((link) => {
         if (link.getAttribute('href') === `#${currentId}`) {
           if (!link.classList.contains('active-link')) {
@@ -3501,7 +3702,22 @@ function initNavGlassSlider() {
     }
   }, { passive: true });
 
-  window.addEventListener('resize', updateInitialSlider);
+  // Initial check on load
+  setTimeout(() => {
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollY < 260) {
+      if (homeBrand) homeBrand.classList.add('active-home');
+      slider.style.opacity = '0';
+    } else {
+      const currentActive = document.querySelector('.glass-nav-container a.active-link');
+      if (currentActive) moveSliderTo(currentActive);
+    }
+  }, 160);
+
+  window.addEventListener('resize', () => {
+    const currentActive = document.querySelector('.glass-nav-container a.active-link');
+    if (currentActive) moveSliderTo(currentActive);
+  });
 }
 
 // ==========================================
@@ -3572,7 +3788,6 @@ function initSideNavNavigator() {
     });
   }, { passive: true });
 }
-
   </script>
   <script src="app.js?v=3.9.0">
 
