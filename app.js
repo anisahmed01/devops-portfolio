@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // Anis Ahmed ΓÇö DevOps Portfolio Interactive Engine
 // ==========================================
 
@@ -447,16 +447,17 @@ Enforce DevSecOps · Scale with resilience.`,
 
     'experience.txt': `<span style="color:var(--blue); font-weight:700;">ANIS AHMED — SENIOR DEVOPS ENGINEER</span>
 • Tenure:          5.5 Years (July 2021 — Present)
-• Specialization:  Google Cloud Platform (GCP) & AWS, Platform Engineering
+• Specialization:  Multi-Cloud (GCP, AWS & Azure), Platform Engineering
 • Location:        Gurugram, India (Open to Remote Global)
 • Core Focus:      Kubernetes, Terraform, CI/CD Automation (70% Effort Reduction),
                    DevSecOps (SAST/DAST/SCA), AIOps & GenAI/RAG, Site Reliability Engineering (SRE)`,
 
     'skills.txt': `<span style="color:var(--blue); font-weight:700;">TECHNICAL SKILLS INVENTORY:</span>
-• <span style="color:var(--emerald);">Cloud Platforms:</span>  Google Cloud Platform (GCP), AWS
+• <span style="color:var(--emerald);">Cloud Platforms:</span>  Google Cloud Platform (GCP), AWS, Microsoft Azure
 • <span style="color:var(--emerald);">GCP Services:</span>     Compute Engine, GKE, Cloud Storage, Cloud SQL, IAM, VPC, Cloud Monitoring, Cloud Logging
 • <span style="color:var(--emerald);">AWS Services:</span>     EC2, S3, IAM, VPC, RDS, CloudWatch, EKS
-• <span style="color:var(--emerald);">Containers:</span>       Docker, Kubernetes, Helm, GKE, EKS
+• <span style="color:var(--emerald);">Azure Services:</span>   Virtual Machines, AKS, Blob Storage, Azure Virtual Networks, Entra ID
+• <span style="color:var(--emerald);">Containers:</span>       Docker, Kubernetes, Helm, GKE, EKS, AKS
 • <span style="color:var(--emerald);">IaC:</span>              Terraform, CloudFormation
 • <span style="color:var(--emerald);">CI/CD:</span>            Jenkins, GitLab CI/CD, GitHub Actions, Azure DevOps
 • <span style="color:var(--emerald);">DevSecOps:</span>        SAST, DAST, SCA, SonarQube, Snyk, Trivy, Gitleaks
@@ -469,7 +470,7 @@ Enforce DevSecOps · Scale with resilience.`,
 • <span style="color:var(--blue);">CI/CD Optimization:</span>  Reduced manual deployment efforts by <strong style="color:#ffffff;">70%</strong> across pipelines.
 • <span style="color:var(--blue);">Shift-Left Security:</span>  Integrated SAST, DAST, and SCA scanning into delivery gates.
 • <span style="color:var(--blue);">Generative AI & RAG:</span>  Explored RAG & LLM solutions for operational knowledge & troubleshooting.
-• <span style="color:var(--blue);">Cloud Scalability:</span>   Managed resilient, high-availability GCP & AWS infrastructure.
+• <span style="color:var(--blue);">Cloud Scalability:</span>   Managed resilient, high-availability GCP, AWS & Azure infrastructure.
 • <span style="color:var(--blue);">IaC Reproducibility:</span>  Engineered reusable Terraform configurations and Ansible playbooks.`,
 
     'devsecops.json': `{
@@ -536,14 +537,14 @@ gke-rag-aiops-cluster     asia-south1-b  1.30.2-gke.1    RUNNING  4
 NAME                             STATUS   ROLES           CLUSTER     VERSION
 gke-asia-south1-worker-01        Ready    node,worker     GCP-GKE     v1.30.2
 eks-ap-south-1a-worker-01        Ready    node,worker     AWS-EKS     v1.30.2
-eks-ap-south-1b-worker-02        Ready    node,worker     AWS-EKS     v1.30.2
+aks-centralindia-worker-01       Ready    node,worker     Azure-AKS   v1.30.2
 `,
 
     'kubectl get nodes -o wide': () => `
 NAME                             STATUS   ROLES           CLUSTER     VERSION   OS-IMAGE
 gke-asia-south1-worker-01        Ready    node,worker     GCP-GKE     v1.30.2   Container-Optimized OS
 eks-ap-south-1a-worker-01        Ready    node,worker     AWS-EKS     v1.30.2   Amazon Linux 2023
-eks-ap-south-1b-worker-02        Ready    node,worker     AWS-EKS     v1.30.2   Amazon Linux 2023
+aks-centralindia-worker-01       Ready    node,worker     Azure-AKS   v1.30.2   Ubuntu 22.04 LTS
 `,
 
     'kubectl get pods': () => `
@@ -568,6 +569,8 @@ google_compute_network.gcp_vpc
 google_container_cluster.primary_gke
 module.multi_cloud_vpc.aws_vpc.this[0]
 module.eks.aws_eks_cluster.this[0]
+azurerm_resource_group.rg_platform
+azurerm_kubernetes_cluster.aks_cluster
 aws_s3_bucket.terraform_remote_state
 aws_dynamodb_table.terraform_state_locks
 `,
@@ -588,7 +591,7 @@ aws_dynamodb_table.terraform_state_locks
     'deploy --env prod': () => {
       setTimeout(() => {
         const lines = [
-          '⚡ [INIT] Connecting to multi-cloud GCP GKE & AWS EKS production clusters...',
+          '⚡ [INIT] Connecting to multi-cloud GCP GKE, AWS EKS & Azure AKS production clusters...',
           '🔍 [DEVSECOPS] SAST, DAST, SCA (SonarQube, Snyk, Trivy): PASSED (0 CVEs)',
           '📜 [OPA] Evaluated Terraform & K8s plan against CIS benchmark rules: APPROVED',
           '👤 [SIGN-OFF] Production Approval Gate authorized by Senior DevOps Engineer (Anis Ahmed)',
@@ -606,7 +609,7 @@ aws_dynamodb_table.terraform_state_locks
           }
         }, 350);
       }, 100);
-      return `<span style="color:var(--amber);">🚀 Initiating multi-cloud GCP & AWS DevSecOps production rollout...</span>`;
+      return `<span style="color:var(--amber);">🚀 Initiating multi-cloud (GCP, AWS & Azure) DevSecOps production rollout...</span>`;
     },
 
     clear: () => {
@@ -635,20 +638,28 @@ aws_dynamodb_table.terraform_state_locks
 
     // Experience queries
     if (/\b(exp|experience|tenure|years|how long|background|work history)\b/.test(q)) {
-      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis Ahmed brings <strong style="color:#ffffff;">5.5 years of experience</strong> as a Senior DevOps Engineer, specializing in Google Cloud Platform (GCP) and AWS. He is experienced in Kubernetes, Terraform, CI/CD automation (reducing deployment effort by 70%), DevSecOps (SAST/DAST/SCA), and AIOps operational intelligence.`;
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis Ahmed brings <strong style="color:#ffffff;">5.5 years of experience</strong> as a Senior DevOps Engineer, specializing in multi-cloud architecture across Google Cloud Platform (GCP), AWS, and Microsoft Azure. He is experienced in Kubernetes (GKE, EKS, AKS), Terraform, CI/CD automation (reducing deployment effort by 70%), DevSecOps (SAST/DAST/SCA), and AIOps operational intelligence.`;
     }
 
     // Skills queries
     if (/\b(skill|skills|tech|technologies|stack|tools|what do you know|capabilities)\b/.test(q)) {
       return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis's technical core includes:
-• <strong style="color:var(--blue);">Cloud:</strong> Google Cloud Platform (GCP) & AWS
-• <strong style="color:var(--blue);">Containers:</strong> Kubernetes, Docker, Helm, GKE, EKS
+• <strong style="color:var(--blue);">Cloud:</strong> Google Cloud Platform (GCP), AWS & Microsoft Azure
+• <strong style="color:var(--blue);">Containers:</strong> Kubernetes (GKE, EKS, AKS), Docker, Helm
 • <strong style="color:var(--blue);">IaC:</strong> Terraform, CloudFormation, Ansible
 • <strong style="color:var(--blue);">CI/CD:</strong> Jenkins, GitLab CI/CD, GitHub Actions, Azure DevOps
 • <strong style="color:var(--blue);">DevSecOps:</strong> SonarQube (SAST), DAST, Snyk (SCA), Trivy, Gitleaks
 • <strong style="color:var(--blue);">AI & AIOps:</strong> Generative AI & RAG for DevOps, GCP AIOps anomaly detection
 • <strong style="color:var(--blue);">Scripting:</strong> Python, Bash, Shell, Go
 • <strong style="color:var(--blue);">Observability:</strong> Prometheus, Grafana, ELK Stack, CloudWatch`;
+    }
+
+    // Cloud / Azure queries
+    if (/\b(cloud|azure|gcp|aws|google cloud|amazon|microsoft azure|hyperscaler)\b/.test(q)) {
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis is an enterprise multi-cloud specialist with deep hands-on expertise across all 3 leading providers:
+• <strong style="color:var(--blue);">Google Cloud Platform (GCP):</strong> GKE, Compute Engine, Cloud SQL, VPC, Cloud Operations, AIOps
+• <strong style="color:var(--blue);">Amazon Web Services (AWS):</strong> EKS, EC2, S3, RDS, CloudWatch, DynamoDB, IAM
+• <strong style="color:var(--blue);">Microsoft Azure:</strong> AKS, Virtual Machines, Azure Virtual Networks, Blob Storage, Entra ID, Azure DevOps`;
     }
 
     // Email queries
@@ -679,7 +690,7 @@ aws_dynamodb_table.terraform_state_locks
 
     // Company / current workplace queries (strict privacy)
     if (/\b(company|employer|where do you work|workplace|current company|organization)\b/.test(q)) {
-      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis works as a Senior DevOps Engineer based in Gurugram, India, managing enterprise cloud infrastructure across GCP and AWS. (Specific employer details withheld for privacy).`;
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis works as a Senior DevOps Engineer based in Gurugram, India, managing enterprise multi-cloud infrastructure across GCP, AWS, and Azure. (Specific employer details withheld for privacy).`;
     }
 
     // Location queries
@@ -694,12 +705,12 @@ aws_dynamodb_table.terraform_state_locks
 
     // Certifications
     if (/\b(cert|certs|certification|certifications)\b/.test(q)) {
-      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis's core proficiencies include Google Cloud Platform (GCP), AWS Architecture, Kubernetes Container Orchestration, Terraform Infrastructure as Code, and Shift-Left DevSecOps.`;
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis's core proficiencies include Multi-Cloud Architecture (GCP, AWS, Azure), Kubernetes Container Orchestration (GKE, EKS, AKS), Terraform Infrastructure as Code, and Shift-Left DevSecOps.`;
     }
 
     // About / Bio
     if (/\b(about|who are you|who is anis|bio|summary)\b/.test(q)) {
-      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis Ahmed is a Senior DevOps Engineer with 5.5 years of experience specializing in GCP and AWS cloud environments, Kubernetes, Terraform, and automated DevSecOps pipelines.`;
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis Ahmed is a Senior DevOps Engineer with 5.5 years of experience specializing in multi-cloud engineering across GCP, AWS, and Azure, Kubernetes, Terraform, and automated DevSecOps pipelines.`;
     }
 
     return null;

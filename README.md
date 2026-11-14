@@ -2,11 +2,12 @@
 
 [![Production Site](https://img.shields.io/badge/Production-anisahmed.in-00f2fe?style=for-the-badge&logo=google-chrome&logoColor=white)](https://anisahmed.in)
 [![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/anisahmed01)
-[![Orchestration](https://img.shields.io/badge/Kubernetes-K8s%20%26%20EKS-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io)
+[![Multi-Cloud](https://img.shields.io/badge/Multi--Cloud-GCP%20%C2%B7%20AWS%20%C2%B7%20Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://azure.microsoft.com)
+[![Orchestration](https://img.shields.io/badge/Kubernetes-GKE%20%C2%B7%20EKS%20%C2%B7%20AKS-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io)
 [![GitOps](https://img.shields.io/badge/GitOps-ArgoCD-EF6B55?style=for-the-badge&logo=argo&logoColor=white)](https://argoproj.github.io)
 [![IaC](https://img.shields.io/badge/IaC-Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](https://terraform.io)
 
-Welcome to the engineering source repository for [anisahmed.in](https://anisahmed.in), personal portfolio and engineering platform of **Anis Ahmed (Senior DevOps & Cloud Infrastructure Engineer)**.
+Welcome to the engineering source repository for [anisahmed.in](https://anisahmed.in), personal portfolio and engineering platform of **Anis Ahmed (Senior DevOps & Cloud Infrastructure Engineer)**. Specializing in enterprise multi-cloud architecture across **Google Cloud Platform (GCP)**, **Amazon Web Services (AWS)**, and **Microsoft Azure**.
 
 This repository is designed not only to host a high-performance web experience, but to serve as a **living showcase of production DevOps engineering principles**: GitOps reconciliation, automated security scanning, container hardening, Infrastructure as Code, and CI/CD pipelines.
 
