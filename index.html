@@ -16,7 +16,7 @@
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <link rel="canonical" href="https://anisahmed.in/">
 
-  <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+  <!-- Open Graph / Meta -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://anisahmed.in/">
   <meta property="og:title" content="Anis Ahmed | Senior DevOps & Cloud Infrastructure Engineer">
@@ -2227,7 +2227,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
 
 </style>
-  <link rel="stylesheet" href="styles.css?v=4.4.0">
+  <link rel="stylesheet" href="styles.css?v=4.5.0">
   <!-- Structured Data: Schema.org (Google Knowledge Graph & Rich Snippets) -->
   <script type="application/ld+json">
   {
@@ -2254,7 +2254,6 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
           "caption": "Anis Ahmed - Senior DevOps Engineer"
         },
         "sameAs": [
-          "https://www.linkedin.com/in/webanis",
           "https://github.com/anisahmed01"
         ],
         "knowsAbout": [
@@ -2364,8 +2363,6 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
         <div class="hero-actions">
           <a class="button primary" href="#projects">Explore my work ↘</a>
-          <a class="button secondary" href="https://github.com/anisahmed01" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          <a class="button secondary" href="https://www.linkedin.com/in/webanis" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
         </div>
 
         <div class="hero-meta">
@@ -2825,7 +2822,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
         <div class="exp-header">
           <div>
             <h3 class="exp-title">Senior DevOps Engineer</h3>
-            <span style="color:var(--muted); font-size:0.88rem;">Senior DevOps Engineer &bull; Gurugram, India &bull; <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue);">linkedin.com/in/webanis</a></span>
+            <span style="color:var(--muted); font-size:0.88rem;">Senior DevOps Engineer &bull; Gurugram, India</span>
           </div>
           <span class="exp-date">July 2021 &mdash; Present (5.5 Years)</span>
         </div>
@@ -2856,9 +2853,6 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
       <div class="contact-actions">
         <a class="button primary" href="mailto:contact@anisahmed.in?subject=DevOps%20Opportunity%20-%20Anis%20Ahmed">
           Get in touch ↗
-        </a>
-        <a class="button secondary" href="https://www.linkedin.com/in/webanis" target="_blank" rel="noopener noreferrer">
-          Connect on LinkedIn ↗
         </a>
         <a class="button secondary" href="https://github.com/anisahmed01" target="_blank" rel="noopener noreferrer">
           GitHub Profile ↗
@@ -2952,7 +2946,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
       <span class="brand-dot">.</span>
     </a>
     <p>&copy; 2026 Anis Ahmed &bull; Engineered for cloud resilience & automated delivery.</p>
-    <span>v3.5.0 &bull; <a class="footer-glass-btn" href="https://www.linkedin.com/in/webanis" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a> <a class="footer-glass-btn" href="https://github.com/anisahmed01" target="_blank" rel="noopener noreferrer">GitHub ↗</a></span>
+    <span>v3.5.0 &bull; <a class="footer-glass-btn" href="https://github.com/anisahmed01" target="_blank" rel="noopener noreferrer">GitHub ↗</a></span>
   </footer>
 
   <!-- Interactive JavaScript Engine -->
@@ -3443,7 +3437,6 @@ Enforce DevSecOps · Scale with resilience.`,
 
     'contact.txt': `<span style="color:var(--blue); font-weight:700;">DIRECT CONTACT CHANNELS:</span>
 • Email:    <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a>
-• LinkedIn: <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline;">linkedin.com/in/webanis</a>
 • GitHub:   <a href="https://github.com/anisahmed01" target="_blank" style="color:var(--blue); text-decoration:underline;">github.com/anisahmed01</a>
 • Website:  https://anisahmed.in`,
 
@@ -3483,7 +3476,7 @@ Enforce DevSecOps · Scale with resilience.`,
 
 <span style="color:var(--purple); font-weight:700;">[AI CHATBOT QUERIES]</span>
   Type keywords or natural questions like:
-  <code>experience</code>, <code>skills</code>, <code>projects</code>, <code>email</code>, <code>github</code>, <code>linkedin</code>, <code>certifications</code>, <code>about</code>
+  <code>experience</code>, <code>skills</code>, <code>projects</code>, <code>email</code>, <code>github</code>, <code>certifications</code>, <code>about</code>
 `,
 
     'gcloud container clusters list': () => `
@@ -3621,14 +3614,9 @@ aws_dynamodb_table.terraform_state_locks
       return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Explore Anis's open-source repositories and code on GitHub: <a href="https://github.com/anisahmed01" target="_blank" style="color:var(--blue); text-decoration:underline; font-weight:700;">https://github.com/anisahmed01</a>`;
     }
 
-    // LinkedIn queries
-    if (/\b(linkedin|profile|network|connect)\b/.test(q)) {
-      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Connect with Anis on LinkedIn: <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline; font-weight:700;">https://www.linkedin.com/in/webanis</a>`;
-    }
-
     // Contact / Hire queries
     if (/\b(contact|hire|hiring|reach out|touch|message|talk)\b/.test(q)) {
-      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis is open to Senior DevOps & Cloud Platform opportunities. Reach out via email at <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a> or on <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline;">LinkedIn</a>.`;
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis is open to Senior DevOps & Cloud Platform opportunities. Reach out via email at <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a> or explore his code on <a href="https://github.com/anisahmed01" target="_blank" style="color:var(--blue); text-decoration:underline;">GitHub</a>.`;
     }
 
     // Projects queries

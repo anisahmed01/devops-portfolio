@@ -484,7 +484,6 @@ Enforce DevSecOps · Scale with resilience.`,
 
     'contact.txt': `<span style="color:var(--blue); font-weight:700;">DIRECT CONTACT CHANNELS:</span>
 • Email:    <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a>
-• LinkedIn: <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline;">linkedin.com/in/webanis</a>
 • GitHub:   <a href="https://github.com/anisahmed01" target="_blank" style="color:var(--blue); text-decoration:underline;">github.com/anisahmed01</a>
 • Website:  https://anisahmed.in`,
 
@@ -524,7 +523,7 @@ Enforce DevSecOps · Scale with resilience.`,
 
 <span style="color:var(--purple); font-weight:700;">[AI CHATBOT QUERIES]</span>
   Type keywords or natural questions like:
-  <code>experience</code>, <code>skills</code>, <code>projects</code>, <code>email</code>, <code>github</code>, <code>linkedin</code>, <code>certifications</code>, <code>about</code>
+  <code>experience</code>, <code>skills</code>, <code>projects</code>, <code>email</code>, <code>github</code>, <code>certifications</code>, <code>about</code>
 `,
 
     'gcloud container clusters list': () => `
@@ -662,14 +661,9 @@ aws_dynamodb_table.terraform_state_locks
       return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Explore Anis's open-source repositories and code on GitHub: <a href="https://github.com/anisahmed01" target="_blank" style="color:var(--blue); text-decoration:underline; font-weight:700;">https://github.com/anisahmed01</a>`;
     }
 
-    // LinkedIn queries
-    if (/\b(linkedin|profile|network|connect)\b/.test(q)) {
-      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Connect with Anis on LinkedIn: <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline; font-weight:700;">https://www.linkedin.com/in/webanis</a>`;
-    }
-
     // Contact / Hire queries
     if (/\b(contact|hire|hiring|reach out|touch|message|talk)\b/.test(q)) {
-      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis is open to Senior DevOps & Cloud Platform opportunities. Reach out via email at <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a> or on <a href="https://www.linkedin.com/in/webanis" target="_blank" style="color:var(--blue); text-decoration:underline;">LinkedIn</a>.`;
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis is open to Senior DevOps & Cloud Platform opportunities. Reach out via email at <a href="mailto:contact@anisahmed.in" style="color:var(--blue); text-decoration:underline;">contact@anisahmed.in</a> or explore his code on <a href="https://github.com/anisahmed01" target="_blank" style="color:var(--blue); text-decoration:underline;">GitHub</a>.`;
     }
 
     // Projects queries

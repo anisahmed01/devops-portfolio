@@ -118,6 +118,5 @@ Every commit pushed to the `main` branch will automatically validate syntax, ver
 ## 📬 Contact & Socials
 
 * **Website**: [anisahmed.in](https://anisahmed.in)
-* **LinkedIn**: [linkedin.com/in/webanis](https://www.linkedin.com/in/webanis)
 * **GitHub**: [github.com/anisahmed01](https://github.com/anisahmed01)
 * **Direct Email**: [contact@anisahmed.in](mailto:contact@anisahmed.in)
