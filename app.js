@@ -448,7 +448,7 @@ Enforce DevSecOps · Scale with resilience.`,
     'experience.txt': `<span style="color:var(--blue); font-weight:700;">ANIS AHMED — SENIOR DEVOPS ENGINEER</span>
 • Tenure:          5.5 Years (July 2021 — Present)
 • Specialization:  Multi-Cloud (GCP, AWS & Azure), Platform Engineering
-• Location:        Gurugram, India (Open to Remote Global)
+• Location:        Delhi, India (Open to Remote Global)
 • Core Focus:      Kubernetes, Terraform, CI/CD Automation (70% Effort Reduction),
                    DevSecOps (SAST/DAST/SCA), AIOps & GenAI/RAG, Site Reliability Engineering (SRE)`,
 
@@ -690,12 +690,12 @@ aws_dynamodb_table.terraform_state_locks
 
     // Company / current workplace queries (strict privacy)
     if (/\b(company|employer|where do you work|workplace|current company|organization)\b/.test(q)) {
-      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis works as a Senior DevOps Engineer based in Gurugram, India, managing enterprise multi-cloud infrastructure across GCP, AWS, and Azure. (Specific employer details withheld for privacy).`;
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis works as a Senior DevOps Engineer based in Delhi, India, managing enterprise multi-cloud infrastructure across GCP, AWS, and Azure. (Specific employer details withheld for privacy).`;
     }
 
     // Location queries
     if (/\b(location|where are you|city|country|based|relocate|remote)\b/.test(q)) {
-      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis is based in <strong>Gurugram, India</strong>, and is open to remote global opportunities.`;
+      return `<span style="color:var(--emerald); font-weight:700;">🤖 AI Assistant:</span> Anis is based in <strong>Delhi, India</strong>, and is open to remote global opportunities.`;
     }
 
     // Greetings
