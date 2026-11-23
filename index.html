@@ -2225,7 +2225,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
   border-left: 2px solid var(--blue);
 }
 </style>
-  <link rel="stylesheet" href="styles.css?v=4.6.0">
+  <link rel="stylesheet" href="styles.css?v=4.7.0">
   <!-- Structured Data: Schema.org (Google Knowledge Graph & Rich Snippets) -->
   <script type="application/ld+json">
   {
@@ -2872,7 +2872,7 @@ html.touch-device .side-nav-wrapper:hover .side-nav-drawer {
 
         <div class="analytics-grid">
           <div class="analytics-metric">
-            <span class="analytics-number" id="globalProfileViews">1,420</span>
+            <span class="analytics-number" id="globalProfileViews">1,450</span>
             <span class="analytics-label">Total Profile Views</span>
           </div>
 
@@ -3845,34 +3845,28 @@ function initVisitorAnalytics() {
   const userVisitsElem = document.getElementById('userVisitCount');
   const globalViewsElem = document.getElementById('globalProfileViews');
 
-  // Cooldown window: 10 minutes (600,000 ms)
-  // If user returns after 10 mins, 1 hour, or 1 day, it increments genuine visits!
-  const COOLDOWN_MS = 10 * 60 * 1000;
-  const now = Date.now();
-
-  const lastVisitKey = 'anis_last_visit_timestamp';
+  const BASELINE_VIEWS = 1450;
   const userVisitsKey = 'anis_user_visits_count';
   const totalViewsKey = 'anis_total_views_count';
-  const BASELINE_VIEWS = 1420;
 
-  let lastVisitTime = parseInt(localStorage.getItem(lastVisitKey) || '0', 10);
   let userVisits = parseInt(localStorage.getItem(userVisitsKey) || '0', 10);
-  let totalViews = parseInt(localStorage.getItem(totalViewsKey) || '0', 10);
+  let storedViews = parseInt(localStorage.getItem(totalViewsKey) || '0', 10);
 
-  if (totalViews < BASELINE_VIEWS) {
+  // Initialize from BASELINE_VIEWS (1,450) or increment on every visit
+  let totalViews;
+  if (!storedViews || storedViews < BASELINE_VIEWS) {
     totalViews = BASELINE_VIEWS;
+  } else {
+    totalViews = storedViews + 1;
   }
 
-  // Check if this visit is outside cooldown (first visit, or returning after 10m / 1hr / 1day)
-  if (!lastVisitTime || (now - lastVisitTime) >= COOLDOWN_MS) {
-    userVisits += 1;
-    totalViews += 1;
-    localStorage.setItem(userVisitsKey, userVisits);
-    localStorage.setItem(totalViewsKey, totalViews);
-    localStorage.setItem(lastVisitKey, now);
-  }
+  // Increment user visits on every page visit
+  userVisits = (isNaN(userVisits) ? 0 : userVisits) + 1;
 
-  // Update DOM displays (strictly clean numbers, no '+' icon)
+  localStorage.setItem(userVisitsKey, userVisits);
+  localStorage.setItem(totalViewsKey, totalViews);
+
+  // Update DOM displays (strictly clean formatted numbers)
   if (userVisitsElem) {
     userVisitsElem.innerText = userVisits <= 1 ? '#1 (First)' : `#${userVisits}`;
   }
@@ -3881,9 +3875,9 @@ function initVisitorAnalytics() {
     globalViewsElem.innerText = totalViews.toLocaleString();
   }
 
-  // Live GoatCounter genuine count integration
+  // Live GoatCounter genuine count integration (with safe fallback)
   if (window.fetch) {
-    fetch('https://anisahmed.goatcounter.com/counter//.json')
+    fetch('https://anisahmed.goatcounter.com/counter/%2F.json')
       .then(res => res.json())
       .then(data => {
         if (data && data.count) {
